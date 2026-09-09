@@ -1,6 +1,6 @@
 # Note-taker
 
-Note-taker is a small, private, local-first Android notebook. Version 3 adds simple connections between notes, alongside manual tags to the local notebook described in [`note-taker-product-brief.md`](note-taker-product-brief.md).
+Note-taker is a small, private, local-first Android notebook. Version 4 adds date filters, sorting, and frequent-tag shortcuts to notes with manual tags and simple connections to the local notebook described in [`note-taker-product-brief.md`](note-taker-product-brief.md).
 
 ## Current features
 
@@ -12,8 +12,11 @@ Note-taker is a small, private, local-first Android notebook. Version 3 adds sim
 - Browse tags with the top-bar Tags button and filter notes by one tag alongside text search
 - Connect notes from the editor, search candidates by content or tag, and see notes with shared tags first
 - Open a connected note or remove a connection from either endpoint; links have no relationship types
+- Combine text and tag search with Today, Last 7 days, Last month, or an inclusive custom date range
+- Filter by creation or edit date; sort by recently edited, newest created, oldest created, or alphabetical preview
+- Access the five most-used tags with note counts and a Last 7 days shortcut
 - New empty drafts are discarded; existing notes may be empty
-- Most recently edited notes first
+- Most recently edited notes first by default
 - Case-insensitive literal content search
 - Permanent deletion with a short Undo action
 - Local Room database with stable UUID identifiers
@@ -109,7 +112,10 @@ Dependencies are assembled by `DefaultAppContainer`; no dependency-injection fra
 
 - Tags are entirely manual. Capture a note as usual, then open its popup to organize it.
 - Tag names are trimmed, limited to 40 characters, and deduplicated without case differences. Each note can have multiple tags; removing a tag from a note does not remove it from the library.
-- Completing a new note clears search and tag filters so it can appear in the full list.
+- Completing a new note clears text, tag, and date filters and restores the default sort so it appears at the top.
+- Date ranges use local calendar days, including the entire end date. Last 7 days includes today and six prior days; Last month means the previous calendar month. Date presets refresh when the screen resumes.
+- Filter/sort selections survive screen recreation. Frequently used tags count notes across the whole notebook, independently of the active filters.
+- V4 uses the existing version 3 database schema.
 - Room schema version 3 migrates v1/v2 data in place. Deleting a note removes its tags and connections; Undo restores its tags and connections to notes that still exist.
 - Connections are bidirectional and unique. A note cannot connect to itself. Content/tag edits preserve connections.
 - Opening a connected note saves pending edits and replaces the current popup. Done/Back returns to the notes list.
@@ -122,4 +128,4 @@ Dependencies are assembled by `DefaultAppContainer`; no dependency-injection fra
 
 ## Deferred roadmap
 
-Advanced deterministic filters, rule-based suggestions, entities, semantic search, AI, import/export, synchronization, accounts, and cloud services remain deferred. They should be introduced one independently useful stage at a time, in the order and under the constraints defined by the product brief.
+Rule-based suggestions, entities, semantic search, AI, import/export, synchronization, accounts, and cloud services remain deferred. They should be introduced one independently useful stage at a time, in the order and under the constraints defined by the product brief.

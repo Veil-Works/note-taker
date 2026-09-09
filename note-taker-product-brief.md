@@ -437,14 +437,19 @@ The note collection begins behaving like a lightweight knowledge network.
 
 Make retrieval significantly better without AI.
 
-Possible functionality:
+V4 scope:
 
-- title/content search;
-- tag filters;
-- date filters;
-- recent notes;
-- frequently used tags;
-- combined filtering.
+- combine existing content search and a tag filter with a date filter;
+- Today, Last 7 days, Last month, and inclusive custom calendar ranges;
+- choose creation or edit date as the date-filter basis;
+- sort by recently edited, newest created, oldest created, or alphabetical note preview;
+- quick access to the last seven days and the five most-used tags with note counts;
+- retain filter/sort choices across screen recreation;
+- clear filters and restore default sorting after successful note capture.
+
+Date ranges use the device's local calendar. Last month means the previous
+calendar month. Tag popularity counts notes across the entire notebook.
+Dedicated note titles remain a future feature; search uses existing note content.
 
 Examples:
 

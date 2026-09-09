@@ -73,6 +73,63 @@ class NotesViewModelTest {
         assertEquals("", viewModel.draft.value)
     }
 
+    @Test
+    fun `date preferences restore and completion clears all filters and sort`() = runTest {
+        val state = SavedStateHandle()
+        val repository = FakeNoteRepository()
+        val first = NotesViewModel(repository, state)
+        val dates = NoteFilters(sort = NoteSort.OLDEST, period = DatePeriod.CUSTOM, dateField = DateField.CREATED,
+            start = java.time.LocalDate.of(2020, 1, 1), end = java.time.LocalDate.of(2020, 1, 31))
+        first.setFilters(dates)
+        first.selectTag("tag")
+        first.onQueryChanged("search")
+        val recreated = NotesViewModel(repository, state)
+        assertEquals(dates, recreated.filters.value)
+        recreated.onDraftChanged("New thought")
+        recreated.completeNote()
+        advanceUntilIdle()
+        assertEquals(NoteFilters(), recreated.filters.value)
+        assertEquals(null, recreated.selectedTag.value)
+        assertEquals("", state.get<String>("notes_query"))
+    }
+
+    @Test
+    fun `frequent tags count notes across entire notebook and update on deletion`() = runTest {
+        val a = app.notetaker.model.Tag("a", "Alpha", 1)
+        val b = app.notetaker.model.Tag("b", "Beta", 1)
+        val one = Note("1", "First", 1, 1, listOf(a, b))
+        val two = Note("2", "Second", 2, 2, listOf(b))
+        val repository = FakeNoteRepository(listOf(one, two))
+        val viewModel = NotesViewModel(repository, SavedStateHandle())
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.frequentTags.collect() }
+        viewModel.onQueryChanged("missing")
+        viewModel.selectTag(a.id)
+        advanceUntilIdle()
+        assertEquals(listOf(FrequentTag(b, 2), FrequentTag(a, 1)), viewModel.frequentTags.value)
+        repository.delete(two)
+        advanceUntilIdle()
+        assertEquals(listOf(FrequentTag(a, 1), FrequentTag(b, 1)), viewModel.frequentTags.value)
+    }
+
+    @Test
+    fun `date tag and text filters combine`() = runTest {
+        val clock = java.time.Clock.fixed(java.time.Instant.parse("2026-09-09T12:00:00Z"), java.time.ZoneId.of("Europe/Prague"))
+        val tag = app.notetaker.model.Tag("work", "Work", 1)
+        val repository = FakeNoteRepository(listOf(
+            Note("a", "Budget", 1, clock.millis(), listOf(tag)),
+            Note("b", "Budget", 1, 1, listOf(tag)),
+            Note("c", "Budget", 1, clock.millis()),
+            Note("d", "Other", 1, clock.millis(), listOf(tag)),
+        ))
+        val viewModel = NotesViewModel(repository, SavedStateHandle(), clock)
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.uiState.collect() }
+        viewModel.setFilters(NoteFilters(period = DatePeriod.TODAY))
+        viewModel.selectTag(tag.id)
+        viewModel.onQueryChanged("Budget")
+        advanceUntilIdle()
+        assertEquals(listOf("a"), viewModel.uiState.value.notes.map(Note::id))
+    }
+
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 

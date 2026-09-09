@@ -10,6 +10,11 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import app.notetaker.data.NoteRepository
 import app.notetaker.model.Note
 import java.util.UUID
+import java.time.Clock
+import java.time.LocalDate
+import app.notetaker.model.Tag
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -33,6 +38,8 @@ data class NotesUiState(
     val errorMessage: String? = null,
 )
 
+data class FrequentTag(val tag: Tag, val count: Int)
+
 private sealed interface NotesResult {
     data object Loading : NotesResult
     data class Success(val notes: List<Note>) : NotesResult
@@ -43,7 +50,44 @@ private sealed interface NotesResult {
 class NotesViewModel(
     private val repository: NoteRepository,
     private val savedStateHandle: SavedStateHandle,
+    private val clock: Clock = Clock.systemDefaultZone(),
 ) : ViewModel() {
+    private val _filters = MutableStateFlow(NoteFilters(
+        sort = NoteSort.valueOf(savedStateHandle["notes_sort"] ?: NoteSort.UPDATED.name),
+        period = DatePeriod.valueOf(savedStateHandle["notes_period"] ?: DatePeriod.ALL.name),
+        dateField = DateField.valueOf(savedStateHandle["notes_date_field"] ?: DateField.UPDATED.name),
+        start = savedStateHandle.get<Long>("notes_start")?.let(LocalDate::ofEpochDay),
+        end = savedStateHandle.get<Long>("notes_end")?.let(LocalDate::ofEpochDay),
+    ))
+    val filters: StateFlow<NoteFilters> = _filters
+    private val today = MutableStateFlow(LocalDate.now(clock))
+    fun refreshDates() { today.value = LocalDate.now(clock) }
+
+    fun setFilters(value: NoteFilters) {
+        require(value.period != DatePeriod.CUSTOM || (value.start != null && value.end != null && value.start <= value.end))
+        savedStateHandle["notes_sort"] = value.sort.name
+        savedStateHandle["notes_period"] = value.period.name
+        savedStateHandle["notes_date_field"] = value.dateField.name
+        savedStateHandle["notes_start"] = value.start?.toEpochDay()
+        savedStateHandle["notes_end"] = value.end?.toEpochDay()
+        _filters.value = value
+        refreshDates()
+    }
+
+    fun clearFilters() {
+        onQueryChanged("")
+        selectTag(null)
+        setFilters(NoteFilters())
+    }
+
+    val frequentTags = flow { emitAll(repository.observeNotes()) }.map { notes ->
+        notes.flatMap { it.tags.distinctBy(Tag::id) }.groupBy(Tag::id).values
+            .map { FrequentTag(it.first(), it.size) }
+            .sortedWith(compareByDescending<FrequentTag> { it.count }.thenBy { it.tag.name.lowercase(java.util.Locale.ROOT) }.thenBy { it.tag.id })
+            .take(5)
+    }.catch { emit(emptyList()) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
     val tags = repository.observeTags().catch { emit(emptyList()) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
     val selectedTag = savedStateHandle.getStateFlow<String?>("selected_tag", null)
@@ -73,7 +117,7 @@ class NotesViewModel(
 
     fun completeNote() {
         if (_saving.value || draft.value.isBlank()) return
-        val timestamp = System.currentTimeMillis()
+        val timestamp = clock.millis()
         val note = pendingNote?.copy(content = draft.value, updatedAt = timestamp)
             ?: Note(UUID.randomUUID().toString(), draft.value, timestamp, timestamp)
         pendingNote = note
@@ -84,8 +128,7 @@ class NotesViewModel(
                 savedStateHandle["capture_text"] = ""
                 pendingNote = null
                 _captureError.value = null
-                onQueryChanged("")
-                selectTag(null)
+                clearFilters()
             } catch (cancelled: CancellationException) {
                 throw cancelled
             } catch (_: Exception) {
@@ -101,16 +144,16 @@ class NotesViewModel(
     private val results: Flow<NotesResult> = query
         .debounce { value -> if (value.isBlank()) 0L else SEARCH_DEBOUNCE_MS }
         .flatMapLatest { value ->
-            repository.observeNotes(value)
+            flow { emitAll(repository.observeNotes(value)) }
                 .map<List<Note>, NotesResult>(NotesResult::Success)
                 .onStart { emit(NotesResult.Loading) }
                 .catch { emit(NotesResult.Error("Could not load notes.")) }
         }
 
-    val uiState: StateFlow<NotesUiState> = combine(query, results, selectedTag) { currentQuery, result, tagId ->
+    val uiState: StateFlow<NotesUiState> = combine(query, results, selectedTag, filters, today) { currentQuery, result, tagId, currentFilters, currentDay ->
         when (result) {
             NotesResult.Loading -> NotesUiState(query = currentQuery, isLoading = true)
-            is NotesResult.Success -> NotesUiState(query = currentQuery, notes = result.notes.filter { note -> tagId == null || note.tags.any { it.id == tagId } }, isLoading = false)
+            is NotesResult.Success -> NotesUiState(query = currentQuery, notes = filterAndSortNotes(result.notes, tagId, currentFilters, currentDay, clock.zone), isLoading = false)
             is NotesResult.Error -> NotesUiState(
                 query = currentQuery,
                 isLoading = false,

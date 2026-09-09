@@ -1,5 +1,19 @@
 # Changelog
 
+## 4.0.0 — 2026-09-09
+
+- Combine text and tag search with Today, Last 7 days, Last month, or an inclusive custom calendar range.
+- Choose creation or edit dates, and sort by recently edited, newest created, oldest created, or alphabetical preview.
+- Add shortcuts for the last seven days and the five most-used tags, with notebook-wide note counts.
+- Preserve applied filter/sort choices across screen recreation; refresh relative dates when the screen resumes.
+- Clear filters and restore default sorting after capture; reset list position when filters or the first result change.
+- Keep the version 3 database schema and all existing notes, tags, and connections.
+
+Validation: 25 unit tests and lint passed; 12 isolated device tests passed across
+filter/calendar/capture flows and existing tag/link/database coverage. Date tests
+cover inclusive boundaries, DST, calendar-month transitions, combined filters,
+sorting, saved preferences, and live tag counts. App updated in place on the phone.
+
 ## 3.0.0 — 2026-09-09
 
 - Connect notes with simple, bidirectional links; no relationship types.

@@ -1,6 +1,12 @@
 package app.notetaker.feature.notes
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.material3.FilterChip
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +19,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.foundation.layout.imePadding
@@ -69,13 +77,22 @@ fun NotesScreen(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val tags by viewModel.tags.collectAsStateWithLifecycle()
     val selectedTag by viewModel.selectedTag.collectAsStateWithLifecycle()
-    var showTags by remember { mutableStateOf(false) }
+    var showTags by rememberSaveable { mutableStateOf(false) }
+    var showFilters by rememberSaveable { mutableStateOf(false) }
+    val filters by viewModel.filters.collectAsStateWithLifecycle()
+    val frequentTags by viewModel.frequentTags.collectAsStateWithLifecycle()
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { viewModel.refreshDates() }
     val draft by viewModel.draft.collectAsStateWithLifecycle()
     val saving by viewModel.saving.collectAsStateWithLifecycle()
     val captureError by viewModel.captureError.collectAsStateWithLifecycle()
-    var searching by remember { mutableStateOf(state.query.isNotEmpty()) }
+    var searching by rememberSaveable { mutableStateOf(state.query.isNotEmpty()) }
     var captureHeight by remember { mutableStateOf(0) }
     val bottomSpace = with(LocalDensity.current) { captureHeight.toDp() } + 12.dp
+
+    if (showFilters) FilterDialog(filters, onApply = {
+        viewModel.setFilters(it)
+        showFilters = false
+    }, onDismiss = { showFilters = false })
 
     Scaffold(
         topBar = {
@@ -93,12 +110,43 @@ fun NotesScreen(
                 TopAppBar(
                     title = { Text("Notes") },
                     actions = {
+                        TextButton(onClick = { showFilters = true }) { Text("Filters") }
                         TextButton(onClick = { showTags = !showTags }) { Text("Tags") }
                         IconButton(onClick = { searching = true }) {
                             Icon(Icons.Default.Search, contentDescription = "Search notes")
                         }
                     },
                 )
+            }
+            Row(
+                Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = 12.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                FilterChip(
+                    selected = filters.period == DatePeriod.RECENT,
+                    onClick = { viewModel.setFilters(filters.copy(period = if (filters.period == DatePeriod.RECENT) DatePeriod.ALL else DatePeriod.RECENT)) },
+                    label = { Text("Last 7 days") },
+                )
+                if (searching) TextButton(onClick = { showFilters = true }) { Text("Filters") }
+                frequentTags.forEach { frequent ->
+                    FilterChip(
+                        selected = selectedTag == frequent.tag.id,
+                        onClick = { viewModel.selectTag(if (selectedTag == frequent.tag.id) null else frequent.tag.id) },
+                        label = { Text("${frequent.tag.name} (${frequent.count})") },
+                        modifier = Modifier.testTag("frequent_tag_${frequent.tag.id}"),
+                    )
+                }
+            }
+            if (filters.period != DatePeriod.ALL || filters.sort != NoteSort.UPDATED || selectedTag != null || state.query.isNotBlank()) {
+                Row(Modifier.fillMaxWidth().padding(horizontal = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+                    val dateLabel = if (filters.period == DatePeriod.CUSTOM) "${filters.start} – ${filters.end}" else filters.period.label
+                    Text(
+                        "${filters.dateField.label}: $dateLabel · ${filters.sort.label}",
+                        style = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier.weight(1f),
+                    )
+                    TextButton(onClick = viewModel::clearFilters) { Text("Clear filters") }
+                }
             }
             if (showTags || selectedTag != null) {
                 Column(Modifier.padding(horizontal = 12.dp)) {
@@ -114,7 +162,8 @@ fun NotesScreen(
                 state.isLoading -> LoadingContent()
                 state.errorMessage != null -> MessageContent(state.errorMessage)
                 state.notes.isEmpty() -> MessageContent(
-                    if (selectedTag != null) "No notes match this tag and search."
+                    if (filters.period != DatePeriod.ALL) "No notes match these filters."
+                    else if (selectedTag != null) "No notes match this tag and search."
                     else if (state.query.isBlank()) "No notes yet. Write your first thought below."
                     else "No notes match your search.",
                     Modifier.padding(bottom = bottomSpace),
@@ -123,6 +172,7 @@ fun NotesScreen(
                     notes = state.notes,
                     onOpenNote = onOpenNote,
                     bottomSpace = bottomSpace,
+                    resetKey = Triple(state.query, selectedTag, filters),
                 )
             }
             Surface(
@@ -198,9 +248,15 @@ private fun NotesList(
     notes: List<Note>,
     onOpenNote: (String) -> Unit,
     bottomSpace: Dp,
+    resetKey: Any,
     modifier: Modifier = Modifier,
 ) {
+    val listState = rememberLazyListState()
+    LaunchedEffect(resetKey, notes.firstOrNull()?.id) {
+        listState.scrollToItem(0)
+    }
     LazyColumn(
+        state = listState,
         modifier = modifier.fillMaxSize().testTag("notes_list"),
         contentPadding = PaddingValues(bottom = bottomSpace),
     ) {
