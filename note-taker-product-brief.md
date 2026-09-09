@@ -317,17 +317,14 @@ Possible relation fields:
 id
 sourceNoteId
 targetNoteId
-relationType
 createdAt
 ```
 
-The earliest implementation may use a generic relation such as:
-
-```text
-related_to
-```
-
-More expressive relation types can be added later.
+V3 links are untyped. Do not add a relationship-type field or selector.
+The priority is connecting notes around common themes, such as a project,
+training, or running. Tags provide thematic grouping; explicit links connect
+individual notes within that context. Relationship types can be reconsidered
+in a later version if a concrete need appears.
 
 ---
 
@@ -414,7 +411,8 @@ The user can manually build a useful thematic structure around notes.
 
 ### Goal
 
-Allow the user to manually express relationships between ideas.
+Allow the user to connect notes around common themes, such as a project,
+training, or running, using simple, untyped links.
 
 ### Required functionality
 
@@ -423,22 +421,9 @@ Allow the user to manually express relationships between ideas.
 - navigate between linked notes;
 - remove links.
 
-Initially, links may simply mean:
-
-```text
-related_to
-```
-
-Later versions may support:
-
-```text
-supports
-contradicts
-extends
-example_of
-part_of
-derived_from
-```
+Use existing tags to group notes by theme and explicit links to connect
+individual notes. V3 does not include relationship types or a type selector.
+Typed relationships are deferred until there is a concrete need for them.
 
 ### Success criterion
 

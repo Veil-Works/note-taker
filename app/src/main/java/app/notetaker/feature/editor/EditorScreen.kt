@@ -25,6 +25,7 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.notetaker.model.Note
 import app.notetaker.ui.TagPicker
+import app.notetaker.ui.NoteLinks
 
 /** The list destination remains visible beneath this navigation dialog. */
 @Composable
@@ -33,9 +34,11 @@ fun EditorScreen(
     isNewNote: Boolean,
     onClose: () -> Unit,
     onDeleted: (Note?) -> Unit,
+    onOpenNote: (String) -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val tags by viewModel.availableTags.collectAsStateWithLifecycle()
+    val notes by viewModel.availableNotes.collectAsStateWithLifecycle()
     fun close() = viewModel.close(onClose)
     BackHandler(onBack = ::close)
     LifecycleEventEffect(Lifecycle.Event.ON_STOP) { viewModel.flush() }
@@ -66,14 +69,23 @@ fun EditorScreen(
             if (state.isExistingNote) {
                 Text("Tags", style = MaterialTheme.typography.labelLarge)
                 TagPicker(tags, state.tags.map { it.id }.toSet(), viewModel::toggleTag, viewModel::createTag)
+                NoteLinks(
+                    currentId = state.noteId,
+                    notes = notes,
+                    tagIds = state.tags.map { it.id }.toSet(),
+                    enabled = !state.isLinking && !state.isSaving,
+                    errorMessage = state.errorMessage,
+                    onSetLinked = viewModel::setLinked,
+                    onOpenNote = { id -> viewModel.close { onOpenNote(id) } },
+                )
             }
             state.errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error) }
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 TextButton(
                     onClick = { viewModel.delete(onDeleted) },
-                    enabled = state.isExistingNote && !state.isSaving,
+                    enabled = state.isExistingNote && !state.isSaving && !state.isLinking,
                 ) { Text("Delete note", color = MaterialTheme.colorScheme.error) }
-                TextButton(onClick = ::close) { Text("Done") }
+                TextButton(onClick = ::close, enabled = !state.isLinking && !state.isSaving) { Text("Done") }
             }
         }
     }

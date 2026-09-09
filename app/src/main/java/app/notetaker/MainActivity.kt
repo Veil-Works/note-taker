@@ -83,6 +83,11 @@ internal fun NoteTakerApp(repository: NoteRepository) {
                     viewModel = editorViewModel,
                     isNewNote = noteId == null,
                     onClose = { navController.popBackStack() },
+                    onOpenNote = { id ->
+                        // Replace the popup so old editor snapshots cannot overwrite later edits.
+                        navController.popBackStack()
+                        navController.navigate("$EDITOR_ROUTE?noteId=$id")
+                    },
                     onDeleted = { deletedNote ->
                         navController.popBackStack()
                         if (deletedNote != null) {

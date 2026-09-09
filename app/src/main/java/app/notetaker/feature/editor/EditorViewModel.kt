@@ -14,6 +14,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.emitAll
 import java.util.UUID
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -32,6 +34,8 @@ data class EditorUiState(
     val isMissing: Boolean = false,
     val errorMessage: String? = null,
     val tags: List<Tag> = emptyList(),
+    val noteId: String? = null,
+    val isLinking: Boolean = false,
 )
 
 class EditorViewModel(
@@ -54,6 +58,29 @@ class EditorViewModel(
         _uiState.value = _uiState.value.copy(errorMessage = "Could not load tags.")
         emit(emptyList())
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    val availableNotes = flow { emitAll(repository.observeNotes()) }.catch {
+        _uiState.value = _uiState.value.copy(errorMessage = "Could not load linked notes.")
+        emit(emptyList())
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    fun setLinked(targetId: String, linked: Boolean) {
+        val sourceId = _uiState.value.noteId ?: return
+        if (_uiState.value.isLinking) return
+        _uiState.value = _uiState.value.copy(isLinking = true, errorMessage = null)
+        viewModelScope.launch {
+            try {
+                if (linked) repository.linkNotes(sourceId, targetId)
+                else repository.unlinkNotes(sourceId, targetId)
+            } catch (cancelled: kotlinx.coroutines.CancellationException) {
+                throw cancelled
+            } catch (error: Exception) {
+                _uiState.value = _uiState.value.copy(errorMessage = "Could not update connection. Try again.")
+            } finally {
+                _uiState.value = _uiState.value.copy(isLinking = false)
+            }
+        }
+    }
 
     fun toggleTag(tag: Tag) {
         if (!_uiState.value.isExistingNote) return
@@ -111,6 +138,7 @@ class EditorViewModel(
                             isLoading = false,
                             isExistingNote = true,
                             tags = tags,
+                            noteId = note.id,
                         )
                         if (content != note.content || tags != note.tags) scheduleAutoSave()
                     }
@@ -145,6 +173,7 @@ class EditorViewModel(
     }
 
     fun close(onClosed: () -> Unit) {
+        if (_uiState.value.isLinking) return
         autoSaveJob?.cancel()
         viewModelScope.launch {
             if (saveAndReport()) onClosed()
@@ -155,7 +184,8 @@ class EditorViewModel(
         autoSaveJob?.cancel()
         viewModelScope.launch {
             try {
-                val latest = persistCurrentContent()
+                val saved = persistCurrentContent()
+                val latest = saved?.let { repository.getNote(it.id) }
                 if (latest != null) repository.delete(latest)
                 onDeleted(latest)
             } catch (_: Exception) {
@@ -207,7 +237,7 @@ class EditorViewModel(
         persistedNote = updatedNote
         savedStateHandle[NOTE_ID_KEY] = updatedNote.id
         savedStateHandle[CREATED_AT_KEY] = updatedNote.createdAt
-        _uiState.value = _uiState.value.copy(isExistingNote = true)
+        _uiState.value = _uiState.value.copy(isExistingNote = true, noteId = updatedNote.id)
         updatedNote
     }
 

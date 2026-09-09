@@ -27,4 +27,8 @@ data class NoteWithTags(
         parentColumn = "id", entityColumn = "id",
         associateBy = Junction(NoteTagEntity::class, parentColumn = "noteId", entityColumn = "tagId"),
     ) val tags: List<TagEntity>,
+    @Relation(parentColumn = "id", entityColumn = "firstNoteId")
+    val outgoingLinks: List<NoteLinkEntity>,
+    @Relation(parentColumn = "id", entityColumn = "secondNoteId")
+    val incomingLinks: List<NoteLinkEntity>,
 )

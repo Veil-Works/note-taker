@@ -43,8 +43,13 @@ class RoomNoteRepository(
     override suspend fun upsert(note: Note) {
         noteDao.saveWithTags(note.toEntity(), note.tags.distinctBy { it.id }.map {
             TagEntity(it.id, it.name, it.name.lowercase(Locale.ROOT), it.createdAt)
-        })
+        }, note.linkedNoteIds)
     }
+
+    override suspend fun linkNotes(sourceId: String, targetId: String) = noteDao.connect(sourceId, targetId)
+
+    override suspend fun unlinkNotes(sourceId: String, targetId: String) =
+        noteDao.deleteNoteLink(minOf(sourceId, targetId), maxOf(sourceId, targetId))
 
     override suspend fun delete(note: Note) {
         noteDao.delete(note.toEntity())
@@ -61,6 +66,7 @@ private fun NoteWithTags.toModel() = Note(
     content = note.content,
     createdAt = note.createdAt,
     updatedAt = note.updatedAt,
+    linkedNoteIds = (outgoingLinks.map { it.secondNoteId } + incomingLinks.map { it.firstNoteId }).toSet(),
     tags = tags.sortedBy { it.normalizedName }.map { Tag(it.id, it.name, it.createdAt) },
 )
 

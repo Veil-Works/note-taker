@@ -7,6 +7,7 @@ data class Note(
     val createdAt: Long,
     val updatedAt: Long,
     val tags: List<Tag> = emptyList(),
+    val linkedNoteIds: Set<String> = emptySet(),
 )
 
 fun Note.preview(): String =

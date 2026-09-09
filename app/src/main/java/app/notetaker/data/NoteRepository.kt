@@ -11,5 +11,7 @@ interface NoteRepository {
     fun observeNote(id: String): Flow<Note?>
     suspend fun getNote(id: String): Note?
     suspend fun upsert(note: Note)
+    suspend fun linkNotes(sourceId: String, targetId: String)
+    suspend fun unlinkNotes(sourceId: String, targetId: String)
     suspend fun delete(note: Note)
 }

@@ -1,6 +1,6 @@
 # Note-taker
 
-Note-taker is a small, private, local-first Android notebook. Version 2 adds manual tags to the local notebook described in [`note-taker-product-brief.md`](note-taker-product-brief.md).
+Note-taker is a small, private, local-first Android notebook. Version 3 adds simple connections between notes, alongside manual tags to the local notebook described in [`note-taker-product-brief.md`](note-taker-product-brief.md).
 
 ## Current features
 
@@ -10,6 +10,8 @@ Note-taker is a small, private, local-first Android notebook. Version 2 adds man
 - Tap a saved note to edit it in a compact popup over the list; Done saves pending changes and closes it
 - Create tags and attach/remove them using selectable chips in the note popup
 - Browse tags with the top-bar Tags button and filter notes by one tag alongside text search
+- Connect notes from the editor, search candidates by content or tag, and see notes with shared tags first
+- Open a connected note or remove a connection from either endpoint; links have no relationship types
 - New empty drafts are discarded; existing notes may be empty
 - Most recently edited notes first
 - Case-insensitive literal content search
@@ -108,7 +110,9 @@ Dependencies are assembled by `DefaultAppContainer`; no dependency-injection fra
 - Tags are entirely manual. Capture a note as usual, then open its popup to organize it.
 - Tag names are trimmed, limited to 40 characters, and deduplicated without case differences. Each note can have multiple tags; removing a tag from a note does not remove it from the library.
 - Completing a new note clears search and tag filters so it can appear in the full list.
-- Room schema version 2 migrates v1 notes in place. Deleting a note removes its tag associations; Undo restores the note and its tags together.
+- Room schema version 3 migrates v1/v2 data in place. Deleting a note removes its tags and connections; Undo restores its tags and connections to notes that still exist.
+- Connections are bidirectional and unique. A note cannot connect to itself. Content/tag edits preserve connections.
+- Opening a connected note saves pending edits and replaces the current popup. Done/Back returns to the notes list.
 
 - Note IDs are UUID strings. Timestamps are UTC epoch milliseconds and formatted in the device locale/time zone.
 - Search trims its query and escapes SQLite `%`, `_`, and `\`, so user input is treated literally.
@@ -118,4 +122,4 @@ Dependencies are assembled by `DefaultAppContainer`; no dependency-injection fra
 
 ## Deferred roadmap
 
-Note links, advanced deterministic filters, rule-based suggestions, entities, semantic search, AI, import/export, synchronization, accounts, and cloud services remain deferred. They should be introduced one independently useful stage at a time, in the order and under the constraints defined by the product brief.
+Advanced deterministic filters, rule-based suggestions, entities, semantic search, AI, import/export, synchronization, accounts, and cloud services remain deferred. They should be introduced one independently useful stage at a time, in the order and under the constraints defined by the product brief.

@@ -39,6 +39,29 @@ class FakeNoteRepository(initialNotes: List<Note> = emptyList()) : NoteRepositor
         notes.value = notes.value.filterNot { it.id == note.id } + note
     }
 
+    override suspend fun linkNotes(sourceId: String, targetId: String) {
+        failure?.let { throw it }
+        require(sourceId != targetId)
+        notes.value = notes.value.map {
+            when (it.id) {
+                sourceId -> it.copy(linkedNoteIds = it.linkedNoteIds + targetId)
+                targetId -> it.copy(linkedNoteIds = it.linkedNoteIds + sourceId)
+                else -> it
+            }
+        }
+    }
+
+    override suspend fun unlinkNotes(sourceId: String, targetId: String) {
+        failure?.let { throw it }
+        notes.value = notes.value.map {
+            when (it.id) {
+                sourceId -> it.copy(linkedNoteIds = it.linkedNoteIds - targetId)
+                targetId -> it.copy(linkedNoteIds = it.linkedNoteIds - sourceId)
+                else -> it
+            }
+        }
+    }
+
     override suspend fun delete(note: Note) {
         failure?.let { throw it }
         deletedNotes += note

@@ -1,5 +1,17 @@
 # Changelog
 
+## 3.0.0 — 2026-09-09
+
+- Connect notes with simple, bidirectional links; no relationship types.
+- Search connection candidates by content or tag, with shared-tag notes first.
+- Show connected notes in the editor, save before navigating, and remove links from either note.
+- Prevent self-links and duplicate connections; preserve connections during content/tag edits.
+- Migrate v1/v2 databases in place. Deletion removes connections; Undo restores links to surviving notes.
+
+Validation: unit tests and lint passed; nine isolated database and UI tests passed
+on the connected phone, covering migration, persistence, link creation/navigation/removal,
+and tag regression. App updated in place without clearing phone storage.
+
 ## 2.0.0 — 2026-09-09
 
 - Manual tag creation, multi-tag assignment, and removal in the note popup.

@@ -55,11 +55,30 @@ interface NoteDao {
     @Query("DELETE FROM note_tags WHERE noteId = :id")
     suspend fun clearLinks(id: String)
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertNoteLink(link: NoteLinkEntity)
+
+    @Query("DELETE FROM note_links WHERE firstNoteId = :first AND secondNoteId = :second")
+    suspend fun deleteNoteLink(first: String, second: String)
+
     @Transaction
-    suspend fun saveWithTags(note: NoteEntity, tags: List<TagEntity>) {
+    suspend fun connect(source: String, target: String) {
+        require(source != target) { "A note cannot link to itself." }
+        check(getById(source) != null && getById(target) != null) { "This note no longer exists." }
+        insertNoteLink(NoteLinkEntity(minOf(source, target), maxOf(source, target)))
+    }
+
+    @Transaction
+    suspend fun saveWithTags(note: NoteEntity, tags: List<TagEntity>, linkedNoteIds: Set<String>) {
+        val restoring = getById(note.id) == null
         upsert(note)
         tags.forEach { insertTag(it) }
         clearLinks(note.id)
         insertLinks(tags.map { NoteTagEntity(note.id, it.id) })
+        // Restoring a deleted note restores only links whose other endpoint still exists.
+        // Ordinary content/tag saves must never overwrite independently edited links.
+        if (restoring) linkedNoteIds.filter { it != note.id }.forEach { target ->
+            if (getById(target) != null) connect(note.id, target)
+        }
     }
 }

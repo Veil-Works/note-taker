@@ -33,6 +33,35 @@ class EditorViewModelTest {
         assertEquals("Original", repository.getNote("note")!!.content)
     }
 
+    @Test
+    fun `delete includes connections added after opening the editor`() = runTest {
+        val repository = FakeNoteRepository(listOf(Note("a", "Plan", 1, 1), Note("b", "Log", 1, 1)))
+        val viewModel = editor(repository, "a")
+        advanceUntilIdle()
+        viewModel.setLinked("b", true)
+        advanceUntilIdle()
+        var deleted: Note? = null
+        viewModel.delete { deleted = it }
+        advanceUntilIdle()
+        assertEquals(setOf("b"), deleted!!.linkedNoteIds)
+    }
+
+    @Test
+    fun `failed connection reports error and can be retried`() = runTest {
+        val repository = FakeNoteRepository(listOf(Note("a", "Plan", 1, 1), Note("b", "Log", 1, 1)))
+        val viewModel = editor(repository, "a")
+        advanceUntilIdle()
+        repository.failure = IllegalStateException("disk full")
+        viewModel.setLinked("b", true)
+        advanceUntilIdle()
+        assertNotNull(viewModel.uiState.value.errorMessage)
+        assertFalse(viewModel.uiState.value.isLinking)
+        repository.failure = null
+        viewModel.setLinked("b", true)
+        advanceUntilIdle()
+        assertEquals(setOf("b"), repository.getNote("a")!!.linkedNoteIds)
+    }
+
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 

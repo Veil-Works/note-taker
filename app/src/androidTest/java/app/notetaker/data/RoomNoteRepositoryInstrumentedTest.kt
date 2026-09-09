@@ -73,6 +73,83 @@ class RoomNoteRepositoryInstrumentedTest {
     }
 
     @Test
+    fun connections_are_bidirectional_unique_and_survive_edit_delete_undo() = runTest {
+        val a = Note("a", "Training plan", 1, 1)
+        val b = Note("b", "Running log", 2, 2)
+        repository.upsert(a)
+        repository.upsert(b)
+        repository.linkNotes("a", "b")
+        repository.linkNotes("b", "a")
+        assertEquals(setOf("b"), repository.getNote("a")!!.linkedNoteIds)
+        assertEquals(setOf("a"), repository.getNote("b")!!.linkedNoteIds)
+        repository.upsert(a.copy(content = "Updated plan"))
+        assertEquals(setOf("b"), repository.getNote("a")!!.linkedNoteIds)
+        val snapshot = repository.getNote("b")!!
+        repository.delete(snapshot)
+        assertEquals(emptySet<String>(), repository.getNote("a")!!.linkedNoteIds)
+        repository.upsert(snapshot)
+        assertEquals(setOf("b"), repository.getNote("a")!!.linkedNoteIds)
+        repository.unlinkNotes("b", "a")
+        assertEquals(emptySet<String>(), repository.getNote("a")!!.linkedNoteIds)
+        assertEquals(emptySet<String>(), repository.getNote("b")!!.linkedNoteIds)
+        repository.upsert(snapshot.copy(content = "Stale editor save"))
+        assertEquals(emptySet<String>(), repository.getNote("b")!!.linkedNoteIds)
+    }
+
+    @Test
+    fun invalid_connections_are_rejected_and_undo_skips_deleted_targets() = runTest {
+        repository.upsert(Note("a", "Plan", 1, 1))
+        repository.upsert(Note("b", "Log", 1, 1))
+        org.junit.Assert.assertTrue(runCatching { repository.linkNotes("a", "a") }.isFailure)
+        org.junit.Assert.assertTrue(runCatching { repository.linkNotes("a", "missing") }.isFailure)
+        repository.linkNotes("a", "b")
+        val snapshot = repository.getNote("a")!!
+        repository.delete(snapshot)
+        repository.delete(repository.getNote("b")!!)
+        repository.upsert(snapshot)
+        assertEquals(emptySet<String>(), repository.getNote("a")!!.linkedNoteIds)
+    }
+
+    @Test
+    fun migration_from_v2_preserves_tags_and_persists_connections_after_reopen() = runTest {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val name = "migration-v2-${java.util.UUID.randomUUID()}.db"
+        val path = context.getDatabasePath(name)
+        path.parentFile!!.mkdirs()
+        android.database.sqlite.SQLiteDatabase.openOrCreateDatabase(path, null).use { old ->
+            old.execSQL("CREATE TABLE notes (id TEXT NOT NULL PRIMARY KEY, content TEXT NOT NULL, createdAt INTEGER NOT NULL, updatedAt INTEGER NOT NULL)")
+            old.execSQL("CREATE INDEX index_notes_updatedAt ON notes(updatedAt)")
+            old.execSQL("CREATE TABLE tags (id TEXT NOT NULL PRIMARY KEY, name TEXT NOT NULL, normalizedName TEXT NOT NULL, createdAt INTEGER NOT NULL)")
+            old.execSQL("CREATE UNIQUE INDEX index_tags_normalizedName ON tags(normalizedName)")
+            old.execSQL("CREATE TABLE note_tags (noteId TEXT NOT NULL, tagId TEXT NOT NULL, PRIMARY KEY(noteId, tagId), FOREIGN KEY(noteId) REFERENCES notes(id) ON UPDATE NO ACTION ON DELETE CASCADE, FOREIGN KEY(tagId) REFERENCES tags(id) ON UPDATE NO ACTION ON DELETE CASCADE)")
+            old.execSQL("CREATE INDEX index_note_tags_tagId ON note_tags(tagId)")
+            old.execSQL("INSERT INTO notes VALUES ('a', 'Plan', 10, 20), ('b', 'Log', 30, 40)")
+            old.execSQL("INSERT INTO tags VALUES ('t', 'Running', 'running', 1)")
+            old.execSQL("INSERT INTO note_tags VALUES ('a', 't')")
+            old.version = 2
+        }
+        try {
+            val migrated = Room.databaseBuilder(context, NoteDatabase::class.java, name)
+                .addMigrations(NoteDatabase.MIGRATION_2_3).build()
+            try {
+                val repo = RoomNoteRepository(migrated.noteDao())
+                val note = repo.getNote("a")!!
+                assertEquals("Plan", note.content)
+                assertEquals(10L, note.createdAt)
+                assertEquals(20L, note.updatedAt)
+                assertEquals("Running", note.tags.single().name)
+                repo.linkNotes("a", "b")
+            } finally { migrated.close() }
+            val reopened = Room.databaseBuilder(context, NoteDatabase::class.java, name).build()
+            try {
+                val repo = RoomNoteRepository(reopened.noteDao())
+                assertEquals(setOf("b"), repo.getNote("a")!!.linkedNoteIds)
+                assertEquals(setOf("a"), repo.getNote("b")!!.linkedNoteIds)
+            } finally { reopened.close() }
+        } finally { context.deleteDatabase(name) }
+    }
+
+    @Test
     fun migration_from_v1_preserves_notes_and_allows_tagging() = runTest {
         val context = ApplicationProvider.getApplicationContext<Context>()
         val name = "migration-test-${java.util.UUID.randomUUID()}.db"
@@ -86,7 +163,7 @@ class RoomNoteRepositoryInstrumentedTest {
         }
         try {
             val migrated = Room.databaseBuilder(context, NoteDatabase::class.java, name)
-                .addMigrations(NoteDatabase.MIGRATION_1_2).build()
+                .addMigrations(NoteDatabase.MIGRATION_1_2, NoteDatabase.MIGRATION_2_3).build()
             try {
                 val repo = RoomNoteRepository(migrated.noteDao())
                 val note = repo.getNote("v1-note")!!
