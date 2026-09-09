@@ -15,8 +15,7 @@ class DefaultAppContainer(context: Context) : AppContainer {
         context.applicationContext,
         NoteDatabase::class.java,
         "notes.db",
-    ).build()
+    ).addMigrations(NoteDatabase.MIGRATION_1_2).build()
 
     override val noteRepository: NoteRepository = RoomNoteRepository(database.noteDao())
 }
-

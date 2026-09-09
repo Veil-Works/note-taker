@@ -18,6 +18,27 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class NotesViewModelTest {
     @Test
+    fun `tag filter combines with search and clears for new capture`() = runTest {
+        val tag = app.notetaker.model.Tag("tag", "Work", 1)
+        val tagged = Note("tagged", "Meeting", 1, 1, listOf(tag))
+        val repository = FakeNoteRepository(listOf(tagged, Note("other", "Meeting", 1, 1)))
+        val viewModel = NotesViewModel(repository, SavedStateHandle())
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.uiState.collect() }
+        viewModel.selectTag(tag.id)
+        viewModel.onQueryChanged("Meeting")
+        advanceUntilIdle()
+        assertEquals(listOf(tagged), viewModel.uiState.value.notes)
+        viewModel.onQueryChanged("absent")
+        advanceUntilIdle()
+        assertEquals(emptyList<Note>(), viewModel.uiState.value.notes)
+        viewModel.onDraftChanged("New")
+        viewModel.completeNote()
+        advanceUntilIdle()
+        assertEquals(null, viewModel.selectedTag.value)
+        assertEquals(3, viewModel.uiState.value.notes.size)
+    }
+
+    @Test
     fun `capture saves only on completion and clears after success`() = runTest {
         val repository = FakeNoteRepository()
         val viewModel = NotesViewModel(repository, SavedStateHandle())

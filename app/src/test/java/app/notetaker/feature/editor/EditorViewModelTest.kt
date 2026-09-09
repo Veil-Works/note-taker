@@ -17,6 +17,22 @@ import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class EditorViewModelTest {
+    @Test
+    fun `tags can be attached and removed without changing content`() = runTest {
+        val note = Note("note", "Original", 1, 2)
+        val repository = FakeNoteRepository(listOf(note))
+        val viewModel = editor(repository, "note")
+        advanceUntilIdle()
+        val tag = app.notetaker.model.Tag("tag", "Research", 1)
+        viewModel.toggleTag(tag)
+        advanceUntilIdle()
+        assertEquals(listOf(tag), repository.getNote("note")!!.tags)
+        viewModel.toggleTag(tag)
+        advanceUntilIdle()
+        assertEquals(emptyList<app.notetaker.model.Tag>(), repository.getNote("note")!!.tags)
+        assertEquals("Original", repository.getNote("note")!!.content)
+    }
+
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 

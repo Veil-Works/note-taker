@@ -24,6 +24,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.notetaker.model.Note
+import app.notetaker.ui.TagPicker
 
 /** The list destination remains visible beneath this navigation dialog. */
 @Composable
@@ -34,6 +35,7 @@ fun EditorScreen(
     onDeleted: (Note?) -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val tags by viewModel.availableTags.collectAsStateWithLifecycle()
     fun close() = viewModel.close(onClose)
     BackHandler(onBack = ::close)
     LifecycleEventEffect(Lifecycle.Event.ON_STOP) { viewModel.flush() }
@@ -60,6 +62,10 @@ fun EditorScreen(
                     maxLines = 8,
                     placeholder = { Text("Write a note…") },
                 )
+            }
+            if (state.isExistingNote) {
+                Text("Tags", style = MaterialTheme.typography.labelLarge)
+                TagPicker(tags, state.tags.map { it.id }.toSet(), viewModel::toggleTag, viewModel::createTag)
             }
             state.errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error) }
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {

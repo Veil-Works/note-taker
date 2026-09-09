@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.0.0 — 2026-09-09
+
+- Manual tag creation, multi-tag assignment, and removal in the note popup.
+- Clear the tag-name field after successful creation so the next tag can be entered immediately; retain input on failure.
+- Tag labels on notes and a tag browser/filter above the list.
+- Combined tag and text filtering; completion clears filters to reveal new notes.
+- Case-insensitive tag deduplication and atomic note/tag updates.
+- Room migration from version 1 preserving existing note records.
+- Delete/Undo restores tag associations as well as note content.
+
+Validation: unit tests and lint passed; five isolated database and UI tests passed
+on the connected phone, covering migration and creating, attaching, filtering,
+and removing tags. App updated in place without clearing phone storage.
+
 ## 1.0.0 — 2026-09-09
 
 First local Android notebook release.
@@ -16,7 +30,7 @@ popup editing passed on the connected phone. Broader manual acceptance items
 remain listed in MVP_ACCEPTANCE.md. The installable APK uses debug signing;
 private release signing requires the owner's keystore.
 
-## Planned v2 — Tags and manual organization
+## Roadmap reference — Tags and manual organization (delivered in v2)
 
 - Create and display tags.
 - Attach multiple tags to a note and remove them.

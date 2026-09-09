@@ -9,6 +9,11 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import app.notetaker.data.NoteRepository
 import app.notetaker.model.Note
+import app.notetaker.model.Tag
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import java.util.UUID
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -26,6 +31,7 @@ data class EditorUiState(
     val isExistingNote: Boolean = false,
     val isMissing: Boolean = false,
     val errorMessage: String? = null,
+    val tags: List<Tag> = emptyList(),
 )
 
 class EditorViewModel(
@@ -44,6 +50,33 @@ class EditorViewModel(
         ),
     )
     val uiState: StateFlow<EditorUiState> = _uiState.asStateFlow()
+    val availableTags = repository.observeTags().catch {
+        _uiState.value = _uiState.value.copy(errorMessage = "Could not load tags.")
+        emit(emptyList())
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    fun toggleTag(tag: Tag) {
+        if (!_uiState.value.isExistingNote) return
+        val selected = _uiState.value.tags
+        val tags = if (selected.any { it.id == tag.id }) selected.filterNot { it.id == tag.id } else selected + tag
+        savedStateHandle["editor_tag_ids"] = ArrayList(tags.map { it.id })
+        _uiState.value = _uiState.value.copy(tags = tags)
+        scheduleAutoSave()
+    }
+
+    fun createTag(name: String, onCreated: () -> Unit) {
+        viewModelScope.launch {
+            try {
+                val tag = repository.createTag(name)
+                if (_uiState.value.tags.none { it.id == tag.id }) toggleTag(tag)
+                onCreated()
+            } catch (cancelled: kotlinx.coroutines.CancellationException) {
+                throw cancelled
+            } catch (error: Exception) {
+                _uiState.value = _uiState.value.copy(errorMessage = error.message ?: "Could not create tag.")
+            }
+        }
+    }
 
     private var persistedNote: Note? = null
     private var autoSaveJob: Job? = null
@@ -70,13 +103,16 @@ class EditorViewModel(
                         savedStateHandle[NOTE_ID_KEY] = note.id
                         savedStateHandle[CREATED_AT_KEY] = note.createdAt
                         val content = restoredContent ?: note.content
+                        val savedTagIds = savedStateHandle.get<ArrayList<String>>("editor_tag_ids")
+                        val tags = if (savedTagIds == null) note.tags else repository.observeTags().first().filter { it.id in savedTagIds }
                         savedStateHandle[CONTENT_KEY] = content
                         _uiState.value = _uiState.value.copy(
                             content = content,
                             isLoading = false,
                             isExistingNote = true,
+                            tags = tags,
                         )
-                        if (content != note.content) scheduleAutoSave()
+                        if (content != note.content || tags != note.tags) scheduleAutoSave()
                     }
                 }
                 .onFailure {
@@ -155,10 +191,11 @@ class EditorViewModel(
         val current = persistedNote
 
         if (current == null && content.isBlank()) return@withLock null
-        if (current?.content == content) return@withLock current
+        val tags = _uiState.value.tags
+        if (current?.content == content && current.tags == tags) return@withLock current
 
         val timestamp = now()
-        val updatedNote = current?.copy(content = content, updatedAt = timestamp)
+        val updatedNote = current?.copy(content = content, updatedAt = timestamp, tags = tags)
             ?: Note(
                 id = newId(),
                 content = content,

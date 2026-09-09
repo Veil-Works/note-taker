@@ -6,6 +6,7 @@ data class Note(
     val content: String,
     val createdAt: Long,
     val updatedAt: Long,
+    val tags: List<Tag> = emptyList(),
 )
 
 fun Note.preview(): String =
@@ -13,4 +14,3 @@ fun Note.preview(): String =
         .map(String::trim)
         .firstOrNull(String::isNotEmpty)
         ?: "Empty note"
-

@@ -7,6 +7,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 
 class FakeNoteRepository(initialNotes: List<Note> = emptyList()) : NoteRepository {
+    override fun observeTags() = kotlinx.coroutines.flow.flowOf(emptyList<app.notetaker.model.Tag>())
+    override suspend fun createTag(name: String) = app.notetaker.model.Tag(name, name, 0)
     private val notes = MutableStateFlow(initialNotes)
     val savedNotes = mutableListOf<Note>()
     val deletedNotes = mutableListOf<Note>()
@@ -43,4 +45,3 @@ class FakeNoteRepository(initialNotes: List<Note> = emptyList()) : NoteRepositor
         notes.value = notes.value.filterNot { it.id == note.id }
     }
 }
-

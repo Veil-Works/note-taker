@@ -44,6 +44,20 @@ class NotesViewModel(
     private val repository: NoteRepository,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
+    val tags = repository.observeTags().catch { emit(emptyList()) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+    val selectedTag = savedStateHandle.getStateFlow<String?>("selected_tag", null)
+    fun selectTag(id: String?) { savedStateHandle["selected_tag"] = id }
+    fun createTag(name: String, onCreated: () -> Unit) {
+        viewModelScope.launch {
+            try {
+                repository.createTag(name)
+                _captureError.value = null
+                onCreated()
+            } catch (cancelled: CancellationException) { throw cancelled }
+            catch (error: Exception) { _captureError.value = error.message ?: "Could not create tag." }
+        }
+    }
     val draft = savedStateHandle.getStateFlow("capture_text", "")
     private val _saving = MutableStateFlow(false)
     val saving: StateFlow<Boolean> = _saving
@@ -71,6 +85,7 @@ class NotesViewModel(
                 pendingNote = null
                 _captureError.value = null
                 onQueryChanged("")
+                selectTag(null)
             } catch (cancelled: CancellationException) {
                 throw cancelled
             } catch (_: Exception) {
@@ -92,10 +107,10 @@ class NotesViewModel(
                 .catch { emit(NotesResult.Error("Could not load notes.")) }
         }
 
-    val uiState: StateFlow<NotesUiState> = combine(query, results) { currentQuery, result ->
+    val uiState: StateFlow<NotesUiState> = combine(query, results, selectedTag) { currentQuery, result, tagId ->
         when (result) {
             NotesResult.Loading -> NotesUiState(query = currentQuery, isLoading = true)
-            is NotesResult.Success -> NotesUiState(query = currentQuery, notes = result.notes, isLoading = false)
+            is NotesResult.Success -> NotesUiState(query = currentQuery, notes = result.notes.filter { note -> tagId == null || note.tags.any { it.id == tagId } }, isLoading = false)
             is NotesResult.Error -> NotesUiState(
                 query = currentQuery,
                 isLoading = false,

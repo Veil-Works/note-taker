@@ -1,6 +1,6 @@
 # Note-taker
 
-Note-taker is a small, private, local-first Android notebook. The current release is the production MVP described in [`note-taker-product-brief.md`](note-taker-product-brief.md): capture, edit, delete, and search plain-text notes without an account or network connection.
+Note-taker is a small, private, local-first Android notebook. Version 2 adds manual tags to the local notebook described in [`note-taker-product-brief.md`](note-taker-product-brief.md).
 
 ## Current features
 
@@ -8,6 +8,8 @@ Note-taker is a small, private, local-first Android notebook. The current releas
 - New notes save only when the checkmark (Complete note) is tapped; successful completion clears the field
 - Existing-note edits autosave after 600 ms and when leaving/backgrounding the editor
 - Tap a saved note to edit it in a compact popup over the list; Done saves pending changes and closes it
+- Create tags and attach/remove them using selectable chips in the note popup
+- Browse tags with the top-bar Tags button and filter notes by one tag alongside text search
 - New empty drafts are discarded; existing notes may be empty
 - Most recently edited notes first
 - Case-insensitive literal content search
@@ -103,6 +105,11 @@ Dependencies are assembled by `DefaultAppContainer`; no dependency-injection fra
 
 ## Behavioral details
 
+- Tags are entirely manual. Capture a note as usual, then open its popup to organize it.
+- Tag names are trimmed, limited to 40 characters, and deduplicated without case differences. Each note can have multiple tags; removing a tag from a note does not remove it from the library.
+- Completing a new note clears search and tag filters so it can appear in the full list.
+- Room schema version 2 migrates v1 notes in place. Deleting a note removes its tag associations; Undo restores the note and its tags together.
+
 - Note IDs are UUID strings. Timestamps are UTC epoch milliseconds and formatted in the device locale/time zone.
 - Search trims its query and escapes SQLite `%`, `_`, and `\`, so user input is treated literally.
 - A new database row is created only on completion of a non-blank draft. Failed completion retains the text for retry. Completing during search clears the filter so the new note appears in the list.
@@ -111,4 +118,4 @@ Dependencies are assembled by `DefaultAppContainer`; no dependency-injection fra
 
 ## Deferred roadmap
 
-Tags, note links, advanced deterministic filters, rule-based suggestions, entities, semantic search, AI, import/export, synchronization, accounts, and cloud services remain deferred. They should be introduced one independently useful stage at a time, in the order and under the constraints defined by the product brief.
+Note links, advanced deterministic filters, rule-based suggestions, entities, semantic search, AI, import/export, synchronization, accounts, and cloud services remain deferred. They should be introduced one independently useful stage at a time, in the order and under the constraints defined by the product brief.

@@ -53,6 +53,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.notetaker.model.Note
 import app.notetaker.model.preview
+import app.notetaker.ui.TagPicker
+import androidx.compose.material3.TextButton
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -65,6 +67,9 @@ fun NotesScreen(
     onOpenNote: (String) -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val tags by viewModel.tags.collectAsStateWithLifecycle()
+    val selectedTag by viewModel.selectedTag.collectAsStateWithLifecycle()
+    var showTags by remember { mutableStateOf(false) }
     val draft by viewModel.draft.collectAsStateWithLifecycle()
     val saving by viewModel.saving.collectAsStateWithLifecycle()
     val captureError by viewModel.captureError.collectAsStateWithLifecycle()
@@ -74,6 +79,7 @@ fun NotesScreen(
 
     Scaffold(
         topBar = {
+            Column {
             if (searching) {
                 SearchBar(
                     query = state.query,
@@ -87,11 +93,19 @@ fun NotesScreen(
                 TopAppBar(
                     title = { Text("Notes") },
                     actions = {
+                        TextButton(onClick = { showTags = !showTags }) { Text("Tags") }
                         IconButton(onClick = { searching = true }) {
                             Icon(Icons.Default.Search, contentDescription = "Search notes")
                         }
                     },
                 )
+            }
+            if (showTags || selectedTag != null) {
+                Column(Modifier.padding(horizontal = 12.dp)) {
+                    TextButton(onClick = { viewModel.selectTag(null) }) { Text(if (selectedTag == null) "All notes" else "Clear tag filter") }
+                    TagPicker(tags, setOfNotNull(selectedTag), { tag -> viewModel.selectTag(if (selectedTag == tag.id) null else tag.id) }, viewModel::createTag)
+                }
+            }
             }
         },
     ) { padding ->
@@ -100,7 +114,8 @@ fun NotesScreen(
                 state.isLoading -> LoadingContent()
                 state.errorMessage != null -> MessageContent(state.errorMessage)
                 state.notes.isEmpty() -> MessageContent(
-                    if (state.query.isBlank()) "No notes yet. Write your first thought below."
+                    if (selectedTag != null) "No notes match this tag and search."
+                    else if (state.query.isBlank()) "No notes yet. Write your first thought below."
                     else "No notes match your search.",
                     Modifier.padding(bottom = bottomSpace),
                 )
@@ -208,6 +223,8 @@ private fun NoteRow(note: Note, onClick: () -> Unit) {
             )
         },
         supportingContent = {
+            Column {
+            if (note.tags.isNotEmpty()) Text(note.tags.joinToString(" · ") { it.name }, style = MaterialTheme.typography.labelMedium)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End,
@@ -217,6 +234,7 @@ private fun NoteRow(note: Note, onClick: () -> Unit) {
                     text = remember(note.updatedAt) { formatTimestamp(note.updatedAt) },
                     style = MaterialTheme.typography.labelMedium,
                 )
+            }
             }
         },
         modifier = Modifier.clickable(

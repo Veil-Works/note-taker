@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun NoteTakerApp(repository: NoteRepository) {
+internal fun NoteTakerApp(repository: NoteRepository) {
     val navController = rememberNavController()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
