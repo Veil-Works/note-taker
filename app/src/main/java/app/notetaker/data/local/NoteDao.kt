@@ -11,6 +11,36 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NoteDao {
+    @Query("SELECT * FROM tag_aliases ORDER BY normalizedText, id")
+    fun observeAliases(): Flow<List<TagAliasEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertAlias(alias: TagAliasEntity)
+
+    @Query("DELETE FROM tag_aliases WHERE id = :id")
+    suspend fun deleteAlias(id: String)
+
+    @Transaction
+    suspend fun saveAlias(alias: TagAliasEntity) {
+        deleteAlias(alias.id)
+        insertAlias(alias)
+    }
+
+    @Query("SELECT tagId FROM tag_dismissals WHERE noteId = :noteId")
+    fun observeDismissals(noteId: String): Flow<List<String>>
+
+    @Query("DELETE FROM tag_dismissals WHERE noteId = :noteId")
+    suspend fun clearDismissals(noteId: String)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertDismissal(dismissal: TagDismissalEntity)
+
+    @Transaction
+    suspend fun dismiss(noteId: String, tagId: String, content: String) {
+        // An evaluation of older text must not dismiss a suggestion for newer text.
+        if (getById(noteId)?.note?.content == content) insertDismissal(TagDismissalEntity(noteId, tagId))
+    }
+
     @Transaction
     @Query("SELECT * FROM notes ORDER BY updatedAt DESC")
     fun observeAll(): Flow<List<NoteWithTags>>
@@ -70,7 +100,9 @@ interface NoteDao {
 
     @Transaction
     suspend fun saveWithTags(note: NoteEntity, tags: List<TagEntity>, linkedNoteIds: Set<String>) {
-        val restoring = getById(note.id) == null
+        val previous = getById(note.id)
+        val restoring = previous == null
+        if (previous != null && previous.note.content != note.content) clearDismissals(note.id)
         upsert(note)
         tags.forEach { insertTag(it) }
         clearLinks(note.id)

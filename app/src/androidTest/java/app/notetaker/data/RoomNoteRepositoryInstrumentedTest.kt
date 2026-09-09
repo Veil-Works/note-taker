@@ -130,7 +130,7 @@ class RoomNoteRepositoryInstrumentedTest {
         }
         try {
             val migrated = Room.databaseBuilder(context, NoteDatabase::class.java, name)
-                .addMigrations(NoteDatabase.MIGRATION_2_3).build()
+                .addMigrations(NoteDatabase.MIGRATION_2_3, NoteDatabase.MIGRATION_3_4).build()
             try {
                 val repo = RoomNoteRepository(migrated.noteDao())
                 val note = repo.getNote("a")!!
@@ -163,7 +163,7 @@ class RoomNoteRepositoryInstrumentedTest {
         }
         try {
             val migrated = Room.databaseBuilder(context, NoteDatabase::class.java, name)
-                .addMigrations(NoteDatabase.MIGRATION_1_2, NoteDatabase.MIGRATION_2_3).build()
+                .addMigrations(NoteDatabase.MIGRATION_1_2, NoteDatabase.MIGRATION_2_3, NoteDatabase.MIGRATION_3_4).build()
             try {
                 val repo = RoomNoteRepository(migrated.noteDao())
                 val note = repo.getNote("v1-note")!!

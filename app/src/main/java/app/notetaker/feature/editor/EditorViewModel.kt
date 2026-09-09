@@ -10,6 +10,10 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import app.notetaker.data.NoteRepository
 import app.notetaker.model.Note
 import app.notetaker.model.Tag
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.catch
@@ -54,6 +58,48 @@ class EditorViewModel(
         ),
     )
     val uiState: StateFlow<EditorUiState> = _uiState.asStateFlow()
+    val aliases = repository.observeAliases().catch {
+        _uiState.value = _uiState.value.copy(errorMessage = "Could not load keywords.")
+        emit(emptyList())
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    val suggestions = uiState.map { it.noteId }.distinctUntilChanged().flatMapLatest { id ->
+        if (id == null) flowOf(emptyList()) else repository.observeSuggestions(id)
+    }.catch {
+        _uiState.value = _uiState.value.copy(errorMessage = "Could not load suggestions.")
+        emit(emptyList())
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    fun saveAlias(tagId: String, aliasId: String?, text: String, onSaved: () -> Unit) = keywordAction {
+        repository.saveAlias(tagId, aliasId, text)
+        onSaved()
+    }
+
+    fun deleteAlias(id: String) = keywordAction { repository.deleteAlias(id) }
+
+    fun dismissSuggestion(tag: Tag) {
+        val note = persistedNote ?: return
+        keywordAction { repository.dismissSuggestion(note.id, tag.id, note.content) }
+    }
+
+    fun acceptSuggestion(tag: Tag) {
+        if (_uiState.value.tags.none { it.id == tag.id }) {
+            toggleTag(tag)
+            flush()
+        }
+    }
+
+    private fun keywordAction(action: suspend () -> Unit) {
+        viewModelScope.launch {
+            try { action() }
+            catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled }
+            catch (error: Exception) {
+                _uiState.value = _uiState.value.copy(errorMessage = error.message ?: "Could not update suggestions.")
+            }
+        }
+    }
+
     val availableTags = repository.observeTags().catch {
         _uiState.value = _uiState.value.copy(errorMessage = "Could not load tags.")
         emit(emptyList())

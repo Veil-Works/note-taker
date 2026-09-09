@@ -471,18 +471,46 @@ This stage should remain deterministic.
 
 ### Goal
 
-Introduce the first automatic assistance without relying on LLMs.
+Suggest existing tags from note text using predictable, local rules. V5 uses
+tag names and user-editable keywords/aliases; it does not require an LLM.
 
-Possible mechanisms:
+### Required functionality
 
-- keyword matching;
-- alias matching;
-- known-tag dictionary;
-- simple tokenization;
-- fuzzy string matching;
-- frequency analysis.
+- Add, edit, and remove keywords/aliases associated with an existing tag.
+- Match note text against both tag names and their configured keywords/aliases.
+- Evaluate suggestions after a note is saved or its edits are saved, without
+  delaying quick capture.
+- Display matching tags as suggestion chips in the note editor.
+- Exclude tags already attached to the note and show each suggested tag only once.
+- Let the user accept or dismiss each suggestion, or adjust its underlying
+  keywords/aliases. Existing manual tag selection remains available.
+- Accepting a suggestion attaches the existing tag. Never attach a suggested
+  tag automatically or create a new tag from a match.
 
-Example:
+### Matching rules
+
+- Ignore capitalization and match whole words or phrases at word boundaries.
+  For example, the alias `run` must not match the substring in `brunch`.
+- Support multi-word aliases such as `bench press` and `Alpha rollout`.
+- Trim alias input, reject blank aliases, and deduplicate aliases within a tag
+  without regard to capitalization.
+- Allow an alias to belong to multiple tags; a phrase may suggest more than
+  one relevant tag.
+- Keep results deterministic. Fuzzy matching, semantic inference, and learned
+  recommendations are outside this version's scope.
+
+### Example configuration
+
+| Existing tag | User-configured keywords/aliases |
+| --- | --- |
+| `running` | `running`, `jog`, `5k`, `marathon` |
+| `strength-training` | `bench press`, `deadlift`, `squat` |
+| `project-alpha` | `Project Alpha`, `Alpha rollout` |
+
+These are examples, not a built-in vocabulary. Suggestions depend on the user's
+existing tags and configured aliases.
+
+With `bench press` configured for both `bench-press` and `strength-training`:
 
 ```text
 User writes:
@@ -493,13 +521,27 @@ bench-press
 strength-training
 ```
 
-Suggested tags should not necessarily be applied automatically.
+### Dismissal and persistence
 
-The user should be able to:
+- A dismissed suggestion stays dismissed while the note text is unchanged,
+  including after reopening the editor or restarting the app.
+- Editing tags alone does not reset dismissals. When saved note text changes,
+  reevaluate suggestions; previously dismissed tags may be suggested again.
+- Store aliases and dismissal state locally and preserve existing notes, tags,
+  and connections through any required database migration.
 
-- accept;
-- reject;
-- modify.
+### Success criteria
+
+- A configured word or phrase suggests the expected existing tags regardless
+  of capitalization, without matching inside unrelated words.
+- Attached tags are not suggested, and multiple matching aliases produce only
+  one chip per tag.
+- Accepting attaches the tag; dismissing leaves note tags unchanged and stays
+  effective for unchanged text across app restarts.
+- Alias edits affect subsequent evaluations, while dismissals for unchanged
+  note text remain respected.
+- Capture and manual organization continue to work entirely offline. The app
+  does not infer themes from vocabulary that has not been configured.
 
 ---
 
@@ -1169,7 +1211,9 @@ Add:
 
 ## Milestone 7 — Automatic Suggestions
 
-Add lightweight automatic tag/relationship suggestions without an LLM.
+Implement the v5 tag-name and editable-alias matching specified in Stage 5,
+including suggestion chips, explicit acceptance, and persistent dismissals.
+Automatic relationship suggestions remain deferred.
 
 ---
 

@@ -1,7 +1,16 @@
 package app.notetaker
 
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.performScrollTo
+import android.content.Context
+import androidx.room.Room
+import androidx.test.core.app.ApplicationProvider
+import app.notetaker.data.RoomNoteRepository
+import app.notetaker.data.local.NoteDatabase
+import app.notetaker.ui.theme.NoteTakerTheme
+import org.junit.Before
+import org.junit.After
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
@@ -30,7 +39,6 @@ import org.junit.Test
 class NoteCaptureFlowTest {
     @Test
     fun existing_note_edits_in_popup_and_returns_to_list() {
-        val repository = (composeRule.activity.application as NoteTakerApplication).container.noteRepository
         val now = System.currentTimeMillis()
         val note = Note(java.util.UUID.randomUUID().toString(), "Popup check $now", now, now)
         runBlocking { repository.upsert(note) }
@@ -47,7 +55,7 @@ class NoteCaptureFlowTest {
                 composeRule.onAllNodesWithText(note.content).fetchSemanticsNodes().size >= 2
             }
             composeRule.onNodeWithTag("note_popup_content").performTextReplacement("Updated $now")
-            composeRule.onNodeWithText("Done").performClick()
+            composeRule.onNodeWithText("Done").performScrollTo().performClick()
             composeRule.waitUntil(5_000) {
                 composeRule.onAllNodesWithText("Updated $now").fetchSemanticsNodes().isNotEmpty()
                     && composeRule.onAllNodesWithText("Done").fetchSemanticsNodes().isEmpty()
@@ -59,7 +67,17 @@ class NoteCaptureFlowTest {
     }
 
     @get:Rule
-    val composeRule = createAndroidComposeRule<MainActivity>()
+    val composeRule = createComposeRule()
+    private lateinit var database: NoteDatabase
+    private lateinit var repository: RoomNoteRepository
+
+    @Before fun setUp() {
+        database = Room.inMemoryDatabaseBuilder(ApplicationProvider.getApplicationContext<Context>(), NoteDatabase::class.java).build()
+        repository = RoomNoteRepository(database.noteDao())
+        composeRule.setContent { NoteTakerTheme { NoteTakerApp(repository) } }
+    }
+
+    @After fun tearDown() = database.close()
 
     @Test
     fun create_note_and_return_to_list() {
@@ -80,7 +98,6 @@ class NoteCaptureFlowTest {
 
     @Test
     fun last_note_scrolls_above_capture_overlay_with_keyboard_open() {
-        val repository = (composeRule.activity.application as NoteTakerApplication).container.noteRepository
         val notes = runBlocking {
             repeat(35) { index ->
                 repository.upsert(Note("overlay-test-$index", "Overlay row $index", index.toLong(), index.toLong()))

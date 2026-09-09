@@ -4,16 +4,45 @@ import app.notetaker.data.local.NoteDao
 import app.notetaker.data.local.NoteEntity
 import app.notetaker.data.local.NoteWithTags
 import app.notetaker.data.local.TagEntity
+import app.notetaker.data.local.TagAliasEntity
+import app.notetaker.model.TagAlias
+import app.notetaker.model.suggestTags
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.combine
 import app.notetaker.model.Tag
 import java.util.Locale
 import java.util.UUID
 import app.notetaker.model.Note
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flowOn
 
 class RoomNoteRepository(
     private val noteDao: NoteDao,
 ) : NoteRepository {
+    override fun observeAliases() = noteDao.observeAliases().map { rows ->
+        rows.map { TagAlias(it.id, it.tagId, it.text) }
+    }
+
+    override suspend fun saveAlias(tagId: String, aliasId: String?, text: String) {
+        val trimmed = text.trim()
+        require(trimmed.isNotBlank()) { "Enter a keyword or phrase." }
+        noteDao.saveAlias(TagAliasEntity(
+            aliasId ?: UUID.randomUUID().toString(), tagId, trimmed, trimmed.lowercase(Locale.ROOT)))
+    }
+
+    override suspend fun deleteAlias(id: String) = noteDao.deleteAlias(id)
+
+    override fun observeSuggestions(noteId: String): Flow<List<Tag>> = combine(
+        observeNote(noteId), observeTags(), observeAliases(), noteDao.observeDismissals(noteId),
+    ) { note, tags, aliases, dismissed ->
+        if (note == null) emptyList() else suggestTags(
+            note.content, tags, aliases, dismissed.toSet() + note.tags.map { it.id })
+    }.flowOn(Dispatchers.Default)
+
+    override suspend fun dismissSuggestion(noteId: String, tagId: String, content: String) =
+        noteDao.dismiss(noteId, tagId, content)
+
     override fun observeTags(): Flow<List<Tag>> = noteDao.observeTags().map { tags -> tags.map { Tag(it.id, it.name, it.createdAt) } }
 
     override suspend fun createTag(name: String): Tag {

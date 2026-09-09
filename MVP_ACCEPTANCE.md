@@ -28,3 +28,14 @@
 - [ ] Install and launch a privately signed release APK
 
 Remaining device checks require separate verification; passing the instrumentation tests does not establish all manual acceptance criteria.
+
+## V5 automated acceptance — 2026-09-09
+
+- [x] Case-insensitive tag-name and literal alias matching, including Unicode word boundaries
+- [x] Shared aliases suggest multiple existing tags; attached/dismissed tags are excluded
+- [x] Add and edit aliases, accept a suggestion, dismiss it, reopen, and reevaluate saved edits in the phone UI
+- [x] Alias removal/deduplication and dismissal persistence after database reopen
+- [x] Tag-only and alias edits preserve dismissals; saved text changes reset them
+- [x] v1/v2/v3 database migrations preserve existing data
+- [x] All 18 app instrumentation tests pass on the connected phone; capture tests now use isolated databases
+- [x] 27 unit tests pass and debug lint reports zero errors

@@ -7,6 +7,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 
 class FakeNoteRepository(initialNotes: List<Note> = emptyList()) : NoteRepository {
+    override fun observeAliases() = kotlinx.coroutines.flow.flowOf(emptyList<app.notetaker.model.TagAlias>())
+    override suspend fun saveAlias(tagId: String, aliasId: String?, text: String) = Unit
+    override suspend fun deleteAlias(id: String) = Unit
+    override fun observeSuggestions(noteId: String) = kotlinx.coroutines.flow.flowOf(emptyList<app.notetaker.model.Tag>())
+    override suspend fun dismissSuggestion(noteId: String, tagId: String, content: String) = Unit
     override fun observeTags() = kotlinx.coroutines.flow.flowOf(emptyList<app.notetaker.model.Tag>())
     override suspend fun createTag(name: String) = app.notetaker.model.Tag(name, name, 0)
     private val notes = MutableStateFlow(initialNotes)

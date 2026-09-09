@@ -24,6 +24,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.notetaker.model.Note
+import app.notetaker.ui.TagSuggestions
 import app.notetaker.ui.TagPicker
 import app.notetaker.ui.NoteLinks
 
@@ -37,6 +38,8 @@ fun EditorScreen(
     onOpenNote: (String) -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val suggestions by viewModel.suggestions.collectAsStateWithLifecycle()
+    val aliases by viewModel.aliases.collectAsStateWithLifecycle()
     val tags by viewModel.availableTags.collectAsStateWithLifecycle()
     val notes by viewModel.availableNotes.collectAsStateWithLifecycle()
     fun close() = viewModel.close(onClose)
@@ -69,6 +72,16 @@ fun EditorScreen(
             if (state.isExistingNote) {
                 Text("Tags", style = MaterialTheme.typography.labelLarge)
                 TagPicker(tags, state.tags.map { it.id }.toSet(), viewModel::toggleTag, viewModel::createTag)
+                TagSuggestions(
+                    errorMessage = state.errorMessage,
+                    tags = tags,
+                    aliases = aliases,
+                    suggestions = suggestions.filterNot { suggested -> state.tags.any { it.id == suggested.id } },
+                    onAccept = viewModel::acceptSuggestion,
+                    onDismiss = viewModel::dismissSuggestion,
+                    onSaveAlias = viewModel::saveAlias,
+                    onDeleteAlias = viewModel::deleteAlias,
+                )
                 NoteLinks(
                     currentId = state.noteId,
                     notes = notes,

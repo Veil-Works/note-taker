@@ -1,8 +1,12 @@
 # Note-taker
 
-Note-taker is a small, private, local-first Android notebook. Version 4 adds date filters, sorting, and frequent-tag shortcuts to notes with manual tags and simple connections to the local notebook described in [`note-taker-product-brief.md`](note-taker-product-brief.md).
+Note-taker is a small, private, local-first Android notebook. Version 5 adds predictable tag suggestions and editable keywords/aliases to the local notebook described in [`note-taker-product-brief.md`](note-taker-product-brief.md).
 
 ## Current features
+
+- Suggest existing tags from saved text using tag names and user-configured words/phrases
+- Accept or dismiss suggestions in the editor; dismissals persist until saved note text changes
+- Add, edit, and remove aliases through **Manage tag keywords** in the note editor
 
 - Floating capture field over the bottom of the notes list, with scroll space to keep the final note accessible
 - New notes save only when the checkmark (Complete note) is tapped; successful completion clears the field
@@ -44,28 +48,16 @@ sdk.dir=/absolute/path/to/Android/Sdk
 ./gradlew testDebugUnitTest lintDebug assembleDebug assembleDebugAndroidTest
 ```
 
-With an emulator or phone connected:
+With the phone connected, install both APKs in place and run the tests:
 
 ```bash
-./gradlew connectedDebugAndroidTest
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+adb install -r app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+adb shell am instrument -w app.notetaker.test/androidx.test.runner.AndroidJUnitRunner
 ```
 
-For autonomous testing on this machine, start the installed virtual device in a
-separate terminal (leave it running):
-
-```bash
-prime-run /home/tim/Android/Sdk/emulator/emulator -avd Pixel_8 -memory 4096 -gpu host -no-window -no-audio -no-boot-anim -no-snapshot
-adb -s emulator-5554 wait-for-device
-adb -s emulator-5554 shell getprop sys.boot_completed
-```
-
-Wait until the last command returns `1` before running the tests. This uses a
-headless Android 17 / API 37 emulator with 4 GB RAM; the initial 2 GB launch
-showed memory pressure. All four instrumentation tests passed with this setup
-on 2026-09-09. Omit `-no-window` to show the emulator UI. The `-gpu host`
-override uses hardware graphics; this AVD otherwise defaults to software rendering.
-On this laptop, `prime-run` selects the dedicated NVIDIA GTX 1650. Omit that
-prefix to use the default GPU on other machines.
+Tests use isolated in-memory or temporary databases. In-place installation preserves
+the phone's notebook. Use the connected phone for device verification.
 
 Install the debug build for personal testing:
 
@@ -115,7 +107,10 @@ Dependencies are assembled by `DefaultAppContainer`; no dependency-injection fra
 - Completing a new note clears text, tag, and date filters and restores the default sort so it appears at the top.
 - Date ranges use local calendar days, including the entire end date. Last 7 days includes today and six prior days; Last month means the previous calendar month. Date presets refresh when the screen resumes.
 - Filter/sort selections survive screen recreation. Frequently used tags count notes across the whole notebook, independently of the active filters.
-- V4 uses the existing version 3 database schema.
+- V5 uses Room schema version 4; migration preserves existing notes, tags, and connections.
+- Suggestions match case-insensitive literal words/phrases at Unicode word boundaries. There is no built-in vocabulary or automatic attachment.
+- Aliases are trimmed and deduplicated per tag without case differences. The same alias can suggest multiple tags.
+- Suggestions evaluate saved text off the UI thread. Tag-only edits and alias changes preserve dismissals; saved text changes reset them.
 - Room schema version 3 migrates v1/v2 data in place. Deleting a note removes its tags and connections; Undo restores its tags and connections to notes that still exist.
 - Connections are bidirectional and unique. A note cannot connect to itself. Content/tag edits preserve connections.
 - Opening a connected note saves pending edits and replaces the current popup. Done/Back returns to the notes list.
@@ -128,4 +123,4 @@ Dependencies are assembled by `DefaultAppContainer`; no dependency-injection fra
 
 ## Deferred roadmap
 
-Rule-based suggestions, entities, semantic search, AI, import/export, synchronization, accounts, and cloud services remain deferred. They should be introduced one independently useful stage at a time, in the order and under the constraints defined by the product brief.
+Entities, semantic search, AI, import/export, synchronization, accounts, and cloud services remain deferred. They should be introduced one independently useful stage at a time, in the order and under the constraints defined by the product brief.

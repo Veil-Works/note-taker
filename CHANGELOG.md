@@ -1,5 +1,20 @@
 # Changelog
 
+## 5.0.0 — 2026-09-09
+
+- Suggest existing tags from saved note text with case-insensitive whole-word/phrase matching.
+- Add, edit, and remove per-tag keywords/aliases in the editor; shared aliases can suggest multiple tags.
+- Accept suggestion chips explicitly or dismiss them persistently for unchanged text.
+- Reevaluate after saved text changes; preserve dismissals through tag-only edits and alias edits.
+- Evaluate suggestions off the UI thread without adding work to quick capture.
+- Migrate Room schema 3 to 4, preserving notes, tags, and connections.
+- Isolate capture UI tests from the phone’s notebook.
+
+Validation: 27 unit tests and lint passed; all 18 app instrumentation tests passed
+on the connected phone. Coverage includes aliases, matching boundaries, saved-edit
+reevaluation, acceptance, dismissal persistence after database reopen, v1/v2/v3
+migrations, and capture/tag/link/filter regressions.
+
 ## 4.0.0 — 2026-09-09
 
 - Combine text and tag search with Today, Last 7 days, Last month, or an inclusive custom calendar range.
