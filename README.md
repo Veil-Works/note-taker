@@ -13,8 +13,12 @@ Note-taker is a small, private, local-first Android notebook. Version 5 adds pre
 - Existing-note edits autosave after 600 ms and when leaving/backgrounding the editor
 - Tap a saved note to edit it in a compact popup over the list; Done saves pending changes and closes it
 - Create tags and attach/remove them using selectable chips in the note popup
-- Browse tags with the top-bar Tags button and filter notes by one tag alongside text search
-- Connect notes from the editor, search candidates by content or tag, and see notes with shared tags first
+- Browse tags with the top-bar Tags button; select multiple tags to require all of them alongside text search
+- Delete a tag from the library using its trash button; confirmation removes it from every note and deletes its keywords
+- Long-press a note or tap Select, then select multiple notes to delete, add/remove tags, or connect every selected pair
+- Bulk deletion requires confirmation; bulk tagging shows checked tags for all selected notes, a dash and count for partially applied tags, and empty boxes for unapplied tags. Toggle on to add to all or off to remove from all; untouched tags are preserved. Bulk connections are manual links
+- Notes with shared tags appear automatically in Connected notes; the connection disappears when the last shared tag is removed
+- Tap Keep linked to preserve an automatic connection as a manual link, or connect other notes from the editor by searching content or tags
 - Open a connected note or remove a connection from either endpoint; links have no relationship types
 - Combine text and tag search with Today, Last 7 days, Last month, or an inclusive custom date range
 - Filter by creation or edit date; sort by recently edited, newest created, oldest created, or alphabetical preview
@@ -102,7 +106,7 @@ Dependencies are assembled by `DefaultAppContainer`; no dependency-injection fra
 
 ## Behavioral details
 
-- Tags are entirely manual. Capture a note as usual, then open its popup to organize it.
+- Tags are attached manually or by accepting a suggestion. Capture a note as usual, then open its popup to organize it.
 - Tag names are trimmed, limited to 40 characters, and deduplicated without case differences. Each note can have multiple tags; removing a tag from a note does not remove it from the library.
 - Completing a new note clears text, tag, and date filters and restores the default sort so it appears at the top.
 - Date ranges use local calendar days, including the entire end date. Last 7 days includes today and six prior days; Last month means the previous calendar month. Date presets refresh when the screen resumes.
@@ -112,7 +116,7 @@ Dependencies are assembled by `DefaultAppContainer`; no dependency-injection fra
 - Aliases are trimmed and deduplicated per tag without case differences. The same alias can suggest multiple tags.
 - Suggestions evaluate saved text off the UI thread. Tag-only edits and alias changes preserve dismissals; saved text changes reset them.
 - Room schema version 3 migrates v1/v2 data in place. Deleting a note removes its tags and connections; Undo restores its tags and connections to notes that still exist.
-- Connections are bidirectional and unique. A note cannot connect to itself. Content/tag edits preserve connections.
+- Manual connections are bidirectional and unique. A note cannot connect to itself. Content/tag edits preserve manual connections. Shared-tag connections are derived from saved tags and never stored as manual links; removing a manual link leaves the automatic connection visible while tags are still shared.
 - Opening a connected note saves pending edits and replaces the current popup. Done/Back returns to the notes list.
 
 - Note IDs are UUID strings. Timestamps are UTC epoch milliseconds and formatted in the device locale/time zone.

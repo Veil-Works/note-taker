@@ -50,7 +50,7 @@ class ManualTagsFlowTest {
             rule.waitUntil(5_000) { rule.onAllNodesWithTag("note_popup_content").fetchSemanticsNodes().isNotEmpty() }
             rule.onNode(hasText("Work") and isSelectable() and hasAnyAncestor(hasTestTag("note_popup"))).performScrollTo().performClick()
             rule.onNodeWithText("Done").performScrollTo().performClick()
-            rule.waitUntil(5_000) { rule.onAllNodesWithText("No notes match this tag and search.").fetchSemanticsNodes().isNotEmpty() }
+            rule.waitUntil(5_000) { rule.onAllNodesWithText("No notes match all selected tags and search.").fetchSemanticsNodes().isNotEmpty() }
             rule.onNodeWithText("Clear tag filter").performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithText("Shopping").fetchSemanticsNodes().isNotEmpty() }
         } finally { database.close() }

@@ -39,3 +39,22 @@ Remaining device checks require separate verification; passing the instrumentati
 - [x] v1/v2/v3 database migrations preserve existing data
 - [x] All 18 app instrumentation tests pass on the connected phone; capture tests now use isolated databases
 - [x] 27 unit tests pass and debug lint reports zero errors
+
+## Phone feature requests — 2026-09-09
+
+- [x] Delete tags globally with confirmation, including aliases and dismissal records; retain notes and manual links
+- [x] Long-press or Select to choose multiple notes; bulk delete with confirmation, add tags, or connect every pair manually
+- [x] Shared-tag connections appear alongside manual connections and disappear after the last common tag is removed; Keep linked makes them permanent
+- [x] Multiple tag filters require all selected tags and survive state recreation
+- [x] Bulk database operations are atomic; failed actions preserve selection for retry
+- [x] 30 unit tests and all 22 phone instrumentation tests pass; debug lint completes with zero errors
+- [x] Updated debug app installed on CPH2653; original four feature notes restored and verified against backup
+
+## Bulk tag editing follow-up — 2026-09-09
+
+- [x] Load tags from every selected note, including notes outside the current filter
+- [x] Show checked tags for all selected notes, indeterminate tags with partial counts, and unchecked tags for none
+- [x] Apply additions and removals atomically; preserve untouched partial tags and manual links
+- [x] Allow removal-only changes, including removing every tag, without deleting tags from the library
+- [x] 30 unit tests and all 24 phone instrumentation tests pass; debug lint completes with zero errors
+- [x] Updated app installed in place on CPH2653

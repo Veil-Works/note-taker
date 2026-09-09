@@ -90,8 +90,66 @@ class NotesViewModel(
 
     val tags = repository.observeTags().catch { emit(emptyList()) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
-    val selectedTag = savedStateHandle.getStateFlow<String?>("selected_tag", null)
-    fun selectTag(id: String?) { savedStateHandle["selected_tag"] = id }
+    val selectedTags = savedStateHandle.getStateFlow("selected_tags", arrayListOf<String>())
+    fun selectTag(id: String?) {
+        savedStateHandle["selected_tags"] = if (id == null) arrayListOf<String>() else arrayListOf(id)
+    }
+    fun toggleFilterTag(id: String) {
+        val current = selectedTags.value
+        savedStateHandle["selected_tags"] = ArrayList(if (id in current) current - id else current + id)
+    }
+    val selectedNotes = savedStateHandle.getStateFlow("selected_notes", arrayListOf<String>())
+    private val _bulkBusy = MutableStateFlow(false)
+    val bulkBusy: StateFlow<Boolean> = _bulkBusy
+    fun toggleNote(id: String) {
+        if (_bulkBusy.value) return
+        val current = selectedNotes.value
+        savedStateHandle["selected_notes"] = ArrayList(if (id in current) current - id else current + id)
+    }
+    fun clearSelection() { if (!_bulkBusy.value) savedStateHandle["selected_notes"] = arrayListOf<String>() }
+    fun selectNotes(ids: List<String>) { if (!_bulkBusy.value) savedStateHandle["selected_notes"] = ArrayList(ids) }
+    private fun bulkAction(action: suspend (Set<String>) -> Unit) {
+        if (_bulkBusy.value) return
+        val ids = selectedNotes.value.toSet()
+        _bulkBusy.value = true
+        viewModelScope.launch {
+            try {
+                action(ids)
+                savedStateHandle["selected_notes"] = arrayListOf<String>()
+                _captureError.value = null
+            } catch (cancelled: CancellationException) { throw cancelled }
+            catch (error: Exception) { _captureError.value = error.message ?: "Could not update notes." }
+            finally { _bulkBusy.value = false }
+        }
+    }
+    fun deleteSelected() = bulkAction { repository.deleteNotes(it) }
+    fun connectSelected() = bulkAction { repository.connectNotes(it) }
+    fun tagSelected(tagIds: Set<String>, removeTagIds: Set<String>) = bulkAction { repository.tagNotes(it, tagIds, removeTagIds) }
+    fun prepareTagging(onReady: (List<Note>) -> Unit) {
+        if (_bulkBusy.value) return
+        val ids = selectedNotes.value.toList()
+        if (ids.isEmpty()) return
+        _bulkBusy.value = true
+        viewModelScope.launch {
+            try {
+                val notes = ids.map { checkNotNull(repository.getNote(it)) { "A selected note no longer exists." } }
+                _captureError.value = null
+                onReady(notes)
+            } catch (cancelled: CancellationException) { throw cancelled }
+            catch (error: Exception) { _captureError.value = error.message ?: "Could not load selected tags." }
+            finally { _bulkBusy.value = false }
+        }
+    }
+    fun deleteTag(tag: Tag) {
+        viewModelScope.launch {
+            try {
+                repository.deleteTag(tag.id)
+                savedStateHandle["selected_tags"] = ArrayList(selectedTags.value - tag.id)
+                _captureError.value = null
+            } catch (cancelled: CancellationException) { throw cancelled }
+            catch (error: Exception) { _captureError.value = error.message ?: "Could not delete tag." }
+        }
+    }
     fun createTag(name: String, onCreated: () -> Unit) {
         viewModelScope.launch {
             try {
@@ -150,10 +208,10 @@ class NotesViewModel(
                 .catch { emit(NotesResult.Error("Could not load notes.")) }
         }
 
-    val uiState: StateFlow<NotesUiState> = combine(query, results, selectedTag, filters, today) { currentQuery, result, tagId, currentFilters, currentDay ->
+    val uiState: StateFlow<NotesUiState> = combine(query, results, selectedTags, filters, today) { currentQuery, result, tagIds, currentFilters, currentDay ->
         when (result) {
             NotesResult.Loading -> NotesUiState(query = currentQuery, isLoading = true)
-            is NotesResult.Success -> NotesUiState(query = currentQuery, notes = filterAndSortNotes(result.notes, tagId, currentFilters, currentDay, clock.zone), isLoading = false)
+            is NotesResult.Success -> NotesUiState(query = currentQuery, notes = filterAndSortNotes(result.notes, tagIds.toSet(), currentFilters, currentDay, clock.zone), isLoading = false)
             is NotesResult.Error -> NotesUiState(
                 query = currentQuery,
                 isLoading = false,

@@ -15,3 +15,11 @@ fun Note.preview(): String =
         .map(String::trim)
         .firstOrNull(String::isNotEmpty)
         ?: "Empty note"
+
+/** Automatic connections are derived, so they never become persisted manual links. */
+fun Note.connectedNoteIds(notes: List<Note>): Set<String> {
+    val tagIds = tags.map { it.id }.toSet()
+    return linkedNoteIds + notes.filter { other ->
+        other.id != id && other.tags.any { it.id in tagIds }
+    }.map { it.id }
+}

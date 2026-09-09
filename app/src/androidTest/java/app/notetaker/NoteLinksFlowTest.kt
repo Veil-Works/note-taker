@@ -22,7 +22,7 @@ class NoteLinksFlowTest {
         val repository = RoomNoteRepository(database.noteDao())
         runBlocking {
             val tag = repository.createTag("Running")
-            repository.upsert(Note("a", "Training plan", 1, 2, listOf(tag)))
+            repository.upsert(Note("a", "Training plan", 1, 2))
             repository.upsert(Note("b", "Morning log", 1, 1, listOf(tag)))
             repository.upsert(Note("c", "Shopping", 1, 3))
         }

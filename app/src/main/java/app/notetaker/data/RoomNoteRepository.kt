@@ -43,6 +43,12 @@ class RoomNoteRepository(
     override suspend fun dismissSuggestion(noteId: String, tagId: String, content: String) =
         noteDao.dismiss(noteId, tagId, content)
 
+    override suspend fun deleteTag(id: String) = noteDao.deleteTag(id)
+    override suspend fun deleteNotes(ids: Set<String>) = noteDao.deleteNotes(ids.toList())
+    override suspend fun tagNotes(ids: Set<String>, tagIds: Set<String>, removeTagIds: Set<String>) =
+        noteDao.tagNotes(ids, tagIds, removeTagIds, System.currentTimeMillis())
+    override suspend fun connectNotes(ids: Set<String>) = noteDao.connectNotes(ids)
+
     override fun observeTags(): Flow<List<Tag>> = noteDao.observeTags().map { tags -> tags.map { Tag(it.id, it.name, it.createdAt) } }
 
     override suspend fun createTag(name: String): Tag {

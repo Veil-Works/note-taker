@@ -12,6 +12,11 @@ interface NoteRepository {
     fun observeSuggestions(noteId: String): Flow<List<Tag>>
     suspend fun dismissSuggestion(noteId: String, tagId: String, content: String)
 
+    suspend fun deleteTag(id: String)
+    suspend fun deleteNotes(ids: Set<String>)
+    suspend fun tagNotes(ids: Set<String>, tagIds: Set<String>, removeTagIds: Set<String> = emptySet())
+    suspend fun connectNotes(ids: Set<String>)
+
     fun observeTags(): Flow<List<Tag>>
     suspend fun createTag(name: String): Tag
     fun observeNotes(query: String = ""): Flow<List<Note>>

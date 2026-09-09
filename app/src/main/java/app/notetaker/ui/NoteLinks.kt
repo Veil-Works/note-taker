@@ -12,6 +12,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.notetaker.model.Note
 import app.notetaker.model.preview
+import app.notetaker.model.connectedNoteIds
 
 @Composable
 fun NoteLinks(
@@ -25,11 +26,14 @@ fun NoteLinks(
 ) {
     var choosing by rememberSaveable(currentId) { mutableStateOf(false) }
     var query by rememberSaveable(currentId) { mutableStateOf("") }
-    val linkedIds = notes.firstOrNull { it.id == currentId }?.linkedNoteIds.orEmpty()
+    val current = notes.firstOrNull { it.id == currentId }
+    val manualIds = current?.linkedNoteIds.orEmpty()
+    val linkedIds = current?.connectedNoteIds(notes).orEmpty()
     val linkedNotes = notes.filter { it.id in linkedIds }
 
     Text("Connected notes", style = MaterialTheme.typography.labelLarge)
     if (linkedNotes.isEmpty()) Text("Connect notes about the same project, training, or other theme.")
+    if (linkedNotes.any { it.id !in manualIds }) Text("Shared tags connect notes automatically. Keep linked preserves a connection when tags change.", style = MaterialTheme.typography.bodySmall)
     linkedNotes.forEach { note ->
         Row(Modifier.fillMaxWidth()) {
             TextButton(
@@ -37,9 +41,9 @@ fun NoteLinks(
                 modifier = Modifier.weight(1f).testTag("open_link_${note.id}"),
             ) { Text(note.preview(), maxLines = 2, overflow = TextOverflow.Ellipsis) }
             TextButton(
-                onClick = { onSetLinked(note.id, false) }, enabled = enabled,
-                modifier = Modifier.testTag("remove_link_${note.id}"),
-            ) { Text("Remove link") }
+                onClick = { onSetLinked(note.id, note.id !in manualIds) }, enabled = enabled,
+                modifier = Modifier.testTag(if (note.id in manualIds) "remove_link_${note.id}" else "keep_link_${note.id}"),
+            ) { Text(if (note.id in manualIds) "Remove link" else "Keep linked") }
         }
     }
     TextButton(onClick = { choosing = true }, enabled = enabled && currentId != null) {

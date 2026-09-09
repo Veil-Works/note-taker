@@ -110,6 +110,61 @@ class RoomNoteRepositoryInstrumentedTest {
         assertEquals(emptySet<String>(), repository.getNote("a")!!.linkedNoteIds)
     }
 
+    @Test fun bulk_operations_preserve_unselected_notes_and_tag_deletion_cascades() = runTest {
+        val tag = repository.createTag("Work")
+        val other = repository.createTag("Other")
+        repository.upsert(Note("a", "A", 1, 1, listOf(other)))
+        repository.upsert(Note("b", "B", 1, 1))
+        repository.upsert(Note("c", "C", 1, 1))
+        repository.upsert(Note("outside", "Outside", 1, 1))
+        repository.tagNotes(setOf("a", "b", "c"), setOf(tag.id))
+        assertEquals(setOf(tag, other), repository.getNote("a")!!.tags.toSet())
+        assertEquals(emptyList<app.notetaker.model.Tag>(), repository.getNote("outside")!!.tags)
+        repository.connectNotes(setOf("c", "a", "b"))
+        repository.connectNotes(setOf("a", "b", "c"))
+        assertEquals(setOf("b", "c"), repository.getNote("a")!!.linkedNoteIds)
+        assertEquals(setOf("a", "c"), repository.getNote("b")!!.linkedNoteIds)
+        repository.saveAlias(tag.id, null, "keyword")
+        repository.dismissSuggestion("a", tag.id, "A")
+        repository.deleteTag(tag.id)
+        assertEquals(listOf(other), repository.getNote("a")!!.tags)
+        assertEquals(emptyList<app.notetaker.model.TagAlias>(), repository.observeAliases().first())
+        assertEquals(emptyList<String>(), database.noteDao().observeDismissals("a").first())
+        assertEquals(setOf("b", "c"), repository.getNote("a")!!.linkedNoteIds)
+        repository.deleteNotes(setOf("a", "b"))
+        assertEquals(setOf("c", "outside"), repository.observeNotes().first().map { it.id }.toSet())
+        assertEquals(emptySet<String>(), repository.getNote("c")!!.linkedNoteIds)
+    }
+
+    @Test fun bulk_tag_changes_add_and_remove_atomically_without_touching_other_tags_or_links() = runTest {
+        val old = repository.createTag("Old")
+        val added = repository.createTag("Added")
+        val partial = repository.createTag("Partial")
+        repository.upsert(Note("a", "A", 1, 1, listOf(old, partial)))
+        repository.upsert(Note("b", "B", 1, 1, listOf(old)))
+        repository.linkNotes("a", "b")
+        org.junit.Assert.assertTrue(runCatching {
+            repository.tagNotes(setOf("a", "missing"), setOf(added.id), setOf(old.id))
+        }.isFailure)
+        assertEquals(setOf(old, partial), repository.getNote("a")!!.tags.toSet())
+        repository.tagNotes(setOf("a", "b"), setOf(added.id), setOf(old.id))
+        assertEquals(setOf(added, partial), repository.getNote("a")!!.tags.toSet())
+        assertEquals(listOf(added), repository.getNote("b")!!.tags)
+        assertEquals(setOf("b"), repository.getNote("a")!!.linkedNoteIds)
+        repository.tagNotes(setOf("a", "b"), emptySet(), setOf(added.id, partial.id))
+        assertEquals(emptyList<app.notetaker.model.Tag>(), repository.getNote("a")!!.tags)
+        assertEquals(emptyList<app.notetaker.model.Tag>(), repository.getNote("b")!!.tags)
+        assertEquals(setOf(old, added, partial), repository.observeTags().first().toSet())
+    }
+
+    @Test fun invalid_bulk_requests_do_not_partially_update_notes() = runTest {
+        repository.upsert(Note("a", "A", 1, 1))
+        val tag = repository.createTag("Work")
+        org.junit.Assert.assertTrue(runCatching { repository.tagNotes(setOf("a", "missing"), setOf(tag.id)) }.isFailure)
+        org.junit.Assert.assertTrue(runCatching { repository.connectNotes(setOf("a", "missing")) }.isFailure)
+        assertEquals(Note("a", "A", 1, 1), repository.getNote("a"))
+    }
+
     @Test
     fun migration_from_v2_preserves_tags_and_persists_connections_after_reopen() = runTest {
         val context = ApplicationProvider.getApplicationContext<Context>()

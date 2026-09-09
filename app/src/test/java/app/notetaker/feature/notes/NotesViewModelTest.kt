@@ -34,7 +34,7 @@ class NotesViewModelTest {
         viewModel.onDraftChanged("New")
         viewModel.completeNote()
         advanceUntilIdle()
-        assertEquals(null, viewModel.selectedTag.value)
+        assertEquals(emptyList<String>(), viewModel.selectedTags.value)
         assertEquals(3, viewModel.uiState.value.notes.size)
     }
 
@@ -89,7 +89,7 @@ class NotesViewModelTest {
         recreated.completeNote()
         advanceUntilIdle()
         assertEquals(NoteFilters(), recreated.filters.value)
-        assertEquals(null, recreated.selectedTag.value)
+        assertEquals(emptyList<String>(), recreated.selectedTags.value)
         assertEquals("", state.get<String>("notes_query"))
     }
 
@@ -128,6 +128,39 @@ class NotesViewModelTest {
         viewModel.onQueryChanged("Budget")
         advanceUntilIdle()
         assertEquals(listOf("a"), viewModel.uiState.value.notes.map(Note::id))
+    }
+
+    @Test fun `multiple tag filters require all tags and restore selection`() = runTest {
+        val a = app.notetaker.model.Tag("a", "A", 0)
+        val b = app.notetaker.model.Tag("b", "B", 0)
+        val repo = FakeNoteRepository(listOf(Note("both", "Match", 0, 0, listOf(a, b)), Note("one", "Match", 0, 0, listOf(a))))
+        val saved = SavedStateHandle()
+        val vm = NotesViewModel(repo, saved)
+        vm.toggleFilterTag("a")
+        vm.toggleFilterTag("b")
+        val restored = NotesViewModel(repo, saved)
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { restored.uiState.collect() }
+        advanceUntilIdle()
+        assertEquals(listOf("both"), restored.uiState.value.notes.map { it.id })
+        restored.toggleFilterTag("b")
+        advanceUntilIdle()
+        assertEquals(2, restored.uiState.value.notes.size)
+    }
+
+    @Test fun `bulk failure retains selection for retry and success clears it`() = runTest {
+        val repo = FakeNoteRepository(listOf(Note("a", "A", 0, 0), Note("b", "B", 0, 0)))
+        val vm = NotesViewModel(repo, SavedStateHandle())
+        vm.selectNotes(listOf("a", "b"))
+        repo.failure = IllegalStateException("Try again")
+        vm.deleteSelected()
+        advanceUntilIdle()
+        assertEquals(listOf("a", "b"), vm.selectedNotes.value)
+        assertEquals("Try again", vm.captureError.value)
+        repo.failure = null
+        vm.deleteSelected()
+        advanceUntilIdle()
+        assertEquals(emptyList<String>(), vm.selectedNotes.value)
+        assertEquals(2, repo.deletedNotes.size)
     }
 
     @get:Rule

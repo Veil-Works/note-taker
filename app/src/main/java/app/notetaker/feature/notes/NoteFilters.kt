@@ -34,7 +34,7 @@ data class NoteFilters(
 
 /** Calendar dates are inclusive in the device zone, including days with DST changes. */
 internal fun filterAndSortNotes(
-    notes: List<Note>, tagId: String?, filters: NoteFilters, today: LocalDate, zone: ZoneId,
+    notes: List<Note>, tagIds: Set<String>, filters: NoteFilters, today: LocalDate, zone: ZoneId,
 ): List<Note> {
     val (start, end) = filters.dateRange(today)
     val from = start?.atStartOfDay(zone)?.toInstant()?.toEpochMilli()
@@ -47,7 +47,7 @@ internal fun filterAndSortNotes(
     }.thenBy { it.id }
     return notes.filter { note ->
         val timestamp = if (filters.dateField == DateField.UPDATED) note.updatedAt else note.createdAt
-        (tagId == null || note.tags.any { it.id == tagId }) &&
+        note.tags.map { it.id }.containsAll(tagIds) &&
             (from == null || timestamp >= from) && (until == null || timestamp < until)
     }.sortedWith(comparator)
 }

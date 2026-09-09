@@ -70,6 +70,42 @@ interface NoteDao {
     @Delete
     suspend fun delete(note: NoteEntity)
 
+    @Query("DELETE FROM tags WHERE id = :id")
+    suspend fun deleteTag(id: String)
+
+    @Query("DELETE FROM notes WHERE id IN (:ids)")
+    suspend fun deleteNotes(ids: List<String>)
+
+    @Query("SELECT id FROM tags WHERE id IN (:ids)")
+    suspend fun existingTagIds(ids: List<String>): List<String>
+
+    @Query("DELETE FROM note_tags WHERE noteId = :noteId AND tagId IN (:tagIds)")
+    suspend fun removeTags(noteId: String, tagIds: List<String>)
+
+    @Transaction
+    suspend fun tagNotes(ids: Set<String>, tagIds: Set<String>, removeTagIds: Set<String>, timestamp: Long) {
+        require(tagIds.intersect(removeTagIds).isEmpty()) { "A tag cannot be added and removed together." }
+        check(existingTagIds(tagIds.toList()).toSet() == tagIds) { "A selected tag no longer exists." }
+        val notes = ids.map { checkNotNull(getById(it)) { "A selected note no longer exists." } }
+        notes.forEach { row ->
+            val current = row.tags.map { it.id }.toSet()
+            if (current != (current + tagIds) - removeTagIds) {
+                removeTags(row.note.id, removeTagIds.toList())
+                insertLinks(tagIds.map { NoteTagEntity(row.note.id, it) })
+                upsert(row.note.copy(updatedAt = timestamp))
+            }
+        }
+    }
+
+    @Transaction
+    suspend fun connectNotes(ids: Set<String>) {
+        val ordered = ids.sorted()
+        ordered.forEach { check(getById(it) != null) { "A selected note no longer exists." } }
+        ordered.forEachIndexed { index, source ->
+            ordered.drop(index + 1).forEach { target -> insertNoteLink(NoteLinkEntity(source, target)) }
+        }
+    }
+
     @Query("SELECT * FROM tags ORDER BY normalizedName")
     fun observeTags(): Flow<List<TagEntity>>
 

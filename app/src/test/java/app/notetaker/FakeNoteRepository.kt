@@ -7,6 +7,24 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 
 class FakeNoteRepository(initialNotes: List<Note> = emptyList()) : NoteRepository {
+    override suspend fun deleteTag(id: String) {
+        failure?.let { throw it }
+        notes.value = notes.value.map { it.copy(tags = it.tags.filterNot { tag -> tag.id == id }) }
+    }
+    override suspend fun deleteNotes(ids: Set<String>) {
+        failure?.let { throw it }
+        notes.value.filter { it.id in ids }.forEach { delete(it) }
+    }
+    override suspend fun tagNotes(ids: Set<String>, tagIds: Set<String>, removeTagIds: Set<String>) {
+        failure?.let { throw it }
+        notes.value.filter { it.id in ids }.forEach { note ->
+            upsert(note.copy(tags = (note.tags.filterNot { it.id in removeTagIds } + tagIds.map { app.notetaker.model.Tag(it, it, 0) }).distinctBy { it.id }))
+        }
+    }
+    override suspend fun connectNotes(ids: Set<String>) {
+        failure?.let { throw it }
+        ids.sorted().forEachIndexed { index, source -> ids.sorted().drop(index + 1).forEach { linkNotes(source, it) } }
+    }
     override fun observeAliases() = kotlinx.coroutines.flow.flowOf(emptyList<app.notetaker.model.TagAlias>())
     override suspend fun saveAlias(tagId: String, aliasId: String?, text: String) = Unit
     override suspend fun deleteAlias(id: String) = Unit

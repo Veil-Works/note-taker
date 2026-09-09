@@ -12,7 +12,7 @@ class NoteFiltersTest {
     private val today = LocalDate.of(2026, 9, 9)
     private fun time(date: LocalDate) = date.atStartOfDay(zone).toInstant().toEpochMilli()
     private fun apply(notes: List<Note>, filters: NoteFilters, tag: String? = null) =
-        filterAndSortNotes(notes, tag, filters, today, zone).map(Note::id)
+        filterAndSortNotes(notes, setOfNotNull(tag), filters, today, zone).map(Note::id)
 
     @Test fun `custom range includes full local day across daylight saving change`() {
         val day = LocalDate.of(2026, 3, 29)
