@@ -1,0 +1,256 @@
+package app.notetaker.feature.notes
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.material3.Surface
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.platform.testTag
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.notetaker.model.Note
+import app.notetaker.model.preview
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun NotesScreen(
+    viewModel: NotesViewModel,
+    onOpenNote: (String) -> Unit,
+) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val draft by viewModel.draft.collectAsStateWithLifecycle()
+    val saving by viewModel.saving.collectAsStateWithLifecycle()
+    val captureError by viewModel.captureError.collectAsStateWithLifecycle()
+    var searching by remember { mutableStateOf(state.query.isNotEmpty()) }
+    var captureHeight by remember { mutableStateOf(0) }
+    val bottomSpace = with(LocalDensity.current) { captureHeight.toDp() } + 12.dp
+
+    Scaffold(
+        topBar = {
+            if (searching) {
+                SearchBar(
+                    query = state.query,
+                    onQueryChanged = viewModel::onQueryChanged,
+                    onClose = {
+                        viewModel.onQueryChanged("")
+                        searching = false
+                    },
+                )
+            } else {
+                TopAppBar(
+                    title = { Text("Notes") },
+                    actions = {
+                        IconButton(onClick = { searching = true }) {
+                            Icon(Icons.Default.Search, contentDescription = "Search notes")
+                        }
+                    },
+                )
+            }
+        },
+    ) { padding ->
+        Box(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding).imePadding()) {
+            when {
+                state.isLoading -> LoadingContent()
+                state.errorMessage != null -> MessageContent(state.errorMessage)
+                state.notes.isEmpty() -> MessageContent(
+                    if (state.query.isBlank()) "No notes yet. Write your first thought below."
+                    else "No notes match your search.",
+                    Modifier.padding(bottom = bottomSpace),
+                )
+                else -> NotesList(
+                    notes = state.notes,
+                    onOpenNote = onOpenNote,
+                    bottomSpace = bottomSpace,
+                )
+            }
+            Surface(
+                modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth()
+                    .onSizeChanged { captureHeight = it.height }
+                    .padding(12.dp).testTag("capture_overlay"),
+                shape = RoundedCornerShape(24.dp),
+                shadowElevation = 8.dp,
+                tonalElevation = 3.dp,
+            ) {
+            Column(Modifier.padding(8.dp)) {
+                Row(verticalAlignment = Alignment.Bottom) {
+                    TextField(
+                        value = draft,
+                        onValueChange = viewModel::onDraftChanged,
+                        modifier = Modifier.weight(1f).testTag("capture_field"),
+                        placeholder = { Text("Write a note…") },
+                        readOnly = saving,
+                        minLines = 1,
+                        maxLines = 5,
+                    )
+                    IconButton(
+                        onClick = viewModel::completeNote,
+                        enabled = draft.isNotBlank() && !saving,
+                    ) {
+                        Icon(Icons.Default.Check, contentDescription = "Complete note")
+                    }
+                }
+                captureError?.let {
+                    Text(it, color = MaterialTheme.colorScheme.error)
+                }
+            }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SearchBar(
+    query: String,
+    onQueryChanged: (String) -> Unit,
+    onClose: () -> Unit,
+) {
+    TopAppBar(
+        title = {
+            TextField(
+                value = query,
+                onValueChange = onQueryChanged,
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = { Text("Search notes") },
+                singleLine = true,
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                trailingIcon = {
+                    if (query.isNotEmpty()) {
+                        IconButton(onClick = { onQueryChanged("") }) {
+                            Icon(Icons.Default.Clear, contentDescription = "Clear search")
+                        }
+                    }
+                },
+            )
+        },
+        navigationIcon = {
+            IconButton(onClick = onClose) {
+                Icon(Icons.Default.Close, contentDescription = "Close search")
+            }
+        },
+    )
+}
+
+@Composable
+private fun NotesList(
+    notes: List<Note>,
+    onOpenNote: (String) -> Unit,
+    bottomSpace: Dp,
+    modifier: Modifier = Modifier,
+) {
+    LazyColumn(
+        modifier = modifier.fillMaxSize().testTag("notes_list"),
+        contentPadding = PaddingValues(bottom = bottomSpace),
+    ) {
+        items(notes, key = Note::id) { note ->
+            NoteRow(note = note, onClick = { onOpenNote(note.id) })
+            HorizontalDivider()
+        }
+    }
+}
+
+@Composable
+private fun NoteRow(note: Note, onClick: () -> Unit) {
+    ListItem(
+        headlineContent = {
+            Text(
+                text = note.preview(),
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                fontWeight = FontWeight.Medium,
+            )
+        },
+        supportingContent = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End,
+            ) {
+                Spacer(Modifier.width(12.dp))
+                Text(
+                    text = remember(note.updatedAt) { formatTimestamp(note.updatedAt) },
+                    style = MaterialTheme.typography.labelMedium,
+                )
+            }
+        },
+        modifier = Modifier.clickable(
+            onClickLabel = "Open note",
+            onClick = onClick,
+        ),
+    )
+}
+
+@Composable
+private fun LoadingContent(modifier: Modifier = Modifier) {
+    Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        CircularProgressIndicator()
+    }
+}
+
+@Composable
+private fun MessageContent(message: String?, modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(32.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = message.orEmpty(),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.semantics { heading() },
+        )
+    }
+}
+
+private fun formatTimestamp(timestamp: Long): String =
+    DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
+        .withZone(ZoneId.systemDefault())
+        .format(Instant.ofEpochMilli(timestamp))

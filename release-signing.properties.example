@@ -1,0 +1,6 @@
+# Copy this file to release-signing.properties and keep the real file private.
+storeFile=/absolute/path/to/notetaker-release.jks
+storePassword=replace-me
+keyAlias=notetaker
+keyPassword=replace-me
+

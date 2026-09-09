@@ -1,0 +1,74 @@
+package app.notetaker.feature.editor
+
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.notetaker.model.Note
+
+/** The list destination remains visible beneath this navigation dialog. */
+@Composable
+fun EditorScreen(
+    viewModel: EditorViewModel,
+    isNewNote: Boolean,
+    onClose: () -> Unit,
+    onDeleted: (Note?) -> Unit,
+) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    fun close() = viewModel.close(onClose)
+    BackHandler(onBack = ::close)
+    LifecycleEventEffect(Lifecycle.Event.ON_STOP) { viewModel.flush() }
+
+    Surface(
+        shape = MaterialTheme.shapes.extraLarge,
+        tonalElevation = 6.dp,
+        modifier = Modifier.fillMaxWidth().testTag("note_popup"),
+    ) {
+        Column(
+            modifier = Modifier.heightIn(max = 440.dp)
+                .verticalScroll(rememberScrollState()).padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Text(if (isNewNote) "New note" else "Edit note", style = MaterialTheme.typography.titleLarge)
+            when {
+                state.isLoading -> CircularProgressIndicator()
+                state.isMissing -> Text("This note no longer exists.")
+                else -> OutlinedTextField(
+                    value = state.content,
+                    onValueChange = viewModel::onContentChanged,
+                    modifier = Modifier.fillMaxWidth().testTag("note_popup_content"),
+                    minLines = 3,
+                    maxLines = 8,
+                    placeholder = { Text("Write a note…") },
+                )
+            }
+            state.errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                TextButton(
+                    onClick = { viewModel.delete(onDeleted) },
+                    enabled = state.isExistingNote && !state.isSaving,
+                ) { Text("Delete note", color = MaterialTheme.colorScheme.error) }
+                TextButton(onClick = ::close) { Text("Done") }
+            }
+        }
+    }
+}
