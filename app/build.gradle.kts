@@ -25,10 +25,10 @@ android {
         applicationId = "app.notetaker"
         minSdk = 26
         targetSdk = 36
-        versionCode = 5
-        versionName = "5.0.0"
+        versionCode = 7
+        versionName = "7.0.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "app.notetaker.IsolatedTestRunner"
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -69,6 +69,8 @@ android {
         resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
     }
 
+    sourceSets.getByName("androidTest").assets.srcDir("schemas")
+
     testOptions {
         unitTests.isIncludeAndroidResources = true
     }
@@ -81,6 +83,8 @@ kotlin {
 }
 
 dependencies {
+    implementation(libs.onnxruntime.android)
+    implementation(libs.androidx.work.runtime)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)

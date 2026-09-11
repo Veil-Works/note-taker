@@ -2,12 +2,20 @@ package app.notetaker.data.local
 
 import androidx.room.*
 
-@Entity(tableName = "tags", indices = [Index(value = ["normalizedName"], unique = true)])
+@Entity(tableName = "entity_types", indices = [Index(value = ["normalizedName"], unique = true)])
+data class EntityTypeEntity(@PrimaryKey val id: String, val name: String, val normalizedName: String)
+
+@DatabaseView("SELECT tags.*, entity_types.name AS typeName FROM tags LEFT JOIN entity_types ON tags.typeId = entity_types.id", viewName = "tag_details")
+data class TagDetails(val id: String, val name: String, val normalizedName: String, val createdAt: Long, val typeId: String?, val typeName: String?)
+
+@Entity(tableName = "tags", indices = [Index(value = ["normalizedName"], unique = true), Index("typeId")],
+    foreignKeys = [ForeignKey(entity = EntityTypeEntity::class, parentColumns = ["id"], childColumns = ["typeId"], onDelete = ForeignKey.SET_NULL)])
 data class TagEntity(
     @PrimaryKey val id: String,
     val name: String,
     val normalizedName: String,
     val createdAt: Long,
+    val typeId: String? = null,
 )
 
 @Entity(
@@ -26,7 +34,11 @@ data class NoteWithTags(
     @Relation(
         parentColumn = "id", entityColumn = "id",
         associateBy = Junction(NoteTagEntity::class, parentColumn = "noteId", entityColumn = "tagId"),
-    ) val tags: List<TagEntity>,
+    ) val tags: List<TagDetails>,
+    @Relation(parentColumn = "id", entityColumn = "id", associateBy = Junction(AutomaticTagEntity::class, parentColumn = "noteId", entityColumn = "tagId"))
+    val automaticTags: List<TagDetails>,
+    @Relation(parentColumn = "id", entityColumn = "noteId") val automaticReasons: List<AutomaticTagEntity>,
+    @Relation(parentColumn = "id", entityColumn = "noteId") val rejections: List<OrganizationRejectionEntity>,
     @Relation(parentColumn = "id", entityColumn = "firstNoteId")
     val outgoingLinks: List<NoteLinkEntity>,
     @Relation(parentColumn = "id", entityColumn = "secondNoteId")

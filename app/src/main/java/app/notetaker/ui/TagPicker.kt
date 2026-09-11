@@ -16,14 +16,19 @@ import app.notetaker.model.Tag
 
 /** Manual tag selection, shared by the note popup and tag browser. */
 @Composable
-fun TagPicker(tags: List<Tag>, selectedIds: Set<String>, onToggle: (Tag) -> Unit, onCreate: (String, () -> Unit) -> Unit, onDelete: ((Tag) -> Unit)? = null) {
+fun TagPicker(tags: List<Tag>, selectedIds: Set<String>, onToggle: (Tag) -> Unit, onCreate: (String, () -> Unit) -> Unit, onDelete: ((Tag) -> Unit)? = null, onOpenConcept: ((Tag) -> Unit)? = null) {
     var name by rememberSaveable { mutableStateOf("") }
+    var query by rememberSaveable { mutableStateOf("") }
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         if (tags.isNotEmpty()) {
+            OutlinedTextField(query, { query = it }, label = { Text("Find tags or entities") }, singleLine = true, modifier = Modifier.fillMaxWidth())
             Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                tags.forEach { tag ->
-                    FilterChip(selected = tag.id in selectedIds, onClick = { onToggle(tag) }, label = { Text(tag.name) },
+                tags.filter { query.isBlank() || it.displayName.contains(query.trim(), true) }.forEach { tag ->
+                    Column {
+                    FilterChip(selected = tag.id in selectedIds, onClick = { onToggle(tag) }, label = { Text(tag.displayName) },
                         trailingIcon = onDelete?.let { delete -> { IconButton(onClick = { delete(tag) }, modifier = Modifier.size(32.dp).testTag("delete_tag_${tag.id}")) { Icon(Icons.Default.Delete, "Delete tag ${tag.name}") } } })
+                    onOpenConcept?.let { open -> TextButton(onClick = { open(tag) }, modifier = Modifier.testTag("open_concept_${tag.id}")) { Text("Details") } }
+                    }
                 }
             }
         }

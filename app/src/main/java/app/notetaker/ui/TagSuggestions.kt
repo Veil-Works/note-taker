@@ -31,10 +31,12 @@ fun TagSuggestions(
             Text("Suggested tags", style = MaterialTheme.typography.labelLarge)
             Text("From saved text. Tap a tag to accept it.", style = MaterialTheme.typography.bodySmall)
             suggestions.forEach { tag ->
-                Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())) {
-                    SuggestionChip(modifier = Modifier.testTag("suggestion_${tag.name}"), onClick = { onAccept(tag) }, label = { Text(tag.name) })
+                Column(Modifier.fillMaxWidth()) {
+                    SuggestionChip(modifier = Modifier.testTag("suggestion_${tag.name}"), onClick = { onAccept(tag) }, label = { Text(tag.displayName) })
+                    Row {
                     TextButton(onClick = { onDismiss(tag) }) { Text("Dismiss " + tag.name) }
                     TextButton(onClick = { editingTagId = tag.id; showKeywords = true }) { Text("Keywords") }
+                    }
                 }
             }
         }
@@ -54,7 +56,7 @@ fun TagSuggestions(
                     Text("Tag names already match. Add words or phrases to suggest an existing tag.")
                     Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         tags.forEach { tag ->
-                            FilterChip(selected = editingTagId == tag.id, onClick = { editingTagId = tag.id }, label = { Text(tag.name) })
+                            FilterChip(selected = editingTagId == tag.id, onClick = { editingTagId = tag.id }, label = { Text(tag.displayName) })
                         }
                     }
                     val tag = tags.find { it.id == editingTagId }

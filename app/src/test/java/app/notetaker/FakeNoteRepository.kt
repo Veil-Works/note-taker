@@ -7,6 +7,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 
 class FakeNoteRepository(initialNotes: List<Note> = emptyList()) : NoteRepository {
+    override fun observeTypes() = kotlinx.coroutines.flow.flowOf(emptyList<app.notetaker.model.EntityType>())
+    override suspend fun saveType(id: String?, name: String) = Unit
+    override suspend fun deleteType(id: String) = Unit
+    override suspend fun updateTag(id: String, name: String, typeId: String?) = Unit
+
     override suspend fun deleteTag(id: String) {
         failure?.let { throw it }
         notes.value = notes.value.map { it.copy(tags = it.tags.filterNot { tag -> tag.id == id }) }

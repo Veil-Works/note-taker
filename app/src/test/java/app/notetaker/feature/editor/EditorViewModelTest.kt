@@ -175,6 +175,21 @@ class EditorViewModelTest {
         assertEquals("After recreation", latest.content)
     }
 
+    @Test
+    fun `reopening does not reject new automatic tags from an old selection snapshot`() = runTest {
+        val tag = app.notetaker.model.Tag("training", "Training", 1)
+        val note = Note("existing", "Bench session", 1, 2, listOf(tag), automaticTagReasons = mapOf(tag.id to "Similar notes"))
+        val repository = FakeNoteRepository(listOf(note))
+        val restored = SavedStateHandle(mapOf("editor_tag_ids" to arrayListOf<String>()))
+        val viewModel = EditorViewModel(repository, note.id, restored)
+        advanceUntilIdle()
+        assertEquals(listOf(tag), viewModel.uiState.value.tags)
+        assertTrue(repository.savedNotes.isEmpty())
+        viewModel.close {}
+        advanceUntilIdle()
+        assertTrue(repository.savedNotes.isEmpty())
+    }
+
     private fun editor(
         repository: FakeNoteRepository,
         noteId: String? = null,

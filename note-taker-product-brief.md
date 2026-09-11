@@ -1,5 +1,17 @@
 # Note-taker — Product and Architecture Brief
 
+## V7 product direction — automatic organization
+
+Capture is the primary interaction: write, save, move on. Organization happens in
+the background and does not require creating tags, entities, or aliases first.
+This supersedes the earlier manual-acceptance-only constraints for strong matches.
+Weak prefix matches remain optional suggestions. Existing tags/entities are reused,
+semantic neighbors work without labels, and recurring topics form provisional
+phrase-named groups. Manual organization remains available as an advanced control.
+Corrections are durable and influence future inference; automatic guesses are
+never treated as user-confirmed examples. All inference remains local.
+
+
 ## 1. Purpose of This Document
 
 This document describes the current product idea, intended functionality, architectural direction, and staged implementation plan for the **Note-taker** application.
@@ -489,8 +501,11 @@ tag names and user-editable keywords/aliases; it does not require an LLM.
 
 ### Matching rules
 
-- Ignore capitalization and match whole words or phrases at word boundaries.
-  For example, the alias `run` must not match the substring in `brunch`.
+- Ignore capitalization and match words or phrases, allowing word-prefix matches
+  in either direction when the shorter word has at least three letters. Thus
+  `run 7km thursday` suggests `runs` or `running`. The alias `run` must not
+  match an interior substring such as the one in `brunch`. Short words, numeric
+  terms, and punctuation-bearing terms such as `C++` still match literally.
 - Support multi-word aliases such as `bench press` and `Alpha rollout`.
 - Trim alias input, reject blank aliases, and deduplicate aliases within a tag
   without regard to capitalization.
@@ -546,6 +561,12 @@ strength-training
 ---
 
 # 12. Stage 6 — Entities and Entity Types
+
+### V6 implementation
+
+Entities extend existing tags: a tag with one optional type is an entity; an untyped tag remains an ordinary label. IDs, note associations, aliases, and dismissals survive upgrades and reversions. Names remain unique across tags and entities; aliases may overlap and ambiguous suggestions show each candidate's type for explicit acceptance.
+
+Concept pages support renaming, type assignment/removal, alias editing, and opening all associated notes independently of list filters. The shared picker searches names and types; the concept browser also searches aliases. Starter types are editable and users can add custom types. Deleting a type preserves its concepts as untyped tags. Structured queries remain stage 7.
 
 ### Goal
 

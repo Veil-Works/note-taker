@@ -35,6 +35,8 @@ fun NoteLinks(
     if (linkedNotes.isEmpty()) Text("Connect notes about the same project, training, or other theme.")
     if (linkedNotes.any { it.id !in manualIds }) Text("Shared tags connect notes automatically. Keep linked preserves a connection when tags change.", style = MaterialTheme.typography.bodySmall)
     linkedNotes.forEach { note ->
+        val shared = note.tags.filter { it.id in tagIds }
+        if (shared.isNotEmpty()) Text("Shared: " + shared.joinToString { it.displayName }, style = MaterialTheme.typography.bodySmall)
         Row(Modifier.fillMaxWidth()) {
             TextButton(
                 onClick = { onOpenNote(note.id) }, enabled = enabled,
@@ -77,7 +79,7 @@ fun NoteLinks(
                                 Column(Modifier.fillMaxWidth()) {
                                     Text(note.preview(), maxLines = 2, overflow = TextOverflow.Ellipsis)
                                     if (note.tags.isNotEmpty()) Text(
-                                        note.tags.joinToString { it.name },
+                                        note.tags.joinToString { it.displayName },
                                         style = MaterialTheme.typography.labelSmall,
                                         maxLines = 1, overflow = TextOverflow.Ellipsis,
                                     )

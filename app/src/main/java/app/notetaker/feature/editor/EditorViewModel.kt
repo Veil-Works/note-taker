@@ -40,6 +40,7 @@ data class EditorUiState(
     val tags: List<Tag> = emptyList(),
     val noteId: String? = null,
     val isLinking: Boolean = false,
+    val automaticTagReasons: Map<String, String> = emptyMap(),
 )
 
 class EditorViewModel(
@@ -58,6 +59,16 @@ class EditorViewModel(
         ),
     )
     val uiState: StateFlow<EditorUiState> = _uiState.asStateFlow()
+    val organizationStatus = repository.observeOrganizationStatus().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), app.notetaker.model.OrganizationStatus())
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    val related = uiState.map { it.noteId }.distinctUntilChanged().flatMapLatest { id ->
+        if (id == null) flowOf(emptyList()) else repository.observeRelated(id)
+    }.catch { emit(emptyList()) }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+    fun retryOrganization() = keywordAction { repository.retryOrganization() }
+    fun keepAutomaticTag(tag: Tag) = keywordAction {
+        val id = _uiState.value.noteId ?: return@keywordAction
+        repository.tagNotes(setOf(id), setOf(tag.id))
+    }
     val aliases = repository.observeAliases().catch {
         _uiState.value = _uiState.value.copy(errorMessage = "Could not load keywords.")
         emit(emptyList())
@@ -128,10 +139,18 @@ class EditorViewModel(
         }
     }
 
+    private fun tagChanges(): Map<String, Boolean> =
+        savedStateHandle.get<ArrayList<String>>("pending_tag_adds").orEmpty().associateWith { true } +
+            savedStateHandle.get<ArrayList<String>>("pending_tag_removes").orEmpty().associateWith { false }
+    private fun storeTagChanges(changes: Map<String, Boolean>) {
+        savedStateHandle["pending_tag_adds"] = ArrayList(changes.filterValues { it }.keys)
+        savedStateHandle["pending_tag_removes"] = ArrayList(changes.filterValues { !it }.keys)
+    }
     fun toggleTag(tag: Tag) {
         if (!_uiState.value.isExistingNote) return
         val selected = _uiState.value.tags
         val tags = if (selected.any { it.id == tag.id }) selected.filterNot { it.id == tag.id } else selected + tag
+        storeTagChanges(tagChanges() + (tag.id to tags.any { it.id == tag.id }))
         savedStateHandle["editor_tag_ids"] = ArrayList(tags.map { it.id })
         _uiState.value = _uiState.value.copy(tags = tags)
         scheduleAutoSave()
@@ -176,8 +195,9 @@ class EditorViewModel(
                         savedStateHandle[NOTE_ID_KEY] = note.id
                         savedStateHandle[CREATED_AT_KEY] = note.createdAt
                         val content = restoredContent ?: note.content
-                        val savedTagIds = savedStateHandle.get<ArrayList<String>>("editor_tag_ids")
-                        val tags = if (savedTagIds == null) note.tags else repository.observeTags().first().filter { it.id in savedTagIds }
+                        val pending = tagChanges()
+                        val added = if (pending.values.any { it }) repository.observeTags().first().filter { pending[it.id] == true } else emptyList()
+                        val tags = (note.tags.filterNot { pending[it.id] == false } + added).distinctBy { it.id }
                         savedStateHandle[CONTENT_KEY] = content
                         _uiState.value = _uiState.value.copy(
                             content = content,
@@ -185,8 +205,10 @@ class EditorViewModel(
                             isExistingNote = true,
                             tags = tags,
                             noteId = note.id,
+                            automaticTagReasons = note.automaticTagReasons,
                         )
-                        if (content != note.content || tags != note.tags) scheduleAutoSave()
+                        if (content != note.content || tagChanges().isNotEmpty()) scheduleAutoSave()
+                        observeOrganization(noteId)
                     }
                 }
                 .onFailure {
@@ -195,6 +217,25 @@ class EditorViewModel(
                         errorMessage = "Could not open this note.",
                     )
                 }
+        }
+    }
+
+    private fun observeOrganization(noteId: String) {
+        viewModelScope.launch {
+            repository.observeNote(noteId).catch {
+                _uiState.value = _uiState.value.copy(errorMessage = "Could not refresh organization.")
+                emit(null)
+            }.collect { latest ->
+                if (latest == null) return@collect
+                // Merge organization arrivals with the user's unsaved tag edits.
+                val old = persistedNote ?: return@collect
+                val changes = tagChanges()
+                val added = (_uiState.value.tags + availableTags.value).filter { changes[it.id] == true }
+                val merged = (latest.tags.filterNot { changes[it.id] == false } + added).distinctBy { it.id }
+                persistedNote = old.copy(tags = latest.tags, automaticTagReasons = latest.automaticTagReasons, rejectedTagIds = latest.rejectedTagIds)
+                savedStateHandle["editor_tag_ids"] = ArrayList(merged.map { it.id })
+                _uiState.value = _uiState.value.copy(tags = merged, automaticTagReasons = latest.automaticTagReasons)
+            }
         }
     }
 
@@ -268,7 +309,8 @@ class EditorViewModel(
 
         if (current == null && content.isBlank()) return@withLock null
         val tags = _uiState.value.tags
-        if (current?.content == content && current.tags == tags) return@withLock current
+        val changes = tagChanges()
+        if (current?.content == content && changes.isEmpty()) return@withLock current
 
         val timestamp = now()
         val updatedNote = current?.copy(content = content, updatedAt = timestamp, tags = tags)
@@ -279,8 +321,15 @@ class EditorViewModel(
                 updatedAt = timestamp,
             )
 
-        repository.upsert(updatedNote)
-        persistedNote = updatedNote
+        if (current == null) repository.upsert(updatedNote)
+        else repository.saveEdit(updatedNote, changes)
+        storeTagChanges(tagChanges().filter { (id, value) -> changes[id] != value })
+        val latest = repository.getNote(updatedNote.id) ?: updatedNote
+        persistedNote = latest
+        val pending = tagChanges()
+        val mergedTags = (latest.tags.filterNot { pending[it.id] == false } + _uiState.value.tags.filter { pending[it.id] == true }).distinctBy { it.id }
+        savedStateHandle["editor_tag_ids"] = ArrayList(mergedTags.map { it.id })
+        _uiState.value = _uiState.value.copy(tags = mergedTags, automaticTagReasons = latest.automaticTagReasons)
         savedStateHandle[NOTE_ID_KEY] = updatedNote.id
         savedStateHandle[CREATED_AT_KEY] = updatedNote.createdAt
         _uiState.value = _uiState.value.copy(isExistingNote = true, noteId = updatedNote.id)

@@ -29,6 +29,7 @@ class ManualTagsFlowTest {
             rule.setContent { NoteTakerTheme { NoteTakerApp(repository) } }
             rule.waitUntil(5_000) { rule.onAllNodesWithText("Project idea").fetchSemanticsNodes().isNotEmpty() }
             rule.onNodeWithText("Project idea").performClick()
+            rule.onNodeWithText("Tags and connections").performScrollTo().performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithText("New tag").fetchSemanticsNodes().isNotEmpty() }
             rule.onNodeWithText("New tag").performScrollTo().performTextInput("Work")
             rule.onNodeWithText("Add tag").performScrollTo().performClick()
@@ -47,6 +48,7 @@ class ManualTagsFlowTest {
             rule.waitUntil(5_000) { rule.onAllNodesWithText("Shopping").fetchSemanticsNodes().isEmpty() }
             rule.onNodeWithText("Project idea").assertIsDisplayed()
             rule.onNodeWithText("Project idea").performClick()
+            rule.onNodeWithText("Tags and connections").performScrollTo().performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithTag("note_popup_content").fetchSemanticsNodes().isNotEmpty() }
             rule.onNode(hasText("Work") and isSelectable() and hasAnyAncestor(hasTestTag("note_popup"))).performScrollTo().performClick()
             rule.onNodeWithText("Done").performScrollTo().performClick()

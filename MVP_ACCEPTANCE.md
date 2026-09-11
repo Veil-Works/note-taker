@@ -58,3 +58,40 @@ Remaining device checks require separate verification; passing the instrumentati
 - [x] Allow removal-only changes, including removing every tag, without deleting tags from the library
 - [x] 30 unit tests and all 24 phone instrumentation tests pass; debug lint completes with zero errors
 - [x] Updated app installed in place on CPH2653
+
+## Partial tag suggestions — 2026-09-09
+
+- [x] Case-insensitive word-prefix matching in either direction for tag names and aliases, with a three-letter minimum
+- [x] Saving “run 7km thursday” suggests the existing “runs” tag and accepting attaches it
+- [x] Interior substrings, short partial words, and partial numeric identifiers do not match; punctuation-bearing terms remain literal
+- [x] 31 unit tests and four targeted phone suggestion UI/persistence tests pass; debug build and lint pass
+- [x] Updated app installed in place on CPH2653
+
+
+## Version 6 — Entities and entity types — 2026-09-09
+
+- [x] Upgrade a tag with one optional type and revert it without changing IDs, note associations, aliases, or dismissals
+- [x] Rename concepts and manage their aliases; concept pages show all associated notes independently of list filters
+- [x] Seed eight editable starter types; add and rename custom types; deleting a type preserves concepts as ordinary tags
+- [x] Search tags and entities together and show types in suggestions, note labels, and shared-connection reasons
+- [x] Upgrade Bench press to Exercise, add its alias, accept the typed suggestion, and open both old and new notes from its page
+- [x] Preserve ambiguous alias candidates for explicit acceptance, and preserve dismissed suggestions across type/name edits
+- [x] Migrate v1–v4 schemas to schema 5 without losing notes, tags, links, aliases, or dismissals
+- [x] 31 unit tests and all 28 phone instrumentation tests pass; debug build and lint complete with zero errors
+- [x] Updated v6 debug app installed in place on the connected phone
+
+
+## Version 7 — Automatic organization — 2026-09-11
+
+- [x] Save notes immediately and queue organization atomically; resume pending work with WorkManager
+- [x] Bundle an offline sentence model and cache unchanged embeddings; reject stale-generation analysis results
+- [x] Find related notes by meaning and create phrase-named topic groups without initial tags or aliases
+- [x] Attach strong existing-concept matches and learn only from manually attached examples and saved corrections
+- [x] Persist removal exclusions across text edits, reopening, and note Undo; Keep promotes automatic associations to manual
+- [x] Preserve manual tags and note timestamps through background processing and concurrent text edits
+- [x] Rename automatic topics without locking membership; explicit merges preserve the combined membership
+- [x] Keep manual controls behind Tags and connections; show automatic organization and semantic related notes in the editor
+- [x] Migrate the previous schema in place and queue existing notes; preserve types, aliases, links, and dismissals
+- [x] Match the app's keyboard-resize setting in the isolated Compose test host
+- [x] 35 unit tests and all 34 phone instrumentation tests pass; build and lint complete with zero errors
+- [x] Install v7 in place on the connected phone; verify normal launch and successful background organization of the existing notebook

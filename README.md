@@ -1,8 +1,26 @@
 # Note-taker
 
-Note-taker is a small, private, local-first Android notebook. Version 5 adds predictable tag suggestions and editable keywords/aliases to the local notebook described in [`note-taker-product-brief.md`](note-taker-product-brief.md).
+Note-taker is a private, local-first Android notebook. Version 7 organizes saved
+notes in the background: it finds related notes by meaning, groups recurring
+topics, and attaches existing concepts when the evidence is strong. Capture needs
+no tags, aliases, or review steps.
 
 ## Current features
+
+- Save immediately; a durable background queue organizes the latest text without blocking capture
+- Find **Related notes** in the editor and browse automatically discovered groups through **Topics**
+- Create provisional topic names from phrases in the notes; rename groups or merge them explicitly
+- Automatically attach strong, unambiguous existing-concept matches and learn from manually tagged examples
+- Remove an automatic association with one tap; the correction survives text edits and app restarts. **Keep** makes it manual
+- Keep manual tags and links intact; automatic organization does not change note edit timestamps or ordering
+- Access advanced manual controls through **Tags and connections** in the editor
+- Run semantic inference entirely offline using a bundled quantized sentence model; see [model provenance and evaluation](MODEL.md)
+
+- Upgrade any tag to an entity by assigning one optional type; remove its type to return it to an ordinary tag
+- Open **Tags → Browse concepts and types**, or **Details** in a note's tag picker, to browse concepts and all their associated notes
+- Rename concepts and manage aliases from their detail pages; concept pages ignore the notes list's active filters
+- Manage editable starter types (Exercise, Project, Research topic, Algorithm, Person, Place, Task, Idea), add custom types, or delete a type while preserving its concepts as ordinary tags
+- Search one tag/entity picker and see types in suggestion chips, note labels, and shared-connection reasons
 
 - Suggest existing tags from saved text using tag names and user-configured words/phrases
 - Accept or dismiss suggestions in the editor; dismissals persist until saved note text changes
@@ -30,7 +48,7 @@ Note-taker is a small, private, local-first Android notebook. Version 5 adds pre
 - Local Room database with stable UUID identifiers
 - System light/dark colors and basic accessibility semantics
 
-The application declares no internet or other runtime permissions. Android cloud backup and device transfer are disabled, so note data stays in the app's private on-device database.
+The application declares no internet permission or user-requested runtime permissions. WorkManager supplies normal system permissions for background scheduling, wake locks, and reboot recovery. Android cloud backup and device transfer are disabled, so note data stays in the app's private on-device database.
 
 > **Data ownership warning:** Uninstalling the application or clearing its storage permanently removes all notes. Export and backup are intentionally deferred from this MVP; do not use this version as the only copy of irreplaceable information.
 
@@ -57,7 +75,7 @@ With the phone connected, install both APKs in place and run the tests:
 ```bash
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 adb install -r app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
-adb shell am instrument -w app.notetaker.test/androidx.test.runner.AndroidJUnitRunner
+adb shell am instrument -w app.notetaker.test/app.notetaker.IsolatedTestRunner
 ```
 
 Tests use isolated in-memory or temporary databases. In-place installation preserves
@@ -106,13 +124,13 @@ Dependencies are assembled by `DefaultAppContainer`; no dependency-injection fra
 
 ## Behavioral details
 
-- Tags are attached manually or by accepting a suggestion. Capture a note as usual, then open its popup to organize it.
+- Tags can be attached manually, by accepting a suggestion, or automatically. Automatic and manual associations are stored separately; user corrections take priority.
 - Tag names are trimmed, limited to 40 characters, and deduplicated without case differences. Each note can have multiple tags; removing a tag from a note does not remove it from the library.
 - Completing a new note clears text, tag, and date filters and restores the default sort so it appears at the top.
 - Date ranges use local calendar days, including the entire end date. Last 7 days includes today and six prior days; Last month means the previous calendar month. Date presets refresh when the screen resumes.
 - Filter/sort selections survive screen recreation. Frequently used tags count notes across the whole notebook, independently of the active filters.
-- V5 uses Room schema version 4; migration preserves existing notes, tags, and connections.
-- Suggestions match case-insensitive literal words/phrases at Unicode word boundaries. There is no built-in vocabulary or automatic attachment.
+- V7 uses Room schema version 6; migration preserves existing notes, tags, and connections.
+- Suggestions ignore case and match words/phrases, including word prefixes in either direction when the shorter word has at least three letters (`run` matches `runs` and `running`). Short words, numbers, and punctuation-bearing terms such as `C++` require literal matches. Prefix matches remain suggestions; automatic attachment requires stronger evidence.
 - Aliases are trimmed and deduplicated per tag without case differences. The same alias can suggest multiple tags.
 - Suggestions evaluate saved text off the UI thread. Tag-only edits and alias changes preserve dismissals; saved text changes reset them.
 - Room schema version 3 migrates v1/v2 data in place. Deleting a note removes its tags and connections; Undo restores its tags and connections to notes that still exist.
@@ -127,4 +145,29 @@ Dependencies are assembled by `DefaultAppContainer`; no dependency-injection fra
 
 ## Deferred roadmap
 
-Entities, semantic search, AI, import/export, synchronization, accounts, and cloud services remain deferred. They should be introduced one independently useful stage at a time, in the order and under the constraints defined by the product brief.
+Structured queries, semantic search in the search box, generative AI, import/export, synchronization, accounts, and cloud services remain deferred. Semantic related notes and automatic topic grouping are available in v7. They should be introduced one independently useful stage at a time, in the order and under the constraints defined by the product brief.
+
+## Automatic organization behavior
+
+Existing notebooks are queued for analysis during the schema upgrade. Note saves
+and changes to manual organization enqueue work atomically through SQLite triggers.
+A WorkManager job computes results off the UI thread and commits only if the
+notebook generation still matches. Failures keep work pending, retry with backoff,
+and expose **Retry organization** in the editor and Topics page.
+
+The organizer caches embeddings and ranks at most five semantic neighbors per
+note. Topics require at least two related notes unless customized. Names are
+extracted phrases, not generated summaries. Renaming preserves the name; merging
+also preserves the combined membership. Related notes and topic groups can update
+as content changes. Pending analysis may temporarily display the previous results.
+
+Removing a concept records a durable per-note exclusion and a negative example
+of that saved text. Manually adding it again clears the exclusion. Similar future
+notes use positive and negative examples; one correction is not a global ban.
+Existing suggestion dismissals are respected until their usual text-change reset.
+Automatic tags are capped at five and never used as positive training examples.
+
+The initial model is English-focused. Meaning-based organization is approximate,
+particularly for very short or ambiguous notes. Analysis currently scans notebook
+pairs; embedding inference is cached, but very large notebooks will need a more
+efficient neighbor index. All note content stays on the device.

@@ -84,6 +84,8 @@ import java.time.format.FormatStyle
 fun NotesScreen(
     viewModel: NotesViewModel,
     onOpenNote: (String) -> Unit,
+    onOpenConcept: (String?) -> Unit = {},
+    onOpenTopics: () -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val tags by viewModel.tags.collectAsStateWithLifecycle()
@@ -174,6 +176,7 @@ fun NotesScreen(
                 Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = 12.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
+                TextButton(onClick = onOpenTopics) { Text("Topics") }
                 FilterChip(
                     selected = filters.period == DatePeriod.RECENT,
                     onClick = { viewModel.setFilters(filters.copy(period = if (filters.period == DatePeriod.RECENT) DatePeriod.ALL else DatePeriod.RECENT)) },
@@ -184,7 +187,7 @@ fun NotesScreen(
                     FilterChip(
                         selected = frequent.tag.id in selectedTags,
                         onClick = { viewModel.toggleFilterTag(frequent.tag.id) },
-                        label = { Text("${frequent.tag.name} (${frequent.count})") },
+                        label = { Text("${frequent.tag.displayName} (${frequent.count})") },
                         modifier = Modifier.testTag("frequent_tag_${frequent.tag.id}"),
                     )
                 }
@@ -202,9 +205,10 @@ fun NotesScreen(
             }
             if (showTags || selectedTags.isNotEmpty()) {
                 Column(Modifier.padding(horizontal = 12.dp)) {
+                    TextButton(onClick = { onOpenConcept(null) }) { Text("Browse concepts and types") }
                     Text("Match all selected tags", style = MaterialTheme.typography.labelSmall)
                     TextButton(onClick = { viewModel.selectTag(null) }) { Text(if (selectedTags.isEmpty()) "All notes" else "Clear tag filter") }
-                    TagPicker(tags, selectedTags.toSet(), { tag -> viewModel.toggleFilterTag(tag.id) }, viewModel::createTag, onDelete = { deletingTag = it })
+                    TagPicker(tags, selectedTags.toSet(), { tag -> viewModel.toggleFilterTag(tag.id) }, viewModel::createTag, onDelete = { deletingTag = it }, onOpenConcept = { onOpenConcept(it.id) })
                 }
             }
             }
@@ -342,7 +346,7 @@ private fun NoteRow(note: Note, selected: Boolean, selectionMode: Boolean, enabl
         },
         supportingContent = {
             Column {
-            if (note.tags.isNotEmpty()) Text(note.tags.joinToString(" · ") { it.name }, style = MaterialTheme.typography.labelMedium)
+            if (note.tags.isNotEmpty()) Text(note.tags.joinToString(" · ") { it.displayName }, style = MaterialTheme.typography.labelMedium)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End,
@@ -422,7 +426,7 @@ private fun BulkTagDialog(tags: List<Tag>, notes: List<Note>, onCreate: (String,
                     ) {
                         TriStateCheckbox(state = state, onClick = null)
                         Column(Modifier.padding(start = 12.dp)) {
-                            Text(tag.name)
+                            Text(tag.displayName)
                             Text(when (state) {
                                 ToggleableState.On -> "All ${notes.size} notes"
                                 ToggleableState.Off -> "No notes"

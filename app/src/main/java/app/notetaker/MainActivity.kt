@@ -60,7 +60,21 @@ internal fun NoteTakerApp(repository: NoteRepository) {
                 NotesScreen(
                     viewModel = notesViewModel,
                     onOpenNote = { id -> navController.navigate("$EDITOR_ROUTE?noteId=$id") },
+                    onOpenTopics = { navController.navigate("topics") },
+                    onOpenConcept = { id -> navController.navigate("concepts?tagId=${id.orEmpty()}") },
                 )
+            }
+
+            composable("topics") {
+                val topicsViewModel: app.notetaker.feature.concepts.ConceptsViewModel = viewModel(factory = app.notetaker.feature.concepts.ConceptsViewModel.factory(repository))
+                app.notetaker.feature.concepts.TopicsScreen(topicsViewModel, onBack = { navController.popBackStack() },
+                    onOpenNote = { id -> navController.navigate("$EDITOR_ROUTE?noteId=$id") })
+            }
+            composable("concepts?tagId={tagId}", arguments = listOf(navArgument("tagId") { defaultValue = "" })) { entry ->
+                val conceptsViewModel: app.notetaker.feature.concepts.ConceptsViewModel = viewModel(factory = app.notetaker.feature.concepts.ConceptsViewModel.factory(repository))
+                app.notetaker.feature.concepts.ConceptsScreen(conceptsViewModel, entry.arguments?.getString("tagId")?.ifBlank { null },
+                    onBack = { navController.popBackStack() },
+                    onOpenNote = { id -> navController.navigate("$EDITOR_ROUTE?noteId=$id") })
             }
 
             dialog(
@@ -83,6 +97,10 @@ internal fun NoteTakerApp(repository: NoteRepository) {
                     viewModel = editorViewModel,
                     isNewNote = noteId == null,
                     onClose = { navController.popBackStack() },
+                    onOpenConcept = { id ->
+                        navController.popBackStack()
+                        navController.navigate("concepts?tagId=${id.orEmpty()}")
+                    },
                     onOpenNote = { id ->
                         // Replace the popup so old editor snapshots cannot overwrite later edits.
                         navController.popBackStack()

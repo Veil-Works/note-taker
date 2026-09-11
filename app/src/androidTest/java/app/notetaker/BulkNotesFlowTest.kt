@@ -133,6 +133,7 @@ class BulkNotesFlowTest {
             rule.setContent { NoteTakerTheme { NoteTakerApp(repo) } }
             rule.waitUntil(5_000) { rule.onAllNodesWithTag("note_a").fetchSemanticsNodes().isNotEmpty() }
             rule.onNodeWithTag("note_a").performClick()
+            rule.onNodeWithText("Tags and connections").performScrollTo().performClick()
             rule.onNodeWithTag("open_link_b").performScrollTo().assertExists()
             runBlocking { repo.upsert(repo.getNote("b")!!.copy(tags = emptyList())) }
             rule.waitUntil(5_000) { rule.onAllNodesWithTag("open_link_b").fetchSemanticsNodes().isEmpty() }

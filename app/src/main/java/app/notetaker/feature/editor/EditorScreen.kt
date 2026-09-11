@@ -15,7 +15,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -36,11 +37,15 @@ fun EditorScreen(
     onClose: () -> Unit,
     onDeleted: (Note?) -> Unit,
     onOpenNote: (String) -> Unit,
+    onOpenConcept: (String?) -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val suggestions by viewModel.suggestions.collectAsStateWithLifecycle()
     val aliases by viewModel.aliases.collectAsStateWithLifecycle()
     val tags by viewModel.availableTags.collectAsStateWithLifecycle()
+    val related by viewModel.related.collectAsStateWithLifecycle()
+    val organizationStatus by viewModel.organizationStatus.collectAsStateWithLifecycle()
+    var showOrganizationControls by rememberSaveable { mutableStateOf(false) }
     val notes by viewModel.availableNotes.collectAsStateWithLifecycle()
     fun close() = viewModel.close(onClose)
     BackHandler(onBack = ::close)
@@ -70,27 +75,34 @@ fun EditorScreen(
                 )
             }
             if (state.isExistingNote) {
-                Text("Tags", style = MaterialTheme.typography.labelLarge)
-                TagPicker(tags, state.tags.map { it.id }.toSet(), viewModel::toggleTag, viewModel::createTag)
-                TagSuggestions(
-                    errorMessage = state.errorMessage,
-                    tags = tags,
-                    aliases = aliases,
-                    suggestions = suggestions.filterNot { suggested -> state.tags.any { it.id == suggested.id } },
-                    onAccept = viewModel::acceptSuggestion,
-                    onDismiss = viewModel::dismissSuggestion,
-                    onSaveAlias = viewModel::saveAlias,
-                    onDeleteAlias = viewModel::deleteAlias,
-                )
-                NoteLinks(
-                    currentId = state.noteId,
-                    notes = notes,
-                    tagIds = state.tags.map { it.id }.toSet(),
-                    enabled = !state.isLinking && !state.isSaving,
-                    errorMessage = state.errorMessage,
-                    onSetLinked = viewModel::setLinked,
-                    onOpenNote = { id -> viewModel.close { onOpenNote(id) } },
-                )
+                app.notetaker.ui.AutomaticOrganization(state.tags, state.automaticTagReasons, related, notes, organizationStatus,
+                    onRemove = { viewModel.toggleTag(it); viewModel.flush() }, onKeep = viewModel::keepAutomaticTag,
+                    onOpen = { id -> viewModel.close { onOpenNote(id) } }, onRetry = viewModel::retryOrganization)
+                TextButton(onClick = { showOrganizationControls = !showOrganizationControls }) { Text("Tags and connections") }
+                if (showOrganizationControls) {
+                    Text("Tags", style = MaterialTheme.typography.labelLarge)
+                    TagPicker(tags, state.tags.map { it.id }.toSet(), viewModel::toggleTag, viewModel::createTag, onOpenConcept = { tag -> viewModel.close { onOpenConcept(tag.id) } })
+                    TextButton(onClick = { viewModel.close { onOpenConcept(null) } }) { Text("Manage concepts and types") }
+                    TagSuggestions(
+                        errorMessage = state.errorMessage,
+                        tags = tags,
+                        aliases = aliases,
+                        suggestions = suggestions.filterNot { suggested -> state.tags.any { it.id == suggested.id } },
+                        onAccept = viewModel::acceptSuggestion,
+                        onDismiss = viewModel::dismissSuggestion,
+                        onSaveAlias = viewModel::saveAlias,
+                        onDeleteAlias = viewModel::deleteAlias,
+                    )
+                    NoteLinks(
+                        currentId = state.noteId,
+                        notes = notes,
+                        tagIds = state.tags.map { it.id }.toSet(),
+                        enabled = !state.isLinking && !state.isSaving,
+                        errorMessage = state.errorMessage,
+                        onSetLinked = viewModel::setLinked,
+                        onOpenNote = { id -> viewModel.close { onOpenNote(id) } },
+                    )
+                }
             }
             state.errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error) }
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {

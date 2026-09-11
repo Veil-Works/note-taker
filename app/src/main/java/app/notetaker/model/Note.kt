@@ -8,6 +8,8 @@ data class Note(
     val updatedAt: Long,
     val tags: List<Tag> = emptyList(),
     val linkedNoteIds: Set<String> = emptySet(),
+    val automaticTagReasons: Map<String, String> = emptyMap(),
+    val rejectedTagIds: Set<String> = emptySet(),
 )
 
 fun Note.preview(): String =

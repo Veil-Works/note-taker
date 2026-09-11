@@ -1,5 +1,39 @@
 # Changelog
 
+## 7.0.0 — 2026-09-11
+
+- Organize saved notes through a durable background queue and bundled offline sentence model.
+- Find semantic related notes and discover phrase-named topics without initial tags or setup.
+- Reuse strong existing-concept matches and learn from manual examples and durable corrections.
+- Keep automatic and manual associations separate; preserve user choices and note edit timestamps.
+- Add topic rename/merge controls and move manual organization behind Tags and connections.
+- Migrate schema 5 to 6, queue existing notes, cache embeddings, and guard analysis commits against concurrent edits.
+- Isolate instrumentation startup from the phone notebook and background organizer.
+
+Validation: 35 unit tests and all 34 isolated phone instrumentation tests pass;
+debug build and lint complete with zero errors. Coverage includes automatic
+capture-to-topic organization, semantic neighbors, corrections and Undo, learning
+from manual examples only, generation guards, cached embeddings, schema 5→6
+migration, editor restoration, and existing capture/tag/link/filter regressions. The normal
+app launched successfully after the in-place upgrade and WorkManager reported
+SUCCESS for organization of the existing notebook.
+
+## 6.0.0 — 2026-09-09
+
+- Upgrade existing tags with an optional entity type while retaining IDs, note associations, aliases, and suggestion dismissals.
+- Add concept pages with name/type editing, alias management, and every associated note regardless of list filters.
+- Add editable starter types and custom types; deleting a type returns its concepts to ordinary tags.
+- Show types in the searchable tag/entity picker, suggestions, note labels, and shared-connection reasons.
+- Preserve explicit suggestion acceptance and existing capture behavior.
+- Migrate Room schema 4 to 5 in place, including starter types and a joined concept view.
+
+
+Validation: 31 unit tests and all 28 phone instrumentation tests passed; debug
+build and lint completed with zero errors. Tests cover the Bench press upgrade,
+typed suggestion acceptance, concept-note browsing, ambiguous aliases, type
+renaming/removal, restoration after type deletion, and v1–v4 migrations. Installed
+in place on the connected phone.
+
 ## 5.0.0 — 2026-09-09
 
 - Suggest existing tags from saved note text with case-insensitive whole-word/phrase matching.

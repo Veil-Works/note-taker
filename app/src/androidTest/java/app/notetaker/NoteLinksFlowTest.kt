@@ -30,6 +30,7 @@ class NoteLinksFlowTest {
             rule.setContent { NoteTakerTheme { NoteTakerApp(repository) } }
             rule.waitUntil(5_000) { rule.onAllNodesWithText("Training plan").fetchSemanticsNodes().isNotEmpty() }
             rule.onNodeWithText("Training plan").performClick()
+            rule.onNodeWithText("Tags and connections").performScrollTo().performClick()
             rule.onNodeWithText("Connect a note").performScrollTo().performClick()
             rule.onNodeWithTag("connect_a").assertDoesNotExist()
             rule.onNodeWithTag("link_search").performTextInput("Running")
@@ -39,8 +40,10 @@ class NoteLinksFlowTest {
             rule.onNodeWithText("Done connecting").performClick()
             rule.onNodeWithTag("note_popup_content").performScrollTo().performTextReplacement("Updated training plan")
             rule.onNodeWithTag("open_link_b").performScrollTo().performClick()
+            rule.onNodeWithText("Tags and connections").performScrollTo().performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithTag("open_link_a").fetchSemanticsNodes().isNotEmpty() }
             rule.onNodeWithTag("open_link_a").performScrollTo().performClick()
+            rule.onNodeWithText("Tags and connections").performScrollTo().performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithTag("open_link_b").fetchSemanticsNodes().isNotEmpty() }
             rule.onNodeWithTag("note_popup_content").assertTextEquals("Updated training plan")
             rule.onNodeWithTag("remove_link_b").performScrollTo().performClick()

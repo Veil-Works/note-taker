@@ -11,6 +11,59 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NoteDao {
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun restoreAutomaticTags(rows: List<AutomaticTagEntity>)
+
+    @Query("DELETE FROM automatic_tags WHERE noteId = :noteId AND tagId = :tagId")
+    suspend fun removeAutomaticTag(noteId: String, tagId: String)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun rejectTag(row: OrganizationRejectionEntity)
+    @Query("DELETE FROM organization_rejections WHERE noteId = :noteId AND tagId = :tagId")
+    suspend fun clearRejection(noteId: String, tagId: String)
+    @Query("DELETE FROM tag_dismissals WHERE noteId = :noteId AND tagId = :tagId")
+    suspend fun clearDismissal(noteId: String, tagId: String)
+
+    @Transaction suspend fun changeTags(noteId: String, changes: Map<String, Boolean>) {
+        val note = checkNotNull(getById(noteId)) { "This note no longer exists." }
+        changes.forEach { (tagId, attached) ->
+            check(existingTagIds(listOf(tagId)).isNotEmpty()) { "This concept no longer exists." }
+            if (attached) {
+                clearRejection(noteId, tagId)
+                clearDismissal(noteId, tagId)
+                insertLinks(listOf(NoteTagEntity(noteId, tagId)))
+            } else {
+                removeTags(noteId, listOf(tagId))
+                rejectTag(OrganizationRejectionEntity(noteId, tagId, note.note.content))
+            }
+            removeAutomaticTag(noteId, tagId)
+        }
+    }
+    @Transaction suspend fun saveEdit(note: NoteEntity, changes: Map<String, Boolean>) {
+        check(getById(note.id) != null) { "This note no longer exists." }
+        val previous = getById(note.id)!!
+        if (previous.note.content != note.content) clearDismissals(note.id)
+        upsert(note)
+        changeTags(note.id, changes)
+    }
+
+    @Query("SELECT * FROM entity_types ORDER BY normalizedName")
+    fun observeTypes(): Flow<List<EntityTypeEntity>>
+
+    @Query("SELECT EXISTS(SELECT 1 FROM entity_types WHERE id = :id)")
+    suspend fun typeExists(id: String): Boolean
+
+    @Insert
+    suspend fun insertType(type: EntityTypeEntity)
+
+    @Query("UPDATE entity_types SET name = :name, normalizedName = :normalized WHERE id = :id")
+    suspend fun renameType(id: String, name: String, normalized: String): Int
+
+    @Query("DELETE FROM entity_types WHERE id = :id")
+    suspend fun deleteType(id: String)
+
+    @Query("UPDATE tags SET name = :name, normalizedName = :normalized, typeId = :typeId WHERE id = :id")
+    suspend fun updateTag(id: String, name: String, normalized: String, typeId: String?): Int
+
     @Query("SELECT * FROM tag_aliases ORDER BY normalizedText, id")
     fun observeAliases(): Flow<List<TagAliasEntity>>
 
@@ -88,12 +141,8 @@ interface NoteDao {
         check(existingTagIds(tagIds.toList()).toSet() == tagIds) { "A selected tag no longer exists." }
         val notes = ids.map { checkNotNull(getById(it)) { "A selected note no longer exists." } }
         notes.forEach { row ->
-            val current = row.tags.map { it.id }.toSet()
-            if (current != (current + tagIds) - removeTagIds) {
-                removeTags(row.note.id, removeTagIds.toList())
-                insertLinks(tagIds.map { NoteTagEntity(row.note.id, it) })
-                upsert(row.note.copy(updatedAt = timestamp))
-            }
+            changeTags(row.note.id, tagIds.associateWith { true } + removeTagIds.associateWith { false })
+            if (tagIds.isNotEmpty() || removeTagIds.isNotEmpty()) upsert(row.note.copy(updatedAt = timestamp))
         }
     }
 
@@ -106,14 +155,14 @@ interface NoteDao {
         }
     }
 
-    @Query("SELECT * FROM tags ORDER BY normalizedName")
-    fun observeTags(): Flow<List<TagEntity>>
+    @Query("SELECT * FROM tag_details ORDER BY normalizedName")
+    fun observeTags(): Flow<List<TagDetails>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertTag(tag: TagEntity)
 
-    @Query("SELECT * FROM tags WHERE normalizedName = :name LIMIT 1")
-    suspend fun findTag(name: String): TagEntity?
+    @Query("SELECT * FROM tag_details WHERE normalizedName = :name LIMIT 1")
+    suspend fun findTag(name: String): TagDetails?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertLinks(links: List<NoteTagEntity>)
@@ -135,14 +184,23 @@ interface NoteDao {
     }
 
     @Transaction
-    suspend fun saveWithTags(note: NoteEntity, tags: List<TagEntity>, linkedNoteIds: Set<String>) {
+    suspend fun saveWithTags(note: NoteEntity, tags: List<TagEntity>, linkedNoteIds: Set<String>, automatic: List<AutomaticTagEntity> = emptyList(), rejected: Set<String> = emptySet()) {
         val previous = getById(note.id)
         val restoring = previous == null
         if (previous != null && previous.note.content != note.content) clearDismissals(note.id)
         upsert(note)
-        tags.forEach { insertTag(it) }
+        tags.forEach { tag ->
+            // Undo can carry a snapshot of a type deleted since the note was removed.
+            val validType = tag.typeId?.takeIf { typeExists(it) }
+            insertTag(tag.copy(typeId = validType))
+        }
         clearLinks(note.id)
         insertLinks(tags.map { NoteTagEntity(note.id, it.id) })
+        if (restoring) {
+            val available = existingTagIds((automatic.map { it.tagId } + rejected).distinct()).toSet()
+            restoreAutomaticTags(automatic.filter { it.tagId in available && it.tagId !in rejected })
+            rejected.filter { it in available }.forEach { rejectTag(OrganizationRejectionEntity(note.id, it, note.content)) }
+        }
         // Restoring a deleted note restores only links whose other endpoint still exists.
         // Ordinary content/tag saves must never overwrite independently edited links.
         if (restoring) linkedNoteIds.filter { it != note.id }.forEach { target ->

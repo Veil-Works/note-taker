@@ -6,6 +6,19 @@ import app.notetaker.model.Tag
 import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {
+    fun observeRelated(id: String): Flow<List<app.notetaker.model.RelatedNote>> = kotlinx.coroutines.flow.flowOf(emptyList())
+    fun observeTopics(): Flow<List<app.notetaker.model.Topic>> = kotlinx.coroutines.flow.flowOf(emptyList())
+    fun observeOrganizationStatus(): Flow<app.notetaker.model.OrganizationStatus> = kotlinx.coroutines.flow.flowOf(app.notetaker.model.OrganizationStatus())
+    suspend fun retryOrganization() {}
+    suspend fun renameTopic(id: String, name: String) {}
+    suspend fun mergeTopics(target: String, source: String) {}
+    suspend fun saveEdit(note: Note, tagChanges: Map<String, Boolean>) = upsert(note)
+
+    fun observeTypes(): Flow<List<app.notetaker.model.EntityType>>
+    suspend fun saveType(id: String?, name: String)
+    suspend fun deleteType(id: String)
+    suspend fun updateTag(id: String, name: String, typeId: String?)
+
     fun observeAliases(): Flow<List<TagAlias>>
     suspend fun saveAlias(tagId: String, aliasId: String?, text: String)
     suspend fun deleteAlias(id: String)
