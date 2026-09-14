@@ -42,7 +42,7 @@ class TagSuggestionsFlowTest {
             waitForSuggestion()
             rule.onNodeWithText("Dismiss Strength").performScrollTo().performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithTag("suggestion_Strength").fetchSemanticsNodes().isEmpty() }
-            rule.onNodeWithText("Done").performScrollTo().performClick()
+            rule.onNodeWithText("Done").performClick()
             waitForText("Bench press today")
             rule.onNodeWithText("Bench press today").performClick()
             rule.onNodeWithText("Tags and connections").performScrollTo().performClick()
@@ -53,7 +53,7 @@ class TagSuggestionsFlowTest {
             rule.onNodeWithTag("suggestion_Strength").performScrollTo().performClick()
             rule.onNodeWithTag("note_popup_content").performScrollTo()
             rule.onNode(hasText("Strength") and isSelectable()).performScrollTo().assertIsSelected()
-            rule.onNodeWithText("Done").performScrollTo().performClick()
+            rule.onNodeWithText("Done").performClick()
             rule.waitUntil(5_000) { runBlocking { repo.getNote("one")!!.tags.any { it.id == strength.id } } }
             assertEquals("Bench press tomorrow", runBlocking { repo.getNote("one")!!.content })
         } finally { db.close() }
@@ -65,14 +65,15 @@ class TagSuggestionsFlowTest {
         val tag = runBlocking { repo.createTag("runs") }
         try {
             rule.setContent { NoteTakerTheme { NoteTakerApp(repo) } }
+            rule.onNodeWithTag("nav_new").performClick()
             rule.onNodeWithTag("capture_field").performTextInput("run 7km thursday")
-            rule.onNodeWithContentDescription("Complete note").performClick()
+            rule.onNodeWithTag("complete_note").performClick()
             rule.waitUntil(5_000) { rule.onAllNodes(hasText("run 7km thursday") and !hasSetTextAction()).fetchSemanticsNodes().isNotEmpty() }
             rule.onNode(hasText("run 7km thursday") and !hasSetTextAction()).performClick()
             rule.onNodeWithText("Tags and connections").performScrollTo().performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithTag("suggestion_runs").fetchSemanticsNodes().isNotEmpty() }
             rule.onNodeWithTag("suggestion_runs").performScrollTo().performClick()
-            rule.onNodeWithText("Done").performScrollTo().performClick()
+            rule.onNodeWithText("Done").performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithText("Done").fetchSemanticsNodes().isEmpty() }
             assertTrue(runBlocking { repo.observeNotes().first().single().tags.contains(tag) })
         } finally { db.close() }

@@ -1,8 +1,14 @@
 package app.notetaker.feature.notes
 
+import app.notetaker.ui.countLabel
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
+
+import app.notetaker.ui.theme.glassPanel
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.combinedClickable
 import androidx.activity.compose.BackHandler
-import androidx.compose.material3.AlertDialog
+import app.notetaker.ui.NotebookDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.TriStateCheckbox
 import androidx.compose.foundation.selection.triStateToggleable
@@ -54,7 +60,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -86,7 +92,9 @@ fun NotesScreen(
     onOpenNote: (String) -> Unit,
     onOpenConcept: (String?) -> Unit = {},
     onOpenTopics: () -> Unit = {},
+    compact: Boolean = false,
 ) {
+    val captureGeneration by viewModel.captureGeneration.collectAsStateWithLifecycle()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val tags by viewModel.tags.collectAsStateWithLifecycle()
     val selectedTags by viewModel.selectedTags.collectAsStateWithLifecycle()
@@ -98,15 +106,15 @@ fun NotesScreen(
     var deletingTag by remember { mutableStateOf<Tag?>(null) }
     val selectionMode = selecting || selectedNotes.isNotEmpty()
     BackHandler(selectionMode && !bulkBusy) { viewModel.clearSelection(); selecting = false }
-    if (deletingNotes) AlertDialog(
+    if (deletingNotes) NotebookDialog(
         onDismissRequest = { deletingNotes = false },
-        title = { Text("Delete ${selectedNotes.size} notes?") },
+        title = { Text("Delete ${countLabel(selectedNotes.size, "note")}?") },
         text = { Text("These notes and their connections will be permanently deleted.") },
         confirmButton = { TextButton(onClick = { viewModel.deleteSelected(); deletingNotes = false; selecting = false }) { Text("Delete notes") } },
         dismissButton = { TextButton(onClick = { deletingNotes = false }) { Text("Cancel") } },
     )
     deletingTag?.let { tag ->
-        AlertDialog(
+        NotebookDialog(
             onDismissRequest = { deletingTag = null },
             title = { Text("Delete tag “${tag.name}”?") },
             text = { Text("Remove this tag from every note and delete its keywords. Notes and manual connections will be kept.") },
@@ -124,23 +132,27 @@ fun NotesScreen(
     val filters by viewModel.filters.collectAsStateWithLifecycle()
     val frequentTags by viewModel.frequentTags.collectAsStateWithLifecycle()
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { viewModel.refreshDates() }
-    val draft by viewModel.draft.collectAsStateWithLifecycle()
-    val saving by viewModel.saving.collectAsStateWithLifecycle()
-    val captureError by viewModel.captureError.collectAsStateWithLifecycle()
     var searching by rememberSaveable { mutableStateOf(state.query.isNotEmpty()) }
-    var captureHeight by remember { mutableStateOf(0) }
-    val bottomSpace = with(LocalDensity.current) { captureHeight.toDp() } + 12.dp
+    var grouped by rememberSaveable { mutableStateOf(false) }
+    val bottomSpace = 16.dp
+    val largeText = LocalDensity.current.fontScale > 1.15f
 
     if (showFilters) FilterDialog(filters, onApply = {
         viewModel.setFilters(it)
         showFilters = false
     }, onDismiss = { showFilters = false })
 
-    Scaffold(
+    Scaffold(containerColor = Color.Transparent,
         topBar = {
+            Column(Modifier.animateContentSize(tween(240))) {
+            AnimatedContent(targetState = when { selectionMode -> "selection"; searching -> "search"; else -> "notes" },
+                transitionSpec = {
+                    (fadeIn(tween(180)) + slideInVertically(tween(240)) { it / 5 }) togetherWith
+                        (fadeOut(tween(120)) + slideOutVertically(tween(200)) { -it / 5 }) using SizeTransform(clip = false)
+                }, label = "note_toolbar") { mode ->
             Column {
-            if (selectionMode) {
-                TopAppBar(
+            if (mode == "selection") {
+                TopAppBar(colors = androidx.compose.material3.TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent, scrolledContainerColor = Color.Transparent),
                     title = { Text("${selectedNotes.size} selected") },
                     navigationIcon = { IconButton(enabled = !bulkBusy, onClick = { viewModel.clearSelection(); selecting = false }) { Icon(Icons.Default.Close, "Cancel selection") } },
                     actions = { TextButton(enabled = !bulkBusy, onClick = { viewModel.selectNotes(state.notes.map { it.id }) }) { Text("Select all") } },
@@ -150,7 +162,7 @@ fun NotesScreen(
                     TextButton(enabled = !bulkBusy && selectedNotes.isNotEmpty(), onClick = { viewModel.prepareTagging { taggingNotes = it } }) { Text("Tag") }
                     TextButton(enabled = !bulkBusy && selectedNotes.size > 1, onClick = { viewModel.connectSelected(); selecting = false }) { Text("Connect") }
                 }
-            } else if (searching) {
+            } else if (mode == "search") {
                 SearchBar(
                     query = state.query,
                     onQueryChanged = viewModel::onQueryChanged,
@@ -160,22 +172,32 @@ fun NotesScreen(
                     },
                 )
             } else {
-                TopAppBar(
-                    title = { Text("Notes") },
+                TopAppBar(colors = androidx.compose.material3.TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent, scrolledContainerColor = Color.Transparent),
+                    title = { Text("Notes", style = MaterialTheme.typography.headlineLarge, maxLines = 1) },
                     actions = {
+                        if (!largeText) {
                         TextButton(onClick = { selecting = true }) { Text("Select") }
                         TextButton(onClick = { showFilters = true }) { Text("Filters") }
                         TextButton(onClick = { showTags = !showTags }) { Text("Tags") }
+                        }
                         IconButton(onClick = { searching = true }) {
                             Icon(Icons.Default.Search, contentDescription = "Search notes")
                         }
                     },
                 )
             }
+            }
+            }
             Row(
                 Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = 12.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
+                if (largeText && !selectionMode && !searching) {
+                    TextButton(onClick = { selecting = true }) { Text("Select") }
+                    TextButton(onClick = { showFilters = true }) { Text("Filters") }
+                    TextButton(onClick = { showTags = !showTags }) { Text("Tags") }
+                }
+                FilterChip(selected = grouped, onClick = { grouped = !grouped }, label = { Text("Group by tags") })
                 TextButton(onClick = onOpenTopics) { Text("Topics") }
                 FilterChip(
                     selected = filters.period == DatePeriod.RECENT,
@@ -203,11 +225,15 @@ fun NotesScreen(
                     TextButton(onClick = viewModel::clearFilters) { Text("Clear filters") }
                 }
             }
-            if (showTags || selectedTags.isNotEmpty()) {
-                Column(Modifier.padding(horizontal = 12.dp)) {
-                    TextButton(onClick = { onOpenConcept(null) }) { Text("Browse concepts and types") }
+            AnimatedVisibility(visible = showTags || selectedTags.isNotEmpty(),
+                enter = expandVertically(tween(260), expandFrom = Alignment.Top) + fadeIn(tween(200)),
+                exit = shrinkVertically(tween(220), shrinkTowards = Alignment.Top) + fadeOut(tween(120))) {
+                Column(Modifier.padding(horizontal = 12.dp, vertical = 8.dp).glassPanel(22.dp).padding(horizontal = 12.dp, vertical = 4.dp)) {
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        TextButton(onClick = { onOpenConcept(null) }) { Text("Manage tags") }
+                        TextButton(onClick = { viewModel.selectTag(null) }) { Text(if (selectedTags.isEmpty()) "All notes" else "Clear tag filter") }
+                    }
                     Text("Match all selected tags", style = MaterialTheme.typography.labelSmall)
-                    TextButton(onClick = { viewModel.selectTag(null) }) { Text(if (selectedTags.isEmpty()) "All notes" else "Clear tag filter") }
                     TagPicker(tags, selectedTags.toSet(), { tag -> viewModel.toggleFilterTag(tag.id) }, viewModel::createTag, onDelete = { deletingTag = it }, onOpenConcept = { onOpenConcept(it.id) })
                 }
             }
@@ -221,52 +247,24 @@ fun NotesScreen(
                 state.notes.isEmpty() -> MessageContent(
                     if (filters.period != DatePeriod.ALL) "No notes match these filters."
                     else if (selectedTags.isNotEmpty()) "No notes match all selected tags and search."
-                    else if (state.query.isBlank()) "No notes yet. Write your first thought below."
+                    else if (state.query.isBlank()) "No notes yet. Tap New note to capture your first thought."
                     else "No notes match your search.",
                     Modifier.padding(bottom = bottomSpace),
                 )
                 else -> NotesList(
                     notes = state.notes,
+                    grouped = grouped,
+                    compact = compact,
                     onOpenNote = { if (selectionMode) viewModel.toggleNote(it) else onOpenNote(it) },
                     selectedIds = selectedNotes.toSet(),
                     selectionMode = selectionMode,
                     onLongClick = { viewModel.toggleNote(it) },
                     enabled = !bulkBusy,
                     bottomSpace = bottomSpace,
-                    resetKey = Triple(state.query, selectedTags, filters),
+                    resetKey = listOf(state.query, selectedTags, filters, captureGeneration),
                 )
             }
-            Surface(
-                modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth()
-                    .onSizeChanged { captureHeight = it.height }
-                    .padding(12.dp).testTag("capture_overlay"),
-                shape = RoundedCornerShape(24.dp),
-                shadowElevation = 8.dp,
-                tonalElevation = 3.dp,
-            ) {
-            Column(Modifier.padding(8.dp)) {
-                Row(verticalAlignment = Alignment.Bottom) {
-                    TextField(
-                        value = draft,
-                        onValueChange = viewModel::onDraftChanged,
-                        modifier = Modifier.weight(1f).testTag("capture_field"),
-                        placeholder = { Text("Write a note…") },
-                        readOnly = saving,
-                        minLines = 1,
-                        maxLines = 5,
-                    )
-                    IconButton(
-                        onClick = viewModel::completeNote,
-                        enabled = draft.isNotBlank() && !saving,
-                    ) {
-                        Icon(Icons.Default.Check, contentDescription = "Complete note")
-                    }
-                }
-                captureError?.let {
-                    Text(it, color = MaterialTheme.colorScheme.error)
-                }
-            }
-            }
+
         }
     }
 }
@@ -278,12 +276,17 @@ private fun SearchBar(
     onQueryChanged: (String) -> Unit,
     onClose: () -> Unit,
 ) {
-    TopAppBar(
+    TopAppBar(colors = androidx.compose.material3.TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent, scrolledContainerColor = Color.Transparent),
         title = {
-            TextField(
+            OutlinedTextField(
+                shape = RoundedCornerShape(20.dp),
+                colors = androidx.compose.material3.OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant),
                 value = query,
                 onValueChange = onQueryChanged,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(end = 12.dp),
                 placeholder = { Text("Search notes") },
                 singleLine = true,
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
@@ -307,6 +310,8 @@ private fun SearchBar(
 @Composable
 private fun NotesList(
     notes: List<Note>,
+    grouped: Boolean,
+    compact: Boolean,
     onOpenNote: (String) -> Unit,
     selectedIds: Set<String>,
     selectionMode: Boolean,
@@ -317,56 +322,60 @@ private fun NotesList(
     modifier: Modifier = Modifier,
 ) {
     val listState = rememberLazyListState()
-    LaunchedEffect(resetKey, notes.firstOrNull()?.id) {
+    LaunchedEffect(resetKey, grouped) {
         listState.scrollToItem(0)
     }
     LazyColumn(
         state = listState,
         modifier = modifier.fillMaxSize().testTag("notes_list"),
-        contentPadding = PaddingValues(bottom = bottomSpace),
+        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp, bottom = bottomSpace),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        items(notes, key = Note::id) { note ->
-            NoteRow(note = note, selected = note.id in selectedIds, selectionMode = selectionMode, enabled = enabled, onLongClick = { onLongClick(note.id) }, onClick = { onOpenNote(note.id) })
-            HorizontalDivider()
+        val tagNames = notes.flatMap { it.tags }.associate { it.id to it.displayName }
+        val groups = if (grouped) {
+            notes.flatMap { note -> if (note.tags.isEmpty()) listOf(null to note) else note.tags.map { it.id to note } }
+                .groupBy({ it.first }, { it.second }).entries.sortedBy { tagNames[it.key] ?: "Untagged" }.map { it.key to it.value }
+        } else listOf(null to notes)
+        groups.forEach { (groupId, members) ->
+            val name = if (grouped) tagNames[groupId] ?: "Untagged" else ""
+            if (name.isNotEmpty()) item(key = "heading-$groupId") {
+                Text("$name · ${members.size}", style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(top = 16.dp, bottom = 4.dp).semantics { heading() })
+            }
+            items(members, key = { "$groupId:${it.id}" }) { note ->
+                NoteRow(note = note, compact = compact, selected = note.id in selectedIds, selectionMode = selectionMode, enabled = enabled,
+                    onLongClick = { onLongClick(note.id) }, onClick = { onOpenNote(note.id) })
+            }
         }
+
     }
 }
 
 @Composable
-private fun NoteRow(note: Note, selected: Boolean, selectionMode: Boolean, enabled: Boolean, onLongClick: () -> Unit, onClick: () -> Unit) {
-    ListItem(
-        leadingContent = if (selectionMode) { { Checkbox(checked = selected, onCheckedChange = null) } } else null,
-        headlineContent = {
-            Text(
-                text = note.preview(),
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-                fontWeight = FontWeight.Medium,
-            )
-        },
-        supportingContent = {
-            Column {
-            if (note.tags.isNotEmpty()) Text(note.tags.joinToString(" · ") { it.displayName }, style = MaterialTheme.typography.labelMedium)
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End,
-            ) {
-                Spacer(Modifier.width(12.dp))
-                Text(
-                    text = remember(note.updatedAt) { formatTimestamp(note.updatedAt) },
-                    style = MaterialTheme.typography.labelMedium,
-                )
+private fun NoteRow(note: Note, compact: Boolean, selected: Boolean, selectionMode: Boolean, enabled: Boolean, onLongClick: () -> Unit, onClick: () -> Unit) {
+    Surface(modifier = Modifier.glassPanel(22.dp, highlighted = selected), shape = RoundedCornerShape(22.dp),
+        color = Color.Transparent, contentColor = MaterialTheme.colorScheme.onSurface, tonalElevation = 0.dp) {
+        Row(Modifier.fillMaxWidth().testTag("note_${note.id}")
+            .semantics { if (selectionMode) this.selected = selected }
+            .combinedClickable(enabled = enabled, onLongClick = onLongClick, onLongClickLabel = "Select note",
+                onClickLabel = if (selectionMode) "Toggle selection" else "Open note", onClick = onClick)
+            .padding(horizontal = 16.dp, vertical = if (compact) 12.dp else 20.dp),
+            verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            AnimatedVisibility(visible = selectionMode,
+                enter = expandHorizontally(tween(220)) + fadeIn(tween(180)),
+                exit = shrinkHorizontally(tween(220)) + fadeOut(tween(120))) {
+                Checkbox(checked = selected, onCheckedChange = null)
             }
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(note.preview(), maxLines = if (compact) 2 else 5, overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Normal)
+                if (note.tags.isNotEmpty()) Text(note.tags.joinToString(" · ") { it.displayName },
+                    style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(formatTimestamp(note.updatedAt), modifier = Modifier.align(Alignment.End),
+                    style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
-        },
-        modifier = Modifier.testTag("note_${note.id}").semantics { if (selectionMode) this.selected = selected }.combinedClickable(
-            enabled = enabled,
-            onLongClick = onLongClick,
-            onLongClickLabel = "Select note",
-            onClickLabel = if (selectionMode) "Toggle selection" else "Open note",
-            onClick = onClick,
-        ),
-    )
+        }
+    }
 }
 
 @Composable
@@ -393,16 +402,22 @@ private fun MessageContent(message: String?, modifier: Modifier = Modifier) {
     }
 }
 
-private fun formatTimestamp(timestamp: Long): String =
-    DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
-        .withZone(ZoneId.systemDefault())
-        .format(Instant.ofEpochMilli(timestamp))
+private fun formatTimestamp(timestamp: Long): String {
+    val date = Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault())
+    val today = java.time.LocalDate.now()
+    val day = when (date.toLocalDate()) {
+        today -> "Today"
+        today.minusDays(1) -> "Yesterday"
+        else -> date.format(DateTimeFormatter.ofPattern("d MMM"))
+    }
+    return "$day · ${date.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))}"
+}
 
 @Composable
 private fun BulkTagDialog(tags: List<Tag>, notes: List<Note>, onCreate: (String, () -> Unit) -> Unit, onApply: (Set<String>, Set<String>) -> Unit, onDismiss: () -> Unit) {
     val counts = remember { notes.flatMap { it.tags.distinctBy(Tag::id) }.groupingBy(Tag::id).eachCount() }
     var changes by remember { mutableStateOf(emptyMap<String, Boolean>()) }
-    AlertDialog(
+    NotebookDialog(
         onDismissRequest = onDismiss,
         title = { Text("Tag selected notes") },
         text = {
@@ -428,7 +443,7 @@ private fun BulkTagDialog(tags: List<Tag>, notes: List<Note>, onCreate: (String,
                         Column(Modifier.padding(start = 12.dp)) {
                             Text(tag.displayName)
                             Text(when (state) {
-                                ToggleableState.On -> "All ${notes.size} notes"
+                                ToggleableState.On -> if (notes.size == 1) "1 note" else "All ${notes.size} notes"
                                 ToggleableState.Off -> "No notes"
                                 ToggleableState.Indeterminate -> "$count of ${notes.size} notes"
                             }, style = MaterialTheme.typography.labelSmall)

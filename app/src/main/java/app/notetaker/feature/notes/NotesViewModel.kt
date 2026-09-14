@@ -167,11 +167,19 @@ class NotesViewModel(
     val captureError: StateFlow<String?> = _captureError
     private var pendingNote: Note? = null
 
+    fun discardDraft() {
+        if (_saving.value) return
+        pendingNote = null
+        onDraftChanged("")
+    }
+
     fun onDraftChanged(text: String) {
         if (_saving.value) return
         savedStateHandle["capture_text"] = text
         _captureError.value = null
     }
+
+    val captureGeneration = savedStateHandle.getStateFlow("capture_generation", 0)
 
     fun completeNote() {
         if (_saving.value || draft.value.isBlank()) return
@@ -187,10 +195,11 @@ class NotesViewModel(
                 pendingNote = null
                 _captureError.value = null
                 clearFilters()
+                savedStateHandle["capture_generation"] = captureGeneration.value + 1
             } catch (cancelled: CancellationException) {
                 throw cancelled
             } catch (_: Exception) {
-                _captureError.value = "Could not save note. Tap Complete note to retry."
+                _captureError.value = "Could not save note. Tap Save note to retry."
             } finally {
                 _saving.value = false
             }

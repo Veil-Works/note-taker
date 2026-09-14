@@ -26,10 +26,11 @@ class AutomaticOrganizationFlowTest {
         try {
             runBlocking { repo.upsert(Note("old", "Barbell chest workout at the gym", 1, 2)) }
             rule.setContent { NoteTakerTheme { NoteTakerApp(repo) } }
+            rule.onNodeWithTag("nav_new").performClick()
             rule.onNodeWithTag("capture_field").performTextInput("Bench press 80 kg, 3 sets of 5 reps")
-            rule.onNodeWithContentDescription("Complete note").performClick()
+            rule.onNodeWithTag("complete_note").performClick()
             rule.waitUntil(5_000) { runBlocking { repo.observeNotes().first().size == 2 } }
-            rule.onNodeWithTag("capture_field").assert(SemanticsMatcher.expectValue(androidx.compose.ui.semantics.SemanticsProperties.EditableText, androidx.compose.ui.text.AnnotatedString("")))
+            rule.onNodeWithTag("capture_field").assertDoesNotExist()
             organize()
             val newNote = runBlocking { repo.observeNotes().first().first { it.id != "old" } }
             assertEquals(1, runBlocking { repo.observeTopics().first().size })
@@ -37,13 +38,13 @@ class AutomaticOrganizationFlowTest {
             rule.waitUntil(5_000) { rule.onAllNodesWithTag("semantic_old").fetchSemanticsNodes().isNotEmpty() }
             rule.onNodeWithTag("semantic_old").performScrollTo().performClick()
             rule.onNodeWithTag("note_popup_content").assertTextContains("Barbell chest workout at the gym")
-            rule.onNodeWithText("Done").performScrollTo().performClick()
+            rule.onNodeWithText("Done").performClick()
             val tag = runBlocking { repo.createTag("Bench press") }
             organize()
             rule.onNodeWithTag("note_${newNote.id}").performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithTag("reject_auto_${tag.id}").fetchSemanticsNodes().isNotEmpty() }
             rule.onNodeWithTag("reject_auto_${tag.id}").performScrollTo().performClick()
-            rule.onNodeWithText("Done").performScrollTo().performClick()
+            rule.onNodeWithText("Done").performClick()
             rule.waitUntil(5_000) { runBlocking { tag.id in repo.getNote(newNote.id)!!.rejectedTagIds } }
             organize()
             assertTrue(runBlocking { repo.getNote(newNote.id)!!.tags.isEmpty() })

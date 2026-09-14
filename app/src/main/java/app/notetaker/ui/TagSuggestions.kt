@@ -45,7 +45,7 @@ fun TagSuggestions(
         }
     }
     if (showKeywords) {
-        AlertDialog(
+        NotebookDialog(
             modifier = Modifier.testTag("tag_keywords_dialog"),
             onDismissRequest = { showKeywords = false },
             title = { Text("Tag keywords") },

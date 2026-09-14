@@ -53,13 +53,14 @@ class NoteFiltersFlowTest {
             rule.onNodeWithText("Filters").performClick()
             rule.onNodeWithText("Last month").performClick()
             rule.onNodeWithText("Apply").performClick()
+            rule.onNodeWithTag("nav_new").performClick()
             rule.onNodeWithTag("capture_field").performTextInput("New capture")
-            rule.onNodeWithContentDescription("Complete note").performClick()
+            rule.onNodeWithTag("complete_note").performClick()
             rule.waitUntil(5_000) {
                 rule.onAllNodesWithText("New capture").fetchSemanticsNodes().isNotEmpty() &&
                     rule.onAllNodesWithText("Clear filters").fetchSemanticsNodes().isEmpty()
             }
-            rule.onNodeWithTag("capture_field").assert(SemanticsMatcher.expectValue(androidx.compose.ui.semantics.SemanticsProperties.EditableText, androidx.compose.ui.text.AnnotatedString("")))
+            rule.onNodeWithTag("capture_field").assertDoesNotExist()
         } finally { database.close() }
     }
 

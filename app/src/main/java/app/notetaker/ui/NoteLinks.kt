@@ -57,7 +57,7 @@ fun NoteLinks(
                 (query.isBlank() || it.content.contains(query.trim(), ignoreCase = true) ||
                     it.tags.any { tag -> tag.name.contains(query.trim(), ignoreCase = true) })
         }.sortedByDescending { note -> note.tags.count { it.id in tagIds } }
-        AlertDialog(
+        NotebookDialog(
             onDismissRequest = { choosing = false },
             title = { Text("Connect a note") },
             text = {

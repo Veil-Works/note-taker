@@ -45,3 +45,12 @@ Thresholds should be revisited with a larger representative evaluation set.
 English shorthand, ambiguity, and mixed subjects remain limitations; other
 languages have not been validated. User-added labels are the only positive
 learning examples. Automatically inferred labels never reinforce themselves.
+
+## Topic labels
+
+Labels use local rules: shared category evidence (such as Dogs and Running),
+recurring project subjects, then phrases appearing in multiple notes. Custom
+names are preserved. The experimental generative model and native runtime have
+been removed; the bundled MiniLM embedding model still supplies connections.
+Upgrading removes the experimental model files and cached generated labels,
+then regenerates automatic topic names without changing note contents.

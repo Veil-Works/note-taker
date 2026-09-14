@@ -21,6 +21,11 @@ class RoomNoteRepository(
     private val noteDao: NoteDao,
     private val organizationDao: app.notetaker.data.local.OrganizationDao? = null,
 ) : NoteRepository {
+    override fun observeGraphEdges() = organizationDao?.observeGraphLinks()?.map { rows ->
+        rows.groupBy { minOf(it.noteId, it.targetId) to maxOf(it.noteId, it.targetId) }.map { (pair, links) ->
+            app.notetaker.model.GraphEdge(pair.first, pair.second, links.maxOf { it.score })
+        }
+    } ?: kotlinx.coroutines.flow.flowOf(emptyList())
     override fun observeRelated(id: String) = organizationDao?.related(id)?.map { rows -> rows.map { app.notetaker.model.RelatedNote(it.targetId, it.score) } } ?: kotlinx.coroutines.flow.flowOf(emptyList())
     override fun observeTopics() = organizationDao?.observeTopics()?.map { rows -> rows.map { app.notetaker.model.Topic(it.topic.id, it.topic.name, it.members.map { m -> m.noteId }.toSet(), it.topic.customized) }.filter { it.noteIds.isNotEmpty() } } ?: kotlinx.coroutines.flow.flowOf(emptyList())
     override fun observeOrganizationStatus() = organizationDao?.observeState()?.map { app.notetaker.model.OrganizationStatus(it != null && it.completed != it.generation, it?.error) } ?: kotlinx.coroutines.flow.flowOf(app.notetaker.model.OrganizationStatus())

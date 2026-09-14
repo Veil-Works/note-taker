@@ -55,7 +55,7 @@ class NoteCaptureFlowTest {
                 composeRule.onAllNodesWithText(note.content).fetchSemanticsNodes().size >= 2
             }
             composeRule.onNodeWithTag("note_popup_content").performTextReplacement("Updated $now")
-            composeRule.onNodeWithText("Done").performScrollTo().performClick()
+            composeRule.onNodeWithText("Done").performClick()
             composeRule.waitUntil(5_000) {
                 composeRule.onAllNodesWithText("Updated $now").fetchSemanticsNodes().isNotEmpty()
                     && composeRule.onAllNodesWithText("Done").fetchSemanticsNodes().isEmpty()
@@ -83,34 +83,35 @@ class NoteCaptureFlowTest {
     fun create_note_and_return_to_list() {
         val content = "Instrumentation capture ${System.currentTimeMillis()}"
 
+        composeRule.onNodeWithTag("nav_new").performClick()
+
         composeRule.onNodeWithTag("capture_field").performTextInput(content)
-        composeRule.onNodeWithContentDescription("Complete note").performClick()
+        composeRule.onNodeWithTag("complete_note").performClick()
 
         composeRule.waitUntil(timeoutMillis = 5_000) {
             runCatching {
                 composeRule.onNode(hasText(content) and !hasSetTextAction()).assertIsDisplayed()
-                composeRule.onNodeWithTag("capture_field").assert(SemanticsMatcher.expectValue(SemanticsProperties.EditableText, AnnotatedString("")))
+                composeRule.onNodeWithTag("capture_field").assertDoesNotExist()
             }.isSuccess
         }
         composeRule.onNode(hasText(content) and !hasSetTextAction()).assertIsDisplayed()
-        composeRule.onNodeWithTag("capture_field").assert(SemanticsMatcher.expectValue(SemanticsProperties.EditableText, AnnotatedString("")))
+        composeRule.onNodeWithTag("capture_field").assertDoesNotExist()
     }
 
     @Test
-    fun last_note_scrolls_above_capture_overlay_with_keyboard_open() {
+    fun last_note_scrolls_above_floating_navigation() {
         val notes = runBlocking {
             repeat(35) { index ->
                 repository.upsert(Note("overlay-test-$index", "Overlay row $index", index.toLong(), index.toLong()))
             }
             repository.observeNotes().first()
         }
-        composeRule.onNodeWithTag("capture_field").performTextInput("Draft\nSecond line\nThird line")
         composeRule.waitForIdle()
         composeRule.onNodeWithTag("notes_list").performScrollToIndex(notes.lastIndex)
         val lastRow = composeRule.onNodeWithText(notes.last().preview())
         lastRow.assertIsDisplayed()
         val rowBounds = lastRow.getUnclippedBoundsInRoot()
-        val overlayBounds = composeRule.onNodeWithTag("capture_overlay").getUnclippedBoundsInRoot()
+        val overlayBounds = composeRule.onNodeWithTag("floating_navigation").getUnclippedBoundsInRoot()
         assertTrue("Last note must be above the floating capture field", rowBounds.bottom <= overlayBounds.top)
     }
 }

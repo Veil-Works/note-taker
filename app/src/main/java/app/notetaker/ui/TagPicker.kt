@@ -1,5 +1,6 @@
 package app.notetaker.ui
 
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.*
@@ -19,22 +20,26 @@ import app.notetaker.model.Tag
 fun TagPicker(tags: List<Tag>, selectedIds: Set<String>, onToggle: (Tag) -> Unit, onCreate: (String, () -> Unit) -> Unit, onDelete: ((Tag) -> Unit)? = null, onOpenConcept: ((Tag) -> Unit)? = null) {
     var name by rememberSaveable { mutableStateOf("") }
     var query by rememberSaveable { mutableStateOf("") }
-    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         if (tags.isNotEmpty()) {
-            OutlinedTextField(query, { query = it }, label = { Text("Find tags or entities") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(query, { query = it }, label = { Text("Find tags or entities") }, singleLine = true, shape = RoundedCornerShape(18.dp),
+                colors = OutlinedTextFieldDefaults.colors(unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow, focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow),
+                modifier = Modifier.fillMaxWidth())
             Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 tags.filter { query.isBlank() || it.displayName.contains(query.trim(), true) }.forEach { tag ->
                     Column {
-                    FilterChip(selected = tag.id in selectedIds, onClick = { onToggle(tag) }, label = { Text(tag.displayName) },
+                    FilterChip(shape = RoundedCornerShape(50), selected = tag.id in selectedIds, onClick = { onToggle(tag) }, label = { Text(tag.displayName) },
                         trailingIcon = onDelete?.let { delete -> { IconButton(onClick = { delete(tag) }, modifier = Modifier.size(32.dp).testTag("delete_tag_${tag.id}")) { Icon(Icons.Default.Delete, "Delete tag ${tag.name}") } } })
                     onOpenConcept?.let { open -> TextButton(onClick = { open(tag) }, modifier = Modifier.testTag("open_concept_${tag.id}")) { Text("Details") } }
                     }
                 }
             }
         }
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text("New tag") },
-                singleLine = true, modifier = Modifier.weight(1f))
+                singleLine = true, shape = RoundedCornerShape(18.dp),
+                colors = OutlinedTextFieldDefaults.colors(unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow, focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow),
+                modifier = Modifier.weight(1f))
             TextButton(onClick = {
                 val submittedName = name
                 onCreate(submittedName) {

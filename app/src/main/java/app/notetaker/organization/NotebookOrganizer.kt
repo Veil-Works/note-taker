@@ -28,11 +28,18 @@ class NotebookOrganizer(private val db: NoteDatabase, private val embedding: Tex
             row.note.id to vector
         }
         val nonempty = notes.filter { it.note.content.isNotBlank() }
-        val links = nonempty.flatMap { row ->
-            coroutineContext.ensureActive()
-            nonempty.asSequence().filter { it.note.id != row.note.id }.map { other ->
-                SemanticLinkEntity(row.note.id, other.note.id, similarity(vectors.getValue(row.note.id), vectors.getValue(other.note.id)))
-            }.filter { it.score >= RELATED_THRESHOLD }.sortedWith(compareByDescending<SemanticLinkEntity> { it.score }.thenBy { it.targetId }).take(5).toList()
+        val subjects = recurringSubjects(nonempty.associate { it.note.id to it.note.content }, vectors)
+        val links = buildList {
+            nonempty.forEachIndexed { index, row ->
+                coroutineContext.ensureActive()
+                for (otherIndex in index + 1 until nonempty.size) {
+                    val other = nonempty[otherIndex]
+                    val score = relevantConnectionScore(row.note.id, other.note.id, vectors, subjects) ?: continue
+                    // An accepted relationship always exists in both directions, regardless of rank.
+                    add(SemanticLinkEntity(row.note.id, other.note.id, score))
+                    add(SemanticLinkEntity(other.note.id, row.note.id, score))
+                }
+            }
         }
         // Only user-attached tags are positive examples. Never train on our own guesses.
         val examples = tags.associate { tag -> tag.id to notes.filter { row -> row.tags.any { it.id == tag.id } } }
@@ -59,29 +66,32 @@ class NotebookOrganizer(private val db: NoteDatabase, private val embedding: Tex
                 }
             }.sortedWith(compareByDescending<AutomaticTagEntity> { it.score }.thenBy { it.tagId }).take(5)
         }
-        val groups = discoverTopics(nonempty, vectors, oldTopics)
+        val groups = discoverTopics(nonempty, vectors, oldTopics, subjects)
         return dao.apply(state.generation, newEmbeddings, automatic, links, groups.map { it.first }, groups.flatMap { (topic, ids) -> ids.map { TopicNoteEntity(topic.id, it) } })
     }
 
-    private fun discoverTopics(notes: List<NoteWithTags>, vectors: Map<String, FloatArray>, old: List<TopicWithNotes>): List<Pair<TopicEntity, Set<String>>> {
+    private suspend fun discoverTopics(notes: List<NoteWithTags>, vectors: Map<String, FloatArray>, old: List<TopicWithNotes>, subjects: Map<String, String>): List<Pair<TopicEntity, Set<String>>> {
         val available = notes.associateBy { it.note.id }
         val groups = mutableListOf<Pair<TopicEntity, MutableSet<String>>>()
         val assigned = mutableSetOf<String>()
         // User names and merges preserve their existing membership. Ordinary groups remain provisional.
-        old.filter { it.topic.membershipLocked }.forEach { topic ->
+        old.filter { it.topic.membershipLocked || it.topic.customized }.forEach { topic ->
             val members = topic.members.map { it.noteId }.filter { it in available }.toMutableSet()
             groups += topic.topic to members
             assigned += members
         }
-        old.filterNot { it.topic.membershipLocked }.forEach { topic ->
-            val members = topic.members.map { it.noteId }.filter { it in available && it !in assigned }
-            val retained = mutableSetOf<String>()
-            members.forEach { id -> if (retained.all { similarity(vectors.getValue(id), vectors.getValue(it)) >= TOPIC_THRESHOLD }) retained += id }
-            if (retained.size >= 2 || (topic.topic.customized && retained.isNotEmpty())) { groups += topic.topic to retained; assigned += retained }
+        subjects.entries.groupBy({ it.value }, { it.key }).toSortedMap().forEach { (name, ids) ->
+            val members = ids.filter { it !in assigned }.toMutableSet()
+            if (members.size >= 2) {
+                var topicId = "subject-$name"
+                while (groups.any { it.first.id == topicId }) topicId += "-new"
+                groups += TopicEntity(topicId, name.replaceFirstChar { it.titlecase(java.util.Locale.ROOT) }) to members
+                assigned += members
+            }
         }
         notes.filter { it.note.id !in assigned }.forEach { row ->
             val id = row.note.id
-            val best = groups.filter { (_, members) -> members.isNotEmpty() && members.all { similarity(vectors.getValue(id), vectors.getValue(it)) >= TOPIC_THRESHOLD } }
+            val best = groups.filter { (topic, members) -> !topic.membershipLocked && fitsTopic(members.map { similarity(vectors.getValue(id), vectors.getValue(it)) }) }
                 .maxByOrNull { (_, members) -> members.map { similarity(vectors.getValue(id), vectors.getValue(it)) }.average() }
             if (best != null) best.second += id
             else {
@@ -91,12 +101,15 @@ class NotebookOrganizer(private val db: NoteDatabase, private val embedding: Tex
             }
         }
         return groups.filter { it.first.customized || it.second.size >= 2 }.map { (topic, members) ->
-            val named = if (topic.customized || topic.name.isNotBlank()) topic else topic.copy(name = topicName(members.map { available.getValue(it).note.content }))
+            coroutineContext.ensureActive()
+            val contents = members.map { available.getValue(it).note.content }
+            val named = if (topic.customized) topic else topic.copy(name =
+                sharedCategory(contents) ?: if (topic.id.startsWith("subject-")) topic.name else topicName(contents))
             named to members.toSet()
         }
     }
     companion object {
-        const val RELATED_THRESHOLD = 0.38
+        const val RULES_VERSION = 7
         const val TOPIC_THRESHOLD = 0.42
         const val LEARNED_THRESHOLD = 0.55
     }

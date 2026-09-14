@@ -51,7 +51,7 @@ class NoteLinksFlowTest {
             runBlocking {
                 assertEquals(emptySet<String>(), repository.getNote("b")!!.linkedNoteIds)
             }
-            rule.onNodeWithText("Done").performScrollTo().performClick()
+            rule.onNodeWithText("Done").performClick()
         } finally { database.close() }
     }
 }

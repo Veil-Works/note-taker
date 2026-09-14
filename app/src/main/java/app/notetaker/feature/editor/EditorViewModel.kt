@@ -122,6 +122,7 @@ class EditorViewModel(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     fun setLinked(targetId: String, linked: Boolean) {
+        edited = true
         val sourceId = _uiState.value.noteId ?: return
         if (_uiState.value.isLinking) return
         _uiState.value = _uiState.value.copy(isLinking = true, errorMessage = null)
@@ -147,6 +148,7 @@ class EditorViewModel(
         savedStateHandle["pending_tag_removes"] = ArrayList(changes.filterValues { !it }.keys)
     }
     fun toggleTag(tag: Tag) {
+        edited = true
         if (!_uiState.value.isExistingNote) return
         val selected = _uiState.value.tags
         val tags = if (selected.any { it.id == tag.id }) selected.filterNot { it.id == tag.id } else selected + tag
@@ -170,6 +172,9 @@ class EditorViewModel(
         }
     }
 
+    private var originalNote: Note? = null
+    private var discarding = false
+    private var edited = false
     private var persistedNote: Note? = null
     private var autoSaveJob: Job? = null
     private val saveMutex = Mutex()
@@ -191,6 +196,7 @@ class EditorViewModel(
                     if (note == null) {
                         _uiState.value = _uiState.value.copy(isLoading = false, isMissing = true)
                     } else {
+                        originalNote = note
                         persistedNote = note
                         savedStateHandle[NOTE_ID_KEY] = note.id
                         savedStateHandle[CREATED_AT_KEY] = note.createdAt
@@ -241,6 +247,7 @@ class EditorViewModel(
 
     fun onContentChanged(content: String) {
         if (_uiState.value.isLoading || _uiState.value.isMissing) return
+        edited = true
         savedStateHandle[CONTENT_KEY] = content
         _uiState.value = _uiState.value.copy(content = content, errorMessage = null)
         scheduleAutoSave()
@@ -257,6 +264,30 @@ class EditorViewModel(
     fun flush() {
         autoSaveJob?.cancel()
         autoSaveJob = viewModelScope.launch { saveAndReport() }
+    }
+
+    fun discard(onClosed: () -> Unit) {
+        if (discarding || _uiState.value.isLinking || _uiState.value.isLoading) return
+        discarding = true
+        autoSaveJob?.cancel()
+        viewModelScope.launch {
+            try {
+                saveMutex.withLock {
+                    val original = originalNote
+                    if (original != null && edited) repository.upsert(original)
+                    else if (original == null) persistedNote?.let { repository.delete(it) }
+                    persistedNote = original
+                    storeTagChanges(emptyMap())
+                    savedStateHandle[CONTENT_KEY] = original?.content.orEmpty()
+                    _uiState.value = _uiState.value.copy(content = original?.content.orEmpty())
+                }
+                onClosed()
+            } catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled }
+            catch (_: Exception) {
+                discarding = false
+                _uiState.value = _uiState.value.copy(errorMessage = "Could not discard changes. Try again.")
+            }
+        }
     }
 
     fun close(onClosed: () -> Unit) {
@@ -304,6 +335,7 @@ class EditorViewModel(
     }
 
     private suspend fun persistCurrentContent(): Note? = saveMutex.withLock {
+        if (discarding) return@withLock persistedNote
         val content = _uiState.value.content
         val current = persistedNote
 

@@ -30,7 +30,7 @@ class ConceptsFlowTest {
             rule.setContent { NoteTakerTheme { NoteTakerApp(repo) } }
             waitFor("Tags")
             rule.onNodeWithText("Tags").performClick()
-            rule.onNodeWithText("Browse concepts and types").performClick()
+            rule.onNodeWithText("Manage tags").performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithTag("concept_${tag.id}").fetchSemanticsNodes().isNotEmpty() }
             rule.onNodeWithTag("concept_${tag.id}").performScrollTo().performClick()
             rule.onNodeWithText("Edit name and type").performScrollTo().performClick()

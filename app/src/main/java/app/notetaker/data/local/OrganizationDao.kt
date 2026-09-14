@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface OrganizationDao {
+    @Query("SELECT * FROM semantic_links") fun observeGraphLinks(): Flow<List<SemanticLinkEntity>>
     @Query("SELECT * FROM organization_state WHERE id = 1") fun observeState(): Flow<OrganizationStateEntity?>
     @Query("SELECT * FROM organization_state WHERE id = 1") suspend fun state(): OrganizationStateEntity?
     @Query("UPDATE organization_state SET generation = generation + 1, error = NULL WHERE id = 1") suspend fun request()
@@ -13,7 +14,7 @@ interface OrganizationDao {
     @Query("SELECT * FROM note_embeddings") suspend fun embeddings(): List<NoteEmbeddingEntity>
     @Upsert suspend fun saveEmbeddings(rows: List<NoteEmbeddingEntity>)
     @Query("SELECT * FROM organization_rejections") suspend fun rejections(): List<OrganizationRejectionEntity>
-    @Query("SELECT * FROM semantic_links WHERE noteId = :id ORDER BY score DESC, targetId LIMIT 5") fun related(id: String): Flow<List<SemanticLinkEntity>>
+    @Query("SELECT * FROM semantic_links WHERE noteId = :id ORDER BY score DESC, targetId") fun related(id: String): Flow<List<SemanticLinkEntity>>
     @Transaction @Query("SELECT * FROM topics ORDER BY name, id") fun observeTopics(): Flow<List<TopicWithNotes>>
     @Transaction @Query("SELECT * FROM topics ORDER BY id") suspend fun topics(): List<TopicWithNotes>
     @Query("DELETE FROM automatic_tags") suspend fun clearAutomaticTags()

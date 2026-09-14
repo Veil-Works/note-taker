@@ -45,6 +45,7 @@ class ConceptsViewModel(private val repository: NoteRepository) : ViewModel() {
     fun create(name: String, done: (String) -> Unit) = action { done(repository.createTag(name).id) }
     fun save(tag: Tag, name: String, typeId: String?, done: () -> Unit) = action { repository.updateTag(tag.id, name, typeId); done() }
     fun saveType(id: String?, name: String, done: () -> Unit) = action { repository.saveType(id, name); done() }
+    fun deleteTag(id: String, done: () -> Unit) = action { repository.deleteTag(id); done() }
     fun deleteType(id: String) = action { repository.deleteType(id) }
     fun saveAlias(tagId: String, id: String?, text: String, done: () -> Unit) = action { repository.saveAlias(tagId, id, text); done() }
     fun deleteAlias(id: String) = action { repository.deleteAlias(id) }

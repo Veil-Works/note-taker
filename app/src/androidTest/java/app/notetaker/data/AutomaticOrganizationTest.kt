@@ -17,6 +17,55 @@ class AutomaticOrganizationTest {
     private val context get() = ApplicationProvider.getApplicationContext<Context>()
     private fun database() = Room.inMemoryDatabaseBuilder(context, NoteDatabase::class.java).addCallback(NoteDatabase.CALLBACK).build()
 
+    @Test fun repeated_subject_groups_survive_rename_and_reorganization() = runTest {
+        val db = database()
+        val model = object : TextEmbedding {
+            override val version = "test"
+            override fun embed(text: String) = floatArrayOf(1f, 0f)
+        }
+        try {
+            val repo = RoomNoteRepository(db.noteDao(), db.organizationDao())
+            listOf("Orion retry fix", "Orion launch monday", "Orion checklist click").forEachIndexed { i, text ->
+                repo.upsert(Note("n$i", text, i.toLong(), i.toLong()))
+            }
+            assertTrue(NotebookOrganizer(db, model).runOnce())
+            val topic = repo.observeTopics().first().single()
+            assertEquals("Orion", topic.name)
+            repo.renameTopic(topic.id, "My project")
+            listOf("Orion new demo", "Orion pilot", "Orion invitations").forEachIndexed { i, text ->
+                repo.upsert(Note("extra$i", text, i.toLong(), i.toLong()))
+            }
+            assertTrue(NotebookOrganizer(db, model).runOnce())
+            assertTrue(repo.observeTopics().first().any { it.id == topic.id && it.name == "My project" })
+            assertEquals(0L, repo.getNote("n0")!!.updatedAt)
+        } finally { db.close() }
+    }
+
+    @Test fun relevance_has_no_degree_limit_and_preserves_manual_links() = runTest {
+        val db = database()
+        val model = object : TextEmbedding {
+            override val version = "relevance-test"
+            override fun embed(text: String) = when (text) {
+                "Coffee shopping" -> floatArrayOf(1f, 0f)
+                "Birthday dinner" -> floatArrayOf(0.4f, kotlin.math.sqrt(0.84f))
+                else -> floatArrayOf(0f, 1f)
+            }
+        }
+        try {
+            val repo = RoomNoteRepository(db.noteDao(), db.organizationDao())
+            repo.upsert(Note("coffee", "Coffee shopping", 1, 1))
+            repo.upsert(Note("dinner", "Birthday dinner", 2, 2))
+            repeat(8) { repo.upsert(Note("guest$it", "Guest $it", 3, 3)) }
+            repo.linkNotes("coffee", "dinner")
+            assertTrue(NotebookOrganizer(db, model).runOnce())
+            assertTrue(repo.observeRelated("coffee").first().isEmpty())
+            assertEquals(8, repo.observeRelated("dinner").first().size)
+            assertEquals(setOf("dinner"), repo.getNote("coffee")!!.linkedNoteIds)
+            val links = db.organizationDao().observeGraphLinks().first()
+            assertTrue(links.all { a -> links.any { b -> b.noteId == a.targetId && b.targetId == a.noteId } })
+        } finally { db.close() }
+    }
+
     @Test fun real_model_benchmark_and_semantic_neighbors() = runTest {
         withContext(Dispatchers.Default) {
             val started = System.nanoTime()

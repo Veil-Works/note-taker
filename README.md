@@ -26,8 +26,14 @@ no tags, aliases, or review steps.
 - Accept or dismiss suggestions in the editor; dismissals persist until saved note text changes
 - Add, edit, and remove aliases through **Manage tag keywords** in the note editor
 
-- Floating capture field over the bottom of the notes list, with scroll space to keep the final note accessible
-- New notes save only when the checkmark (Complete note) is tapped; successful completion clears the field
+- Four main screens with a persistent floating bar: List, Net, New note, Connections, Settings
+- Rounded note cards with time sorting, search, filters, bulk actions, and optional grouping by tag
+- Interactive graph with pan/zoom, topic labels, note selection, a searchable note browser, and connection-strength filtering
+- Graph layout uses short-range pair repulsion and confidence-weighted springs along edges, with damping and gentle centering. Groups emerge from connections rather than topic assignments.
+- Graph edges combine bidirectional automatic links and manual links; stronger edges are brighter/thicker, manual links are dashed
+- Connections manages tags, types, aliases, and automatic topics
+- Settings saves System/Light/Dark appearance and compact-list preferences
+- The central New note button opens capture from any screen. Save note persists it and returns to List; Close or an outside tap discards the unfinished draft.
 - Existing-note edits autosave after 600 ms and when leaving/backgrounding the editor
 - Tap a saved note to edit it in a compact popup over the list; Done saves pending changes and closes it
 - Create tags and attach/remove them using selectable chips in the note popup
@@ -41,12 +47,15 @@ no tags, aliases, or review steps.
 - Combine text and tag search with Today, Last 7 days, Last month, or an inclusive custom date range
 - Filter by creation or edit date; sort by recently edited, newest created, oldest created, or alphabetical preview
 - Access the five most-used tags with note counts and a Last 7 days shortcut
+- Outside taps dismiss note details and discard that editing session, including autosaved changes; Done saves normally.
 - New empty drafts are discarded; existing notes may be empty
 - Most recently edited notes first by default
 - Case-insensitive literal content search
 - Permanent deletion with a short Undo action
 - Local Room database with stable UUID identifiers
-- System light/dark colors and basic accessibility semantics
+- Blue-black glass panels, muted slate-blue accents and coordinated light/dark themes
+- Net uses a single blue node palette; labels identify topics and connection strength controls edge emphasis
+- Accessible labeled navigation
 
 The application declares no internet permission or user-requested runtime permissions. WorkManager supplies normal system permissions for background scheduling, wake locks, and reboot recovery. Android cloud backup and device transfer are disabled, so note data stays in the app's private on-device database.
 
@@ -155,9 +164,19 @@ A WorkManager job computes results off the UI thread and commits only if the
 notebook generation still matches. Failures keep work pending, retry with backoff,
 and expose **Retry organization** in the editor and Topics page.
 
-The organizer caches embeddings and ranks at most five semantic neighbors per
-note. Topics require at least two related notes unless customized. Names are
-extracted phrases, not generated summaries. Renaming preserves the name; merging
+The organizer caches embeddings and retains every qualifying connection, with no
+per-note count limit. General matches require similarity of at least 0.42;
+recurring subjects can support weaker semantic matches (at least 0.20).
+Accepted connections are stored in both directions. The editor initially shows
+the five strongest, with **Show all** to expand; Net uses all qualifying edges,
+subject to its strength slider. Manual links remain independent of these rules.
+Repeated leading subjects (for example a project name) support short-note matches
+only when nearby notes also agree semantically. Topic grouping uses average
+similarity with a minimum pairwise floor, rather than requiring every pair to
+clear the same threshold. Repeated subjects seed coherent groups. Topics require
+at least two related notes unless customized. Names prefer repeated subjects or
+informative extracted phrases, not generated summaries. Organization rule upgrades
+queue existing notebooks once without changing note timestamps. Renaming preserves the name; merging
 also preserves the combined membership. Related notes and topic groups can update
 as content changes. Pending analysis may temporarily display the previous results.
 

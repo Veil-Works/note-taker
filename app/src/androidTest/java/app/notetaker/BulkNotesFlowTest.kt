@@ -45,8 +45,8 @@ class BulkNotesFlowTest {
             rule.onNodeWithText("Connect").performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithText("2 selected").fetchSemanticsNodes().isEmpty() }
             runBlocking { assertEquals(setOf("b"), repo.getNote("a")!!.linkedNoteIds) }
-            rule.onNodeWithTag("frequent_tag_${tags.first.id}").performClick()
-            rule.onNodeWithTag("frequent_tag_${tags.second.id}").performClick()
+            rule.onNodeWithTag("frequent_tag_${tags.first.id}").performScrollTo().performClick()
+            rule.onNodeWithTag("frequent_tag_${tags.second.id}").performScrollTo().performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithTag("note_b").fetchSemanticsNodes().isEmpty() && rule.onAllNodesWithTag("note_c").fetchSemanticsNodes().isEmpty() }
             rule.onNodeWithTag("note_a").assertExists()
             rule.onNodeWithTag("delete_tag_${tags.second.id}").performClick()
@@ -145,7 +145,7 @@ class BulkNotesFlowTest {
             rule.onNodeWithTag("open_link_b").assertExists()
             rule.onNodeWithTag("remove_link_b").performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithTag("open_link_b").fetchSemanticsNodes().isEmpty() }
-            rule.onNodeWithText("Done").performScrollTo().performClick()
+            rule.onNodeWithText("Done").performClick()
         } finally { db.close() }
     }
 }

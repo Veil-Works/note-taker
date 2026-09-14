@@ -6,6 +6,7 @@ import app.notetaker.model.Tag
 import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {
+    fun observeGraphEdges(): Flow<List<app.notetaker.model.GraphEdge>> = kotlinx.coroutines.flow.flowOf(emptyList())
     fun observeRelated(id: String): Flow<List<app.notetaker.model.RelatedNote>> = kotlinx.coroutines.flow.flowOf(emptyList())
     fun observeTopics(): Flow<List<app.notetaker.model.Topic>> = kotlinx.coroutines.flow.flowOf(emptyList())
     fun observeOrganizationStatus(): Flow<app.notetaker.model.OrganizationStatus> = kotlinx.coroutines.flow.flowOf(app.notetaker.model.OrganizationStatus())
