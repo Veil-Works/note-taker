@@ -171,7 +171,7 @@ class AutomaticOrganizationTest {
             old.execSQL("INSERT INTO tag_dismissals VALUES ('b', 'bench')")
             old.version = 5
         }
-        val db = Room.databaseBuilder(context, NoteDatabase::class.java, name).addMigrations(NoteDatabase.MIGRATION_5_6).build()
+        val db = Room.databaseBuilder(context, NoteDatabase::class.java, name).addMigrations(NoteDatabase.MIGRATION_5_6, NoteDatabase.MIGRATION_6_7).build()
         try {
             val repo = RoomNoteRepository(db.noteDao(), db.organizationDao())
             assertEquals("Exercise", repo.getNote("a")!!.tags.single().typeName)

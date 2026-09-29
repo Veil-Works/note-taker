@@ -91,6 +91,15 @@ class NotesViewModel(
     val tags = repository.observeTags().catch { emit(emptyList()) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
     val selectedTags = savedStateHandle.getStateFlow("selected_tags", arrayListOf<String>())
+    init {
+        viewModelScope.launch {
+            combine(repository.observeTopicRedirects(), selectedTags) { redirects, selected ->
+                selected.mapNotNull { if (redirects.containsKey(it)) redirects[it] else it }.distinct()
+            }.catch { /* Keep the current selection if redirects cannot be loaded. */ }.collect { resolved ->
+                if (resolved != selectedTags.value) savedStateHandle["selected_tags"] = ArrayList(resolved)
+            }
+        }
+    }
     fun selectTag(id: String?) {
         savedStateHandle["selected_tags"] = if (id == null) arrayListOf<String>() else arrayListOf(id)
     }
@@ -136,7 +145,7 @@ class NotesViewModel(
                 _captureError.value = null
                 onReady(notes)
             } catch (cancelled: CancellationException) { throw cancelled }
-            catch (error: Exception) { _captureError.value = error.message ?: "Could not load selected tags." }
+            catch (error: Exception) { _captureError.value = error.message ?: "Could not load selected topics." }
             finally { _bulkBusy.value = false }
         }
     }
@@ -147,7 +156,7 @@ class NotesViewModel(
                 savedStateHandle["selected_tags"] = ArrayList(selectedTags.value - tag.id)
                 _captureError.value = null
             } catch (cancelled: CancellationException) { throw cancelled }
-            catch (error: Exception) { _captureError.value = error.message ?: "Could not delete tag." }
+            catch (error: Exception) { _captureError.value = error.message ?: "Could not delete topic." }
         }
     }
     fun createTag(name: String, onCreated: () -> Unit) {
@@ -157,7 +166,7 @@ class NotesViewModel(
                 _captureError.value = null
                 onCreated()
             } catch (cancelled: CancellationException) { throw cancelled }
-            catch (error: Exception) { _captureError.value = error.message ?: "Could not create tag." }
+            catch (error: Exception) { _captureError.value = error.message ?: "Could not create topic." }
         }
     }
     val draft = savedStateHandle.getStateFlow("capture_text", "")
@@ -190,7 +199,7 @@ class NotesViewModel(
         _saving.value = true
         viewModelScope.launch {
             try {
-                repository.upsert(note)
+                repository.capture(note)
                 savedStateHandle["capture_text"] = ""
                 pendingNote = null
                 _captureError.value = null
@@ -198,6 +207,8 @@ class NotesViewModel(
                 savedStateHandle["capture_generation"] = captureGeneration.value + 1
             } catch (cancelled: CancellationException) {
                 throw cancelled
+            } catch (error: IllegalArgumentException) {
+                _captureError.value = error.message
             } catch (_: Exception) {
                 _captureError.value = "Could not save note. Tap Save note to retry."
             } finally {

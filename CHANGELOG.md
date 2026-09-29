@@ -1,5 +1,96 @@
 # Changelog
 
+## Unreleased — short-note grouping and label scope
+
+- Recover multiple subjects using corroborated sentence/clause matches.
+- Generate inflection-aware observed labels, broaden weak qualifiers, and check
+  individual-member coverage before publishing a topic.
+- Split only strongly separated, independently labelable cohorts; leave uncertain
+  groups unnamed rather than forcing a generic topic.
+- Reprocess automatically with rules version 11; retain the bundled model.
+- Validate only on the emulator; see [results](docs/GROUPING_V11_REVIEW.md).
+
+## Unreleased — general topic-label coverage
+
+- Score labels against whole notes and meaningful opening sentences with the existing
+  embedding model, including weaker member coverage rather than average similarity alone.
+- Reduce incidental-word influence, count phrase recurrence across distinct notes,
+  and use word-boundary matching for lexical evidence.
+- Re-evaluate descriptive names after membership expansion and consolidation.
+- Preserve explicit subjects and customized names; reprocess on rules version 10.
+- Audit all 14 phone groups in [the label review](docs/TOPIC_LABEL_AUDIT.md).
+
+## Unreleased — simpler organization controls
+
+- Remove Topics and Browse topics from the list header; move topic selection into
+  Filters while retaining selected-topic and frequent-topic shortcuts.
+- Show semantic matches, shared-topic connections, and manual links in one
+  deduplicated Connections list, with reasons and Keep linked/Remove link controls.
+- Remove manual alias and keyword editors; retain existing aliases internally for
+  matching and preserve merged topic names.
+
+Validation: 52 unit tests pass. All 54 emulator tests pass across the full run and
+the targeted rerun after updating the topic-deletion test to use the Topics view.
+Debug builds and lint pass; light/dark walkthroughs cover the simplified screens.
+
+## Unreleased — retire topic types
+
+- Remove type management, selection, and type suffixes from all topic displays.
+- Simplify topic editing to Rename topic and the editor entry point to Manage topics.
+- Allow merges regardless of legacy type differences, preserving topic membership,
+  aliases, and exclusions. Keep legacy storage compatible without a schema migration.
+
+## Unreleased — capture shortcuts and focused note details
+
+- Assign topics when capturing with leading `#Atlas #orion` prefixes; match names
+  case-insensitively, deduplicate, and create missing topics atomically.
+- Support quoted multiword topics and retain explicit assignments as manual choices.
+- Keep prefixes out of the saved body and preserve drafts that contain only topics.
+- Replace the expanding Topics and connections section with separate Topics and
+  Connections panels and a compact topic summary in the editor.
+
+Validation: 52 unit tests and 54 isolated emulator tests pass, including prefix
+capture, case-insensitive reuse, retained memberships, invalid drafts, and the
+updated topic/link editing flows. Debug builds and lint pass with zero errors;
+light and dark editor screenshots were inspected.
+
+## Unreleased — short-note grouping
+
+- Recognize recurring project names anywhere in short notes, including multiple
+  projects in one note.
+- Evaluate new memberships against fixed representatives from coherent cores.
+- Consolidate redundant inferred groups and preserve redirects from retired topics.
+- Rank purpose labels and repeated phrases with the local model; protect custom names.
+- Store representative explanations and actual similarity scores for discovered memberships.
+- Reprocess existing notebooks automatically when organization rules upgrade to version 9.
+
+Validation: 48 unit tests and 51 isolated API 36 ARM64 emulator tests pass; debug
+build and lint complete with zero errors. The existing 72-note notebook upgrades
+without note or timestamp changes. See [grouping review](docs/GROUPING_REVIEW.md)
+for measured results and remaining limitations.
+
+## 8.0.0 — 2026-09-15
+
+- Unify tags and automatic groups into one Topics browser, picker, and detail page.
+- Use the same topics for note labels, filters, list grouping, and graph labels.
+- Allow multiple topics per note; preserve manual membership and durable exclusions.
+- Add per-note Keep/Remove controls and Add notes on topic pages.
+- Merge topics transactionally, preserving aliases, compatible types, manual/automatic
+  membership, exclusions, and discovery lineage. Active filters follow merged IDs
+  and clear references to deleted or expired topics.
+- Keep renamed/customized topics stable while allowing automatic memberships to change;
+  never train on generated names or automatic memberships.
+- Migrate Room schema 6 to 7, preserving old tags and discovered/customized groups,
+  disambiguating collisions, and retaining all earlier migration paths.
+- Compact the floating navigation, enlarge its labels, and remove icon frames.
+
+
+Validation: 45 unit tests and all 49 API 36 ARM64 emulator tests pass; debug
+build and lint complete with zero errors (24 existing warnings). New coverage
+includes migration collisions, upgrade paths 1–6, topic lifetime and identity,
+multiple automatic memberships, merge conflicts and lineage, and the unified
+browser/editor/filter flow. Light and dark walkthroughs pass.
+
 ## 7.0.0 — 2026-09-11
 
 - Organize saved notes through a durable background queue and bundled offline sentence model.

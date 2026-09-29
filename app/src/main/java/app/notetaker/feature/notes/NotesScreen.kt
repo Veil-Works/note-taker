@@ -90,8 +90,6 @@ import java.time.format.FormatStyle
 fun NotesScreen(
     viewModel: NotesViewModel,
     onOpenNote: (String) -> Unit,
-    onOpenConcept: (String?) -> Unit = {},
-    onOpenTopics: () -> Unit = {},
     compact: Boolean = false,
 ) {
     val captureGeneration by viewModel.captureGeneration.collectAsStateWithLifecycle()
@@ -103,7 +101,6 @@ fun NotesScreen(
     var selecting by rememberSaveable { mutableStateOf(false) }
     var deletingNotes by remember { mutableStateOf(false) }
     var taggingNotes by remember { mutableStateOf<List<Note>?>(null) }
-    var deletingTag by remember { mutableStateOf<Tag?>(null) }
     val selectionMode = selecting || selectedNotes.isNotEmpty()
     BackHandler(selectionMode && !bulkBusy) { viewModel.clearSelection(); selecting = false }
     if (deletingNotes) NotebookDialog(
@@ -113,21 +110,11 @@ fun NotesScreen(
         confirmButton = { TextButton(onClick = { viewModel.deleteSelected(); deletingNotes = false; selecting = false }) { Text("Delete notes") } },
         dismissButton = { TextButton(onClick = { deletingNotes = false }) { Text("Cancel") } },
     )
-    deletingTag?.let { tag ->
-        NotebookDialog(
-            onDismissRequest = { deletingTag = null },
-            title = { Text("Delete tag “${tag.name}”?") },
-            text = { Text("Remove this tag from every note and delete its keywords. Notes and manual connections will be kept.") },
-            confirmButton = { TextButton(onClick = { viewModel.deleteTag(tag); deletingTag = null }) { Text("Delete tag") } },
-            dismissButton = { TextButton(onClick = { deletingTag = null }) { Text("Cancel") } },
-        )
-    }
     taggingNotes?.let { notes ->
         BulkTagDialog(tags, notes, viewModel::createTag,
             onApply = { added, removed -> viewModel.tagSelected(added, removed); taggingNotes = null; selecting = false },
             onDismiss = { taggingNotes = null })
     }
-    var showTags by rememberSaveable { mutableStateOf(false) }
     var showFilters by rememberSaveable { mutableStateOf(false) }
     val filters by viewModel.filters.collectAsStateWithLifecycle()
     val frequentTags by viewModel.frequentTags.collectAsStateWithLifecycle()
@@ -137,7 +124,9 @@ fun NotesScreen(
     val bottomSpace = 16.dp
     val largeText = LocalDensity.current.fontScale > 1.15f
 
-    if (showFilters) FilterDialog(filters, onApply = {
+    if (showFilters) FilterDialog(filters, tags, selectedTags.toSet(), onTopicsApply = { chosen ->
+        (selectedTags.toSet() union chosen).filter { (it in selectedTags) != (it in chosen) }.forEach(viewModel::toggleFilterTag)
+    }, onApply = {
         viewModel.setFilters(it)
         showFilters = false
     }, onDismiss = { showFilters = false })
@@ -159,7 +148,7 @@ fun NotesScreen(
                 )
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                     TextButton(enabled = !bulkBusy && selectedNotes.isNotEmpty(), onClick = { deletingNotes = true }) { Text("Delete") }
-                    TextButton(enabled = !bulkBusy && selectedNotes.isNotEmpty(), onClick = { viewModel.prepareTagging { taggingNotes = it } }) { Text("Tag") }
+                    TextButton(enabled = !bulkBusy && selectedNotes.isNotEmpty(), onClick = { viewModel.prepareTagging { taggingNotes = it } }) { Text("Topic") }
                     TextButton(enabled = !bulkBusy && selectedNotes.size > 1, onClick = { viewModel.connectSelected(); selecting = false }) { Text("Connect") }
                 }
             } else if (mode == "search") {
@@ -178,7 +167,6 @@ fun NotesScreen(
                         if (!largeText) {
                         TextButton(onClick = { selecting = true }) { Text("Select") }
                         TextButton(onClick = { showFilters = true }) { Text("Filters") }
-                        TextButton(onClick = { showTags = !showTags }) { Text("Tags") }
                         }
                         IconButton(onClick = { searching = true }) {
                             Icon(Icons.Default.Search, contentDescription = "Search notes")
@@ -195,10 +183,8 @@ fun NotesScreen(
                 if (largeText && !selectionMode && !searching) {
                     TextButton(onClick = { selecting = true }) { Text("Select") }
                     TextButton(onClick = { showFilters = true }) { Text("Filters") }
-                    TextButton(onClick = { showTags = !showTags }) { Text("Tags") }
                 }
-                FilterChip(selected = grouped, onClick = { grouped = !grouped }, label = { Text("Group by tags") })
-                TextButton(onClick = onOpenTopics) { Text("Topics") }
+                FilterChip(selected = grouped, onClick = { grouped = !grouped }, label = { Text("Group by topics") })
                 FilterChip(
                     selected = filters.period == DatePeriod.RECENT,
                     onClick = { viewModel.setFilters(filters.copy(period = if (filters.period == DatePeriod.RECENT) DatePeriod.ALL else DatePeriod.RECENT)) },
@@ -225,16 +211,16 @@ fun NotesScreen(
                     TextButton(onClick = viewModel::clearFilters) { Text("Clear filters") }
                 }
             }
-            AnimatedVisibility(visible = showTags || selectedTags.isNotEmpty(),
+            AnimatedVisibility(visible = selectedTags.isNotEmpty(),
                 enter = expandVertically(tween(260), expandFrom = Alignment.Top) + fadeIn(tween(200)),
                 exit = shrinkVertically(tween(220), shrinkTowards = Alignment.Top) + fadeOut(tween(120))) {
                 Column(Modifier.padding(horizontal = 12.dp, vertical = 8.dp).glassPanel(22.dp).padding(horizontal = 12.dp, vertical = 4.dp)) {
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        TextButton(onClick = { onOpenConcept(null) }) { Text("Manage tags") }
-                        TextButton(onClick = { viewModel.selectTag(null) }) { Text(if (selectedTags.isEmpty()) "All notes" else "Clear tag filter") }
+                    Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        tags.filter { it.id in selectedTags }.forEach { tag ->
+                            FilterChip(selected = true, onClick = { viewModel.toggleFilterTag(tag.id) }, label = { Text(tag.name) }, modifier = Modifier.testTag("topic_chip_${tag.id}"))
+                        }
+                        TextButton(onClick = { viewModel.selectTag(null) }) { Text("Clear topic filter") }
                     }
-                    Text("Match all selected tags", style = MaterialTheme.typography.labelSmall)
-                    TagPicker(tags, selectedTags.toSet(), { tag -> viewModel.toggleFilterTag(tag.id) }, viewModel::createTag, onDelete = { deletingTag = it }, onOpenConcept = { onOpenConcept(it.id) })
                 }
             }
             }
@@ -246,7 +232,7 @@ fun NotesScreen(
                 state.errorMessage != null -> MessageContent(state.errorMessage)
                 state.notes.isEmpty() -> MessageContent(
                     if (filters.period != DatePeriod.ALL) "No notes match these filters."
-                    else if (selectedTags.isNotEmpty()) "No notes match all selected tags and search."
+                    else if (selectedTags.isNotEmpty()) "No notes match all selected topics and search."
                     else if (state.query.isBlank()) "No notes yet. Tap New note to capture your first thought."
                     else "No notes match your search.",
                     Modifier.padding(bottom = bottomSpace),
@@ -419,10 +405,10 @@ private fun BulkTagDialog(tags: List<Tag>, notes: List<Note>, onCreate: (String,
     var changes by remember { mutableStateOf(emptyMap<String, Boolean>()) }
     NotebookDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Tag selected notes") },
+        title = { Text("Topic selected notes") },
         text = {
             Column(Modifier.heightIn(max = 360.dp).verticalScroll(rememberScrollState())) {
-                Text("Checked: all notes. Dash: some notes. Tap to apply to all, then tap again to remove from all. Untouched tags stay unchanged.")
+                Text("Checked: all notes. Dash: some notes. Tap to apply to all, then tap again to remove from all. Untouched topics stay unchanged.")
                 tags.forEach { tag ->
                     val count = counts[tag.id] ?: 0
                     val state = when {
@@ -453,7 +439,7 @@ private fun BulkTagDialog(tags: List<Tag>, notes: List<Note>, onCreate: (String,
                 TagPicker(emptyList(), emptySet(), {}, onCreate)
             }
         },
-        confirmButton = { TextButton(enabled = changes.isNotEmpty(), onClick = { onApply(changes.filterValues { it }.keys, changes.filterValues { !it }.keys) }) { Text("Apply tags") } },
+        confirmButton = { TextButton(enabled = changes.isNotEmpty(), onClick = { onApply(changes.filterValues { it }.keys, changes.filterValues { !it }.keys) }) { Text("Apply topics") } },
         dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
     )
 }

@@ -34,9 +34,9 @@ class BulkNotesFlowTest {
             rule.onNodeWithTag("note_a").performTouchInput { longClick() }
             rule.onNodeWithTag("note_b").performClick()
             rule.onNodeWithText("2 selected").assertExists()
-            rule.onNodeWithText("Tag").performClick()
+            rule.onNodeWithText("Topic").performClick()
             rule.onNodeWithText("Project").performClick()
-            rule.onNodeWithText("Apply tags").performClick()
+            rule.onNodeWithText("Apply topics").performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithText("2 selected").fetchSemanticsNodes().isEmpty() }
             runBlocking { assertEquals(setOf(tags.first.id, tags.second.id), repo.getNote("a")!!.tags.map { it.id }.toSet()) }
             rule.onNodeWithText("Select").performClick()
@@ -49,8 +49,11 @@ class BulkNotesFlowTest {
             rule.onNodeWithTag("frequent_tag_${tags.second.id}").performScrollTo().performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithTag("note_b").fetchSemanticsNodes().isEmpty() && rule.onAllNodesWithTag("note_c").fetchSemanticsNodes().isEmpty() }
             rule.onNodeWithTag("note_a").assertExists()
-            rule.onNodeWithTag("delete_tag_${tags.second.id}").performClick()
-            rule.onNodeWithText("Delete tag").performClick()
+            rule.onNodeWithTag("nav_connections").performClick()
+            rule.onNodeWithTag("concept_${tags.second.id}").performClick()
+            rule.onNodeWithText("Delete topic").performClick()
+            rule.onAllNodesWithText("Delete topic").onLast().performClick()
+            rule.onNodeWithTag("nav_notes").performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithTag("note_c").fetchSemanticsNodes().isNotEmpty() }
             rule.onNodeWithText("Clear filters").performClick()
             rule.onNodeWithText("Select").performClick()
@@ -81,8 +84,8 @@ class BulkNotesFlowTest {
             rule.onNodeWithText("Select").performClick()
             rule.onNodeWithTag("note_a").performClick()
             rule.onNodeWithTag("note_b").performClick()
-            rule.onNodeWithText("Tag").performClick()
-            rule.waitUntil(5_000) { rule.onAllNodesWithText("Tag selected notes").fetchSemanticsNodes().isNotEmpty() }
+            rule.onNodeWithText("Topic").performClick()
+            rule.waitUntil(5_000) { rule.onAllNodesWithText("Topic selected notes").fetchSemanticsNodes().isNotEmpty() }
         }
         fun assertTag(id: String, state: androidx.compose.ui.state.ToggleableState) {
             rule.onNodeWithTag("bulk_tag_$id").assert(SemanticsMatcher.expectValue(
@@ -95,9 +98,9 @@ class BulkNotesFlowTest {
             assertTag(tags.first.id, androidx.compose.ui.state.ToggleableState.On)
             assertTag(tags.second.id, androidx.compose.ui.state.ToggleableState.Indeterminate)
             rule.onNodeWithText("1 of 2 notes").assertExists()
-            rule.onNodeWithText("Apply tags").assertIsNotEnabled()
+            rule.onNodeWithText("Apply topics").assertIsNotEnabled()
             rule.onNodeWithTag("bulk_tag_${tags.first.id}").performClick()
-            rule.onNodeWithText("Apply tags").performClick()
+            rule.onNodeWithText("Apply topics").performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithText("2 selected").fetchSemanticsNodes().isEmpty() }
             runBlocking {
                 assertEquals(listOf(tags.second), repo.getNote("a")!!.tags)
@@ -111,7 +114,7 @@ class BulkNotesFlowTest {
             assertTag(tags.second.id, androidx.compose.ui.state.ToggleableState.On)
             rule.onNodeWithTag("bulk_tag_${tags.second.id}").performClick()
             assertTag(tags.second.id, androidx.compose.ui.state.ToggleableState.Off)
-            rule.onNodeWithText("Apply tags").assertIsEnabled().performClick()
+            rule.onNodeWithText("Apply topics").assertIsEnabled().performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithText("2 selected").fetchSemanticsNodes().isEmpty() }
             runBlocking {
                 assertEquals(emptyList<app.notetaker.model.Tag>(), repo.getNote("a")!!.tags)
@@ -133,7 +136,7 @@ class BulkNotesFlowTest {
             rule.setContent { NoteTakerTheme { NoteTakerApp(repo) } }
             rule.waitUntil(5_000) { rule.onAllNodesWithTag("note_a").fetchSemanticsNodes().isNotEmpty() }
             rule.onNodeWithTag("note_a").performClick()
-            rule.onNodeWithText("Tags and connections").performScrollTo().performClick()
+            rule.onNodeWithTag("edit_connections").performScrollTo().performClick()
             rule.onNodeWithTag("open_link_b").performScrollTo().assertExists()
             runBlocking { repo.upsert(repo.getNote("b")!!.copy(tags = emptyList())) }
             rule.waitUntil(5_000) { rule.onAllNodesWithTag("open_link_b").fetchSemanticsNodes().isEmpty() }

@@ -6,7 +6,7 @@ import androidx.room.*
 data class EntityTypeEntity(@PrimaryKey val id: String, val name: String, val normalizedName: String)
 
 @DatabaseView("SELECT tags.*, entity_types.name AS typeName FROM tags LEFT JOIN entity_types ON tags.typeId = entity_types.id", viewName = "tag_details")
-data class TagDetails(val id: String, val name: String, val normalizedName: String, val createdAt: Long, val typeId: String?, val typeName: String?)
+data class TagDetails(val id: String, val name: String, val normalizedName: String, val createdAt: Long, val typeId: String?, val typeName: String?, val provisional: Boolean)
 
 @Entity(tableName = "tags", indices = [Index(value = ["normalizedName"], unique = true), Index("typeId")],
     foreignKeys = [ForeignKey(entity = EntityTypeEntity::class, parentColumns = ["id"], childColumns = ["typeId"], onDelete = ForeignKey.SET_NULL)])
@@ -16,6 +16,7 @@ data class TagEntity(
     val normalizedName: String,
     val createdAt: Long,
     val typeId: String? = null,
+    @ColumnInfo(defaultValue = "0") val provisional: Boolean = false,
 )
 
 @Entity(

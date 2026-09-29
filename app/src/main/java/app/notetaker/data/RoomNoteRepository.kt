@@ -21,17 +21,28 @@ class RoomNoteRepository(
     private val noteDao: NoteDao,
     private val organizationDao: app.notetaker.data.local.OrganizationDao? = null,
 ) : NoteRepository {
+    override suspend fun capture(note: Note) {
+        val parsed = app.notetaker.model.parseTopicPrefixes(note.content)
+        require(parsed.content.isNotBlank()) { "Write a note after the topic names." }
+        noteDao.captureWithTopics(note.copy(content = parsed.content).toEntity(), parsed.topics)
+    }
+    override fun observeTopicRedirects() = noteDao.observeTopicRedirects().map { rows ->
+        rows.associate { it.key.removePrefix("merged-id:") to it.tagId }
+    }
     override fun observeGraphEdges() = organizationDao?.observeGraphLinks()?.map { rows ->
         rows.groupBy { minOf(it.noteId, it.targetId) to maxOf(it.noteId, it.targetId) }.map { (pair, links) ->
             app.notetaker.model.GraphEdge(pair.first, pair.second, links.maxOf { it.score })
         }
     } ?: kotlinx.coroutines.flow.flowOf(emptyList())
     override fun observeRelated(id: String) = organizationDao?.related(id)?.map { rows -> rows.map { app.notetaker.model.RelatedNote(it.targetId, it.score) } } ?: kotlinx.coroutines.flow.flowOf(emptyList())
-    override fun observeTopics() = organizationDao?.observeTopics()?.map { rows -> rows.map { app.notetaker.model.Topic(it.topic.id, it.topic.name, it.members.map { m -> m.noteId }.toSet(), it.topic.customized) }.filter { it.noteIds.isNotEmpty() } } ?: kotlinx.coroutines.flow.flowOf(emptyList())
+    override fun observeTopics() = combine(observeTags(), observeNotes()) { tags, notes ->
+        tags.map { tag -> app.notetaker.model.Topic(tag.id, tag.name,
+            notes.filter { note -> note.tags.any { it.id == tag.id } }.map { it.id }.toSet(), !tag.provisional) }
+    }
     override fun observeOrganizationStatus() = organizationDao?.observeState()?.map { app.notetaker.model.OrganizationStatus(it != null && it.completed != it.generation, it?.error) } ?: kotlinx.coroutines.flow.flowOf(app.notetaker.model.OrganizationStatus())
     override suspend fun retryOrganization() { organizationDao?.request() }
-    override suspend fun renameTopic(id: String, name: String) { organizationDao?.renameTopic(id, validatedName(name)) }
-    override suspend fun mergeTopics(target: String, source: String) { organizationDao?.mergeTopics(target, source) }
+    override suspend fun renameTopic(id: String, name: String) { val tag = checkNotNull(noteDao.topicById(id)) { "This topic no longer exists." }; updateTag(id, name, tag.typeId) }
+    override suspend fun mergeTopics(target: String, source: String) { noteDao.mergeTopics(target, source) }
     override suspend fun saveEdit(note: Note, tagChanges: Map<String, Boolean>) {
         noteDao.saveEdit(note.toEntity(), tagChanges)
     }
@@ -52,7 +63,7 @@ class RoomNoteRepository(
     override suspend fun deleteType(id: String) = noteDao.deleteType(id)
     override suspend fun updateTag(id: String, name: String, typeId: String?) {
         val value = validatedName(name)
-        check(noteDao.updateTag(id, value, value.lowercase(Locale.ROOT), typeId) == 1) { "This concept no longer exists." }
+        check(noteDao.updateTag(id, value, value.lowercase(Locale.ROOT), typeId) == 1) { "This topic no longer exists." }
     }
 
     override fun observeAliases() = noteDao.observeAliases().map { rows ->
@@ -78,21 +89,22 @@ class RoomNoteRepository(
     override suspend fun dismissSuggestion(noteId: String, tagId: String, content: String) =
         noteDao.dismiss(noteId, tagId, content)
 
-    override suspend fun deleteTag(id: String) = noteDao.deleteTag(id)
+    override suspend fun deleteTag(id: String) = noteDao.deleteTopic(id)
     override suspend fun deleteNotes(ids: Set<String>) = noteDao.deleteNotes(ids.toList())
     override suspend fun tagNotes(ids: Set<String>, tagIds: Set<String>, removeTagIds: Set<String>) =
         noteDao.tagNotes(ids, tagIds, removeTagIds, System.currentTimeMillis())
     override suspend fun connectNotes(ids: Set<String>) = noteDao.connectNotes(ids)
 
-    override fun observeTags(): Flow<List<Tag>> = noteDao.observeTags().map { tags -> tags.map { Tag(it.id, it.name, it.createdAt, it.typeId, it.typeName) } }
+    override fun observeTags(): Flow<List<Tag>> = noteDao.observeTags().map { tags -> tags.map { Tag(it.id, it.name, it.createdAt, it.typeId, it.typeName, it.provisional) } }
 
     override suspend fun createTag(name: String): Tag {
         val displayName = name.trim()
-        require(displayName.isNotEmpty()) { "Enter a tag name." }
+        require(displayName.isNotEmpty()) { "Enter a topic name." }
         require(displayName.length <= 40) { "Use 40 characters or fewer." }
         val normalizedName = displayName.lowercase(Locale.ROOT)
         noteDao.insertTag(TagEntity(UUID.randomUUID().toString(), displayName, normalizedName, System.currentTimeMillis()))
         val tag = checkNotNull(noteDao.findTag(normalizedName))
+        noteDao.retainTopic(tag.id)
         return Tag(tag.id, tag.name, tag.createdAt, tag.typeId, tag.typeName)
     }
     override fun observeNotes(query: String): Flow<List<Note>> {
@@ -139,7 +151,7 @@ private fun NoteWithTags.toModel() = Note(
     createdAt = note.createdAt,
     updatedAt = note.updatedAt,
     linkedNoteIds = (outgoingLinks.map { it.secondNoteId } + incomingLinks.map { it.firstNoteId }).toSet(),
-    tags = (tags + automaticTags.filterNot { auto -> rejections.any { it.tagId == auto.id } }).distinctBy { it.id }.sortedBy { it.normalizedName }.map { Tag(it.id, it.name, it.createdAt, it.typeId, it.typeName) },
+    tags = (tags + automaticTags.filterNot { auto -> rejections.any { it.tagId == auto.id } }).distinctBy { it.id }.sortedBy { it.normalizedName }.map { Tag(it.id, it.name, it.createdAt, it.typeId, it.typeName, it.provisional) },
     automaticTagReasons = automaticReasons.filterNot { auto -> tags.any { it.id == auto.tagId } || rejections.any { it.tagId == auto.tagId } }.associate { it.tagId to it.reason },
     rejectedTagIds = rejections.map { it.tagId }.toSet(),
 )

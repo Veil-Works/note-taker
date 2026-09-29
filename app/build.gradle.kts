@@ -25,8 +25,8 @@ android {
         applicationId = "app.notetaker"
         minSdk = 26
         targetSdk = 36
-        versionCode = 7
-        versionName = "7.0.0"
+        versionCode = 8
+        versionName = "8.0.0"
 
         testInstrumentationRunner = "app.notetaker.IsolatedTestRunner"
         vectorDrawables.useSupportLibrary = true
@@ -70,6 +70,7 @@ android {
     }
 
     sourceSets.getByName("androidTest").assets.srcDir("schemas")
+    sourceSets.getByName("androidTest").assets.srcDir(rootProject.file("fixtures"))
 
     testOptions {
         unitTests.isIncludeAndroidResources = true

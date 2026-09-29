@@ -69,11 +69,6 @@ class EditorViewModel(
         val id = _uiState.value.noteId ?: return@keywordAction
         repository.tagNotes(setOf(id), setOf(tag.id))
     }
-    val aliases = repository.observeAliases().catch {
-        _uiState.value = _uiState.value.copy(errorMessage = "Could not load keywords.")
-        emit(emptyList())
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
-
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     val suggestions = uiState.map { it.noteId }.distinctUntilChanged().flatMapLatest { id ->
         if (id == null) flowOf(emptyList()) else repository.observeSuggestions(id)
@@ -81,13 +76,6 @@ class EditorViewModel(
         _uiState.value = _uiState.value.copy(errorMessage = "Could not load suggestions.")
         emit(emptyList())
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
-
-    fun saveAlias(tagId: String, aliasId: String?, text: String, onSaved: () -> Unit) = keywordAction {
-        repository.saveAlias(tagId, aliasId, text)
-        onSaved()
-    }
-
-    fun deleteAlias(id: String) = keywordAction { repository.deleteAlias(id) }
 
     fun dismissSuggestion(tag: Tag) {
         val note = persistedNote ?: return
@@ -112,7 +100,7 @@ class EditorViewModel(
     }
 
     val availableTags = repository.observeTags().catch {
-        _uiState.value = _uiState.value.copy(errorMessage = "Could not load tags.")
+        _uiState.value = _uiState.value.copy(errorMessage = "Could not load topics.")
         emit(emptyList())
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
@@ -167,7 +155,7 @@ class EditorViewModel(
             } catch (cancelled: kotlinx.coroutines.CancellationException) {
                 throw cancelled
             } catch (error: Exception) {
-                _uiState.value = _uiState.value.copy(errorMessage = error.message ?: "Could not create tag.")
+                _uiState.value = _uiState.value.copy(errorMessage = error.message ?: "Could not create topic.")
             }
         }
     }

@@ -35,29 +35,31 @@ class AutomaticOrganizationFlowTest {
             val newNote = runBlocking { repo.observeNotes().first().first { it.id != "old" } }
             assertEquals(1, runBlocking { repo.observeTopics().first().size })
             rule.onNodeWithTag("note_${newNote.id}").performClick()
-            rule.waitUntil(5_000) { rule.onAllNodesWithTag("semantic_old").fetchSemanticsNodes().isNotEmpty() }
-            rule.onNodeWithTag("semantic_old").performScrollTo().performClick()
+            rule.onNodeWithTag("edit_connections").performScrollTo().performClick()
+            rule.waitUntil(5_000) { rule.onAllNodesWithTag("open_link_old").fetchSemanticsNodes().isNotEmpty() }
+            rule.onNodeWithTag("open_link_old").performScrollTo().performClick()
             rule.onNodeWithTag("note_popup_content").assertTextContains("Barbell chest workout at the gym")
             rule.onNodeWithText("Done").performClick()
             val tag = runBlocking { repo.createTag("Bench press") }
             organize()
             rule.onNodeWithTag("note_${newNote.id}").performClick()
+            rule.onNodeWithTag("edit_topics").performScrollTo().performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithTag("reject_auto_${tag.id}").fetchSemanticsNodes().isNotEmpty() }
             rule.onNodeWithTag("reject_auto_${tag.id}").performScrollTo().performClick()
             rule.onNodeWithText("Done").performClick()
             rule.waitUntil(5_000) { runBlocking { tag.id in repo.getNote(newNote.id)!!.rejectedTagIds } }
             organize()
-            assertTrue(runBlocking { repo.getNote(newNote.id)!!.tags.isEmpty() })
-            rule.onNodeWithText("Topics").performClick()
-            rule.onNodeWithTag("topics_page").assertExists()
-            val topic = runBlocking { repo.observeTopics().first().single() }
-            rule.onNodeWithTag("topic_${topic.id}").performClick()
+            assertFalse(runBlocking { repo.getNote(newNote.id)!!.tags.any { it.id == tag.id } })
+            rule.onNodeWithTag("nav_connections").performClick()
+            rule.onNodeWithTag("concept_page").assertExists()
+            val topic = runBlocking { repo.observeTopics().first().single { it.id != tag.id } }
+            rule.onNodeWithTag("concept_${topic.id}").performClick()
             rule.onNodeWithText("Rename topic").performClick()
             rule.onNodeWithText("Topic name").performTextReplacement("Strength sessions")
-            rule.onNodeWithText("Save").performClick()
-            rule.waitUntil(5_000) { runBlocking { repo.observeTopics().first().single().name == "Strength sessions" } }
+            rule.onNodeWithText("Save topic").performClick()
+            rule.waitUntil(5_000) { runBlocking { repo.observeTopics().first().single { it.id != tag.id }.name == "Strength sessions" } }
             organize()
-            assertEquals("Strength sessions", runBlocking { repo.observeTopics().first().single().name })
+            assertEquals("Strength sessions", runBlocking { repo.observeTopics().first().single { it.id != tag.id }.name })
         } finally { db.close() }
     }
 }

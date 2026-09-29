@@ -10,6 +10,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Button
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -42,14 +44,13 @@ fun EditorScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val suggestions by viewModel.suggestions.collectAsStateWithLifecycle()
-    val aliases by viewModel.aliases.collectAsStateWithLifecycle()
     val tags by viewModel.availableTags.collectAsStateWithLifecycle()
     val related by viewModel.related.collectAsStateWithLifecycle()
     val organizationStatus by viewModel.organizationStatus.collectAsStateWithLifecycle()
-    var showOrganizationControls by rememberSaveable { mutableStateOf(false) }
+    var panel by rememberSaveable { mutableStateOf("note") }
     val notes by viewModel.availableNotes.collectAsStateWithLifecycle()
     fun close() = viewModel.close(onClose)
-    BackHandler(onBack = ::close)
+    BackHandler { if (panel != "note") panel = "note" else close() }
     LifecycleEventEffect(Lifecycle.Event.ON_STOP) { viewModel.flush() }
 
     Surface(
@@ -63,53 +64,69 @@ fun EditorScreen(
             modifier = Modifier.heightIn(max = 560.dp).padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Text(if (isNewNote) "New note" else "Edit note", style = MaterialTheme.typography.titleLarge)
-            Column(Modifier.weight(1f, fill = false).verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                when {
-                    state.isLoading -> CircularProgressIndicator()
-                    state.isMissing -> Text("This note no longer exists.")
-                    else -> OutlinedTextField(
-                        value = state.content,
-                        onValueChange = viewModel::onContentChanged,
-                        modifier = Modifier.fillMaxWidth().testTag("note_popup_content"),
-                        shape = MaterialTheme.shapes.large,
-                        minLines = 3,
-                        maxLines = 8,
-                        placeholder = { Text("Write a note…") },
-                    )
-                }
-                if (state.isExistingNote) {
-                    app.notetaker.ui.AutomaticOrganization(state.tags, state.automaticTagReasons, related, notes, organizationStatus,
-                        onRemove = { viewModel.toggleTag(it); viewModel.flush() }, onKeep = viewModel::keepAutomaticTag,
-                        onOpen = { id -> viewModel.close { onOpenNote(id) } }, onRetry = viewModel::retryOrganization, noteId = state.noteId)
-                    TextButton(onClick = { showOrganizationControls = !showOrganizationControls }) { Text("Tags and connections") }
-                    if (showOrganizationControls) {
-                        Text("Tags", style = MaterialTheme.typography.labelLarge)
-                        TagPicker(tags, state.tags.map { it.id }.toSet(), viewModel::toggleTag, viewModel::createTag, onOpenConcept = { tag -> viewModel.close { onOpenConcept(tag.id) } })
-                        TextButton(onClick = { viewModel.close { onOpenConcept(null) } }) { Text("Manage concepts and types") }
-                        TagSuggestions(
-                            errorMessage = state.errorMessage,
-                            tags = tags,
-                            aliases = aliases,
-                            suggestions = suggestions.filterNot { suggested -> state.tags.any { it.id == suggested.id } },
-                            onAccept = viewModel::acceptSuggestion,
-                            onDismiss = viewModel::dismissSuggestion,
-                            onSaveAlias = viewModel::saveAlias,
-                            onDeleteAlias = viewModel::deleteAlias,
-                        )
-                        NoteLinks(
-                            currentId = state.noteId,
-                            notes = notes,
-                            tagIds = state.tags.map { it.id }.toSet(),
-                            enabled = !state.isLinking && !state.isSaving,
-                            errorMessage = state.errorMessage,
-                            onSetLinked = viewModel::setLinked,
-                            onOpenNote = { id -> viewModel.close { onOpenNote(id) } },
-                        )
+            if (panel != "note") TextButton(onClick = { panel = "note" }, modifier = Modifier.testTag("back_to_note")) { Text("Back to note") }
+            Text(when (panel) { "topics" -> "Topics"; "connections" -> "Connections"; else -> if (isNewNote) "New note" else "Edit note" }, style = MaterialTheme.typography.titleLarge)
+            key(panel) {
+                Column(Modifier.weight(1f, fill = false).verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    if (panel == "note") {
+                        when {
+                            state.isLoading -> CircularProgressIndicator()
+                            state.isMissing -> Text("This note no longer exists.")
+                            else -> OutlinedTextField(
+                                value = state.content,
+                                onValueChange = viewModel::onContentChanged,
+                                modifier = Modifier.fillMaxWidth().testTag("note_popup_content"),
+                                shape = MaterialTheme.shapes.large,
+                                minLines = 3,
+                                maxLines = 8,
+                                placeholder = { Text("Write a note…") },
+                            )
+                        }
                     }
+                    if (state.isExistingNote) {
+                        if (panel == "note") {
+                            if (state.tags.isNotEmpty()) Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                state.tags.forEach { tag ->
+                                    AssistChip(onClick = { panel = "topics" }, label = { Text(tag.displayName) })
+                                }
+                            }
+                            if (organizationStatus.pending) Text("Organizing…", style = MaterialTheme.typography.bodySmall)
+                            if (organizationStatus.error != null) TextButton(onClick = viewModel::retryOrganization) { Text("Retry organization") }
+                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                                TextButton(onClick = { panel = "topics" }, modifier = Modifier.testTag("edit_topics")) { Text("Topics") }
+                                TextButton(onClick = { panel = "connections" }, modifier = Modifier.testTag("edit_connections")) { Text("Connections") }
+                            }
+                        }
+                        if (panel == "topics") {
+                            app.notetaker.ui.AutomaticOrganization(state.tags, state.automaticTagReasons, organizationStatus,
+                                onRemove = { viewModel.toggleTag(it); viewModel.flush() }, onKeep = viewModel::keepAutomaticTag,
+                                onRetry = viewModel::retryOrganization)
+                            TagPicker(tags, state.tags.map { it.id }.toSet(), viewModel::toggleTag, viewModel::createTag, onOpenConcept = { tag -> viewModel.close { onOpenConcept(tag.id) } })
+                            TextButton(onClick = { viewModel.close { onOpenConcept(null) } }) { Text("Manage topics") }
+                            TagSuggestions(
+                                suggestions = suggestions.filterNot { suggested -> state.tags.any { it.id == suggested.id } },
+                                onAccept = viewModel::acceptSuggestion,
+                                onDismiss = viewModel::dismissSuggestion,
+                            )
+                        }
+                        if (panel == "connections") {
+                            if (organizationStatus.pending) Text("Organizing…", style = MaterialTheme.typography.bodySmall)
+                            if (organizationStatus.error != null) TextButton(onClick = viewModel::retryOrganization) { Text("Retry organization") }
+                            NoteLinks(
+                                currentId = state.noteId,
+                                related = related,
+                                errorMessage = state.errorMessage,
+                                notes = notes,
+                                tagIds = state.tags.map { it.id }.toSet(),
+                                enabled = !state.isLinking && !state.isSaving,
+                                onSetLinked = viewModel::setLinked,
+                                onOpenNote = { id -> viewModel.close { onOpenNote(id) } },
+                            )
+                        }
+                    }
+                    state.errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error) }
                 }
-                state.errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error) }
             }
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {

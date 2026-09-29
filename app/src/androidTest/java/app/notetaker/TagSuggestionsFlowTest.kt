@@ -18,40 +18,34 @@ import org.junit.Test
 class TagSuggestionsFlowTest {
     @get:Rule val rule = createComposeRule()
 
-    @Test fun configure_accept_dismiss_and_reevaluate_saved_edits() {
+    @Test fun existing_aliases_suggest_without_manual_keyword_controls() {
         val db = Room.inMemoryDatabaseBuilder(ApplicationProvider.getApplicationContext<Context>(), NoteDatabase::class.java).build()
         val repo = RoomNoteRepository(db.noteDao())
         val strength = runBlocking {
             repo.upsert(Note("one", "Bench press today", 1, 2))
-            repo.createTag("Strength")
+            repo.createTag("Strength").also { repo.saveAlias(it.id, null, "bench press") }
         }
         try {
             rule.setContent { NoteTakerTheme { NoteTakerApp(repo) } }
             waitForText("Bench press today")
             rule.onNodeWithText("Bench press today").performClick()
-            rule.onNodeWithText("Tags and connections").performScrollTo().performClick()
-            waitForText("Manage tag keywords")
-            rule.onNodeWithText("Manage tag keywords").performScrollTo().performClick()
-            rule.onNode(hasText("Strength") and isSelectable() and hasAnyAncestor(hasTestTag("tag_keywords_dialog"))).performClick()
-            rule.onNodeWithText("New keyword or phrase").performScrollTo().performTextInput("bench press")
-            rule.onNodeWithText("Add keyword").performScrollTo().performClick()
-            waitForText("Keyword for Strength")
-            rule.onNodeWithText("Keyword for Strength").performScrollTo().performTextReplacement("BENCH PRESS")
-            rule.onNodeWithText("Save keyword").performScrollTo().performClick()
-            rule.onNode(hasText("Done") and hasAnyAncestor(hasTestTag("tag_keywords_dialog"))).performClick()
+            rule.onNodeWithTag("edit_topics").performScrollTo().performClick()
+            rule.onNodeWithText("Manage topic keywords").assertDoesNotExist()
+            rule.onNodeWithText("Keywords").assertDoesNotExist()
             waitForSuggestion()
             rule.onNodeWithText("Dismiss Strength").performScrollTo().performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithTag("suggestion_Strength").fetchSemanticsNodes().isEmpty() }
             rule.onNodeWithText("Done").performClick()
             waitForText("Bench press today")
             rule.onNodeWithText("Bench press today").performClick()
-            rule.onNodeWithText("Tags and connections").performScrollTo().performClick()
-            waitForText("Manage tag keywords")
+            rule.onNodeWithTag("edit_topics").performScrollTo().performClick()
+            rule.onNodeWithText("Manage topic keywords").assertDoesNotExist()
             rule.onNodeWithTag("suggestion_Strength").assertDoesNotExist()
+            rule.onNodeWithTag("back_to_note").performClick()
             rule.onNodeWithTag("note_popup_content").performScrollTo().performTextReplacement("Bench press tomorrow")
+            rule.onNodeWithTag("edit_topics").performScrollTo().performClick()
             waitForSuggestion()
             rule.onNodeWithTag("suggestion_Strength").performScrollTo().performClick()
-            rule.onNodeWithTag("note_popup_content").performScrollTo()
             rule.onNode(hasText("Strength") and isSelectable()).performScrollTo().assertIsSelected()
             rule.onNodeWithText("Done").performClick()
             rule.waitUntil(5_000) { runBlocking { repo.getNote("one")!!.tags.any { it.id == strength.id } } }
@@ -70,7 +64,7 @@ class TagSuggestionsFlowTest {
             rule.onNodeWithTag("complete_note").performClick()
             rule.waitUntil(5_000) { rule.onAllNodes(hasText("run 7km thursday") and !hasSetTextAction()).fetchSemanticsNodes().isNotEmpty() }
             rule.onNode(hasText("run 7km thursday") and !hasSetTextAction()).performClick()
-            rule.onNodeWithText("Tags and connections").performScrollTo().performClick()
+            rule.onNodeWithTag("edit_topics").performScrollTo().performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithTag("suggestion_runs").fetchSemanticsNodes().isNotEmpty() }
             rule.onNodeWithTag("suggestion_runs").performScrollTo().performClick()
             rule.onNodeWithText("Done").performClick()

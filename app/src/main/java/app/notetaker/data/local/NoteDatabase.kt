@@ -6,9 +6,9 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Database(
-    entities = [NoteEntity::class, TagEntity::class, NoteTagEntity::class, NoteLinkEntity::class, TagAliasEntity::class, TagDismissalEntity::class, EntityTypeEntity::class, OrganizationStateEntity::class, NoteEmbeddingEntity::class, AutomaticTagEntity::class, OrganizationRejectionEntity::class, SemanticLinkEntity::class, TopicEntity::class, TopicNoteEntity::class],
+    entities = [NoteEntity::class, TagEntity::class, NoteTagEntity::class, NoteLinkEntity::class, TagAliasEntity::class, TagDismissalEntity::class, EntityTypeEntity::class, OrganizationStateEntity::class, NoteEmbeddingEntity::class, AutomaticTagEntity::class, OrganizationRejectionEntity::class, SemanticLinkEntity::class, TopicDiscoveryKeyEntity::class],
     views = [TagDetails::class],
-    version = 6,
+    version = 7,
     exportSchema = true,
 )
 abstract class NoteDatabase : RoomDatabase() {
@@ -24,6 +24,53 @@ abstract class NoteDatabase : RoomDatabase() {
                     val condition = if (table == "notes" && event == "UPDATE") " WHEN NEW.content != OLD.content" else ""
                     db.execSQL("CREATE TRIGGER IF NOT EXISTS queue_${table}_${event} AFTER $event ON $table$condition BEGIN UPDATE organization_state SET generation = generation + 1, error = NULL WHERE id = 1; END")
                 }
+            }
+        }
+        val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("DROP VIEW IF EXISTS tag_details")
+                db.execSQL("ALTER TABLE tags ADD COLUMN provisional INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("CREATE VIEW `tag_details` AS SELECT tags.*, entity_types.name AS typeName FROM tags LEFT JOIN entity_types ON tags.typeId = entity_types.id")
+                db.execSQL("CREATE TABLE topic_discovery_keys (`key` TEXT NOT NULL PRIMARY KEY, tagId TEXT, FOREIGN KEY(tagId) REFERENCES tags(id) ON UPDATE NO ACTION ON DELETE SET NULL)")
+                db.execSQL("CREATE INDEX index_topic_discovery_keys_tagId ON topic_discovery_keys(tagId)")
+                // Name equality alone is not enough evidence to collapse an existing group into a tag.
+                val ids = mutableSetOf<String>()
+                val names = mutableSetOf<String>()
+                db.query("SELECT id, normalizedName FROM tags").use { rows ->
+                    while (rows.moveToNext()) { ids += rows.getString(0); names += rows.getString(1) }
+                }
+                db.query("SELECT id, name, customized, membershipLocked FROM topics ORDER BY id").use { rows ->
+                    while (rows.moveToNext()) {
+                        val oldId = rows.getString(0)
+                        var id = oldId
+                        while (id in ids) id = "migrated-$id"
+                        ids += id
+                        val base = rows.getString(1).trim().ifBlank { "Untitled topic" }.take(40)
+                        var name = base
+                        var suffix = 2
+                        while (name.lowercase(java.util.Locale.ROOT) in names) {
+                            val ending = " ($suffix)"
+                            name = base.take(40 - ending.length) + ending
+                            suffix++
+                        }
+                        val normalized = name.lowercase(java.util.Locale.ROOT)
+                        names += normalized
+                        val locked = rows.getInt(3) != 0
+                        val provisional = if (rows.getInt(2) != 0 || locked) 0 else 1
+                        db.execSQL("INSERT INTO tags (id, name, normalizedName, createdAt, typeId, provisional) VALUES (?, ?, ?, 0, NULL, ?)", arrayOf(id, name, normalized, provisional))
+                        db.execSQL("INSERT INTO topic_discovery_keys (`key`, tagId) VALUES (?, ?)", arrayOf(oldId, id))
+                        if (locked) {
+                            // Legacy explicit merges promised to keep the combined membership.
+                            db.execSQL("INSERT OR IGNORE INTO note_tags SELECT noteId, ? FROM topic_notes WHERE topicId = ?", arrayOf(id, oldId))
+                        } else {
+                            db.execSQL("INSERT OR IGNORE INTO automatic_tags SELECT noteId, ?, 'Discovered from related notes', 1.0 FROM topic_notes WHERE topicId = ?", arrayOf(id, oldId))
+                        }
+                    }
+                }
+                db.execSQL("DROP TABLE topic_notes")
+                db.execSQL("DROP TABLE topics")
+                installOrganizationTriggers(db)
+                db.execSQL("UPDATE organization_state SET generation = generation + 1, error = NULL WHERE id = 1")
             }
         }
         val MIGRATION_5_6 = object : Migration(5, 6) {

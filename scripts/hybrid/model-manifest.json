@@ -1,0 +1,26 @@
+{
+  "id": "qwen3-0.6b-q8-v1",
+  "repository": "Qwen/Qwen3-0.6B-GGUF",
+  "revision": "23749fefcc72300e3a2ad315e1317431b06b590a",
+  "file": "Qwen3-0.6B-Q8_0.gguf",
+  "bytes": 639446688,
+  "sha256": "9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031",
+  "license": "Apache-2.0",
+  "url": "https://huggingface.co/Qwen/Qwen3-0.6B-GGUF/resolve/23749fefcc72300e3a2ad315e1317431b06b590a/Qwen3-0.6B-Q8_0.gguf",
+  "runtimeRevision": "391fac16460f15233a7740550d858ac96df3419d",
+  "runtimeLicense": "MIT",
+  "distribution": "optional-download; not packaged in base APK",
+  "defaultMode": "rules",
+  "comparisonRuntime": {
+    "contextTokens": 2048,
+    "threads": 4,
+    "batchTokens": 128,
+    "microBatchTokens": 128,
+    "slots": 1,
+    "promptCacheMiB": 0,
+    "thinking": false,
+    "temperature": 0,
+    "seed": 731,
+    "contextShift": false
+  }
+}

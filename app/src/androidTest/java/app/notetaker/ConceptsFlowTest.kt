@@ -16,7 +16,7 @@ import org.junit.Test
 class ConceptsFlowTest {
     @get:Rule val rule = createComposeRule()
 
-    @Test fun upgrade_existing_tag_accept_typed_alias_and_browse_old_and_new_notes() {
+    @Test fun rename_topic_accept_alias_and_browse_old_and_new_notes() {
         val db = Room.inMemoryDatabaseBuilder(ApplicationProvider.getApplicationContext<Context>(), NoteDatabase::class.java)
             .addCallback(NoteDatabase.CALLBACK).build()
         val repo = RoomNoteRepository(db.noteDao())
@@ -24,35 +24,37 @@ class ConceptsFlowTest {
             val tag = repo.createTag("Bench press")
             repo.upsert(Note("old", "Old training log", 1, 2, listOf(tag)))
             repo.upsert(Note("new", "barbell bench press today", 3, 4))
+            repo.saveAlias(tag.id, null, "barbell bench press")
             tag
         }
         try {
             rule.setContent { NoteTakerTheme { NoteTakerApp(repo) } }
-            waitFor("Tags")
-            rule.onNodeWithText("Tags").performClick()
-            rule.onNodeWithText("Manage tags").performClick()
+            waitFor("Topics")
+            rule.onNodeWithTag("nav_connections").performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithTag("concept_${tag.id}").fetchSemanticsNodes().isNotEmpty() }
             rule.onNodeWithTag("concept_${tag.id}").performScrollTo().performClick()
-            rule.onNodeWithText("Edit name and type").performScrollTo().performClick()
-            rule.onNodeWithText("Exercise").performScrollTo().performClick()
-            rule.onNodeWithText("Save concept").performClick()
-            rule.waitUntil(5_000) { runBlocking { repo.getNote("old")!!.tags.single().typeName == "Exercise" } }
-            rule.onNodeWithText("New alias").performScrollTo().performTextInput("barbell bench press")
-            rule.onNodeWithText("Add alias").performScrollTo().performClick()
+            rule.onNodeWithText("Rename topic").performScrollTo().performClick()
+            rule.onNodeWithText("Type").assertDoesNotExist()
+            rule.onNodeWithText("Types").assertDoesNotExist()
+            rule.onNodeWithText("Topic name").performTextReplacement("Strength")
+            rule.onNodeWithText("Save topic").performClick()
+            rule.waitUntil(5_000) { runBlocking { repo.getNote("old")!!.tags.single().name == "Strength" } }
+            rule.onNodeWithText("New alias").assertDoesNotExist()
+            rule.onNodeWithText("Aliases").assertDoesNotExist()
             rule.onNodeWithTag("concept_note_old").performScrollTo().assertExists()
             rule.onNodeWithText("Back").performClick()
-            rule.onNodeWithText("Back").performClick()
+            rule.onNodeWithTag("nav_notes").performClick()
             rule.onNodeWithTag("note_new").performScrollTo().performClick()
-            rule.onNodeWithText("Tags and connections").performScrollTo().performClick()
-            rule.waitUntil(5_000) { rule.onAllNodesWithTag("suggestion_Bench press").fetchSemanticsNodes().isNotEmpty() }
-            rule.onNodeWithTag("suggestion_Bench press").performScrollTo().assertTextContains("Bench press · Exercise").performClick()
-            rule.onNodeWithTag("note_popup_content").performScrollTo()
+            rule.onNodeWithTag("edit_topics").performScrollTo().performClick()
+            rule.waitUntil(5_000) { rule.onAllNodesWithTag("suggestion_Strength").fetchSemanticsNodes().isNotEmpty() }
+            rule.onNodeWithTag("suggestion_Strength").performScrollTo().assertTextContains("Strength").performClick()
             rule.onNode(hasTestTag("open_concept_${tag.id}") and hasAnyAncestor(hasTestTag("note_popup"))).performScrollTo().performClick()
             rule.waitUntil(5_000) { runBlocking { repo.getNote("new")!!.tags.any { it.id == tag.id } } }
             rule.onNodeWithTag("concept_page").performScrollToNode(hasTestTag("concept_note_old"))
             rule.onNodeWithTag("concept_note_old").assertExists()
             rule.onNodeWithTag("concept_page").performScrollToNode(hasTestTag("concept_note_new"))
             rule.onNodeWithTag("concept_note_new").performScrollTo().assertExists()
+            rule.onNodeWithTag("concept_page").performScrollToNode(hasTestTag("concept_note_old"))
             rule.onNodeWithTag("concept_note_old").performClick()
             rule.onNodeWithTag("note_popup_content").assertTextContains("Old training log")
         } finally { db.close() }

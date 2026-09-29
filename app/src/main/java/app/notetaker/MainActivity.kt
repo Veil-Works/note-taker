@@ -112,8 +112,6 @@ internal fun NoteTakerApp(repository: NoteRepository) {
                     viewModel = notesViewModel,
                     compact = compact,
                     onOpenNote = { id -> navController.navigate("$EDITOR_ROUTE?noteId=$id") },
-                    onOpenTopics = { navController.navigate("topics") },
-                    onOpenConcept = { id -> navController.navigate("concepts?tagId=${id.orEmpty()}") },
                 )
             }
 
@@ -124,7 +122,7 @@ internal fun NoteTakerApp(repository: NoteRepository) {
             composable("connections") {
                 ConceptsScreen(concepts, null, onBack = { navigate("notes") },
                     onOpenNote = { navController.navigate("$EDITOR_ROUTE?noteId=$it") },
-                    onTopics = { navController.navigate("topics") }, root = true)
+                    root = true)
             }
             composable("settings") {
                 SettingsScreen(mode, { mode = it; preferences.edit().putString("mode", it).apply() }, compact,
@@ -133,7 +131,7 @@ internal fun NoteTakerApp(repository: NoteRepository) {
 
             composable("topics") {
                 val topicsViewModel: app.notetaker.feature.concepts.ConceptsViewModel = viewModel(factory = app.notetaker.feature.concepts.ConceptsViewModel.factory(repository))
-                app.notetaker.feature.concepts.TopicsScreen(topicsViewModel, onBack = { navController.popBackStack() },
+                app.notetaker.feature.concepts.ConceptsScreen(topicsViewModel, initialTagId = null, onBack = { navController.popBackStack() },
                     onOpenNote = { id -> navController.navigate("$EDITOR_ROUTE?noteId=$id") })
             }
             composable("concepts?tagId={tagId}", arguments = listOf(navArgument("tagId") { defaultValue = "" })) { entry ->
@@ -214,7 +212,7 @@ internal fun NoteTakerApp(repository: NoteRepository) {
                     Column(Modifier.weight(1f, fill = false).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(16.dp)) {
                         Text("One thought. Your own words.", color = MaterialTheme.colorScheme.onSurfaceVariant)
                         OutlinedTextField(draft, notesViewModel::onDraftChanged, modifier = Modifier.fillMaxWidth().focusRequester(captureFocus).testTag("capture_field"),
-                            placeholder = { Text("Write a note…") }, minLines = 4, maxLines = 8, readOnly = saving, shape = MaterialTheme.shapes.large)
+                            placeholder = { Text("Write a note…") }, supportingText = { Text("Start with #Atlas #orion to set topics") }, minLines = 4, maxLines = 8, readOnly = saving, shape = MaterialTheme.shapes.large)
                         error?.let { Text(it, color = MaterialTheme.colorScheme.error) }
                     }
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {

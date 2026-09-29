@@ -30,7 +30,7 @@ class NoteLinksFlowTest {
             rule.setContent { NoteTakerTheme { NoteTakerApp(repository) } }
             rule.waitUntil(5_000) { rule.onAllNodesWithText("Training plan").fetchSemanticsNodes().isNotEmpty() }
             rule.onNodeWithText("Training plan").performClick()
-            rule.onNodeWithText("Tags and connections").performScrollTo().performClick()
+            rule.onNodeWithTag("edit_connections").performScrollTo().performClick()
             rule.onNodeWithText("Connect a note").performScrollTo().performClick()
             rule.onNodeWithTag("connect_a").assertDoesNotExist()
             rule.onNodeWithTag("link_search").performTextInput("Running")
@@ -38,14 +38,18 @@ class NoteLinksFlowTest {
             rule.onNodeWithTag("connect_b").performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithTag("connect_b").fetchSemanticsNodes().isEmpty() }
             rule.onNodeWithText("Done connecting").performClick()
+            rule.onNodeWithTag("back_to_note").performClick()
             rule.onNodeWithTag("note_popup_content").performScrollTo().performTextReplacement("Updated training plan")
+            rule.onNodeWithTag("edit_connections").performScrollTo().performClick()
             rule.onNodeWithTag("open_link_b").performScrollTo().performClick()
-            rule.onNodeWithText("Tags and connections").performScrollTo().performClick()
+            rule.onNodeWithTag("edit_connections").performScrollTo().performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithTag("open_link_a").fetchSemanticsNodes().isNotEmpty() }
             rule.onNodeWithTag("open_link_a").performScrollTo().performClick()
-            rule.onNodeWithText("Tags and connections").performScrollTo().performClick()
+            rule.onNodeWithTag("edit_connections").performScrollTo().performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithTag("open_link_b").fetchSemanticsNodes().isNotEmpty() }
+            rule.onNodeWithTag("back_to_note").performClick()
             rule.onNodeWithTag("note_popup_content").assertTextEquals("Updated training plan")
+            rule.onNodeWithTag("edit_connections").performScrollTo().performClick()
             rule.onNodeWithTag("remove_link_b").performScrollTo().performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithTag("open_link_b").fetchSemanticsNodes().isEmpty() }
             runBlocking {

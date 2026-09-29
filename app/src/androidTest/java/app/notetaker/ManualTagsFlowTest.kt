@@ -29,31 +29,32 @@ class ManualTagsFlowTest {
             rule.setContent { NoteTakerTheme { NoteTakerApp(repository) } }
             rule.waitUntil(5_000) { rule.onAllNodesWithText("Project idea").fetchSemanticsNodes().isNotEmpty() }
             rule.onNodeWithText("Project idea").performClick()
-            rule.onNodeWithText("Tags and connections").performScrollTo().performClick()
-            rule.waitUntil(5_000) { rule.onAllNodesWithText("New tag").fetchSemanticsNodes().isNotEmpty() }
-            rule.onNodeWithText("New tag").performScrollTo().performTextInput("Work")
-            rule.onNodeWithText("Add tag").performScrollTo().performClick()
+            rule.onNodeWithTag("edit_topics").performScrollTo().performClick()
+            rule.waitUntil(5_000) { rule.onAllNodesWithText("New topic").fetchSemanticsNodes().isNotEmpty() }
+            rule.onNodeWithText("New topic").performScrollTo().performTextInput("Work")
+            rule.onNodeWithText("Add topic").performScrollTo().performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithText("Work").fetchSemanticsNodes().isNotEmpty() }
             rule.onNode(hasText("Work") and isSelectable()).assertIsSelected()
-            rule.onNodeWithText("New tag").assert(SemanticsMatcher.expectValue(SemanticsProperties.EditableText, AnnotatedString("")))
-            rule.onNodeWithText("New tag").performTextInput("Ideas")
-            rule.onNodeWithText("Add tag").performScrollTo().performClick()
+            rule.onNodeWithText("New topic").assert(SemanticsMatcher.expectValue(SemanticsProperties.EditableText, AnnotatedString("")))
+            rule.onNodeWithText("New topic").performTextInput("Ideas")
+            rule.onNodeWithText("Add topic").performScrollTo().performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithText("Ideas").fetchSemanticsNodes().isNotEmpty() }
             rule.onNode(hasText("Ideas") and isSelectable()).assertIsSelected()
-            rule.onNodeWithText("New tag").assert(SemanticsMatcher.expectValue(SemanticsProperties.EditableText, AnnotatedString("")))
+            rule.onNodeWithText("New topic").assert(SemanticsMatcher.expectValue(SemanticsProperties.EditableText, AnnotatedString("")))
             rule.onNodeWithText("Done").performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithText("Done").fetchSemanticsNodes().isEmpty() }
-            rule.onNodeWithText("Tags").performClick()
-            rule.onNode(hasText("Work") and isSelectable()).performClick()
+            rule.onNodeWithText("Filters").performClick()
+            rule.onNode(hasText("Work") and isSelectable()).performScrollTo().performClick()
+            rule.onNodeWithText("Apply").performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithText("Shopping").fetchSemanticsNodes().isEmpty() }
             rule.onNodeWithText("Project idea").assertIsDisplayed()
             rule.onNodeWithText("Project idea").performClick()
-            rule.onNodeWithText("Tags and connections").performScrollTo().performClick()
-            rule.waitUntil(5_000) { rule.onAllNodesWithTag("note_popup_content").fetchSemanticsNodes().isNotEmpty() }
+            rule.onNodeWithTag("edit_topics").performScrollTo().performClick()
+            rule.waitUntil(5_000) { rule.onAllNodesWithText("New topic").fetchSemanticsNodes().isNotEmpty() }
             rule.onNode(hasText("Work") and isSelectable() and hasAnyAncestor(hasTestTag("note_popup"))).performScrollTo().performClick()
             rule.onNodeWithText("Done").performClick()
-            rule.waitUntil(5_000) { rule.onAllNodesWithText("No notes match all selected tags and search.").fetchSemanticsNodes().isNotEmpty() }
-            rule.onNodeWithText("Clear tag filter").performClick()
+            rule.waitUntil(5_000) { rule.onAllNodesWithText("No notes match all selected topics and search.").fetchSemanticsNodes().isNotEmpty() }
+            rule.onNodeWithText("Clear topic filter").performClick()
             rule.waitUntil(5_000) { rule.onAllNodesWithText("Shopping").fetchSemanticsNodes().isNotEmpty() }
         } finally { database.close() }
     }

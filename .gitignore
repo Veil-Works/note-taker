@@ -11,3 +11,8 @@ app/build/
 release-signing.properties
 *.jks
 *.keystore
+.local/
+
+# Local Python comparison tooling
+__pycache__/
+.DS_Store

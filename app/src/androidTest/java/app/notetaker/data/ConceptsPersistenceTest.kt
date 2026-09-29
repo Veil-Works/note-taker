@@ -26,7 +26,7 @@ class ConceptsPersistenceTest {
             repo.updateTag(bench.id, bench.name, exercise.id)
             val typed = repo.getNote("old")!!.tags.single()
             assertEquals(bench.id, typed.id)
-            assertEquals("Bench press · Exercise", typed.displayName)
+            assertEquals("Bench press", typed.displayName)
             repo.upsert(Note("new", "barbell bench press today", 3, 4))
             assertEquals(typed, repo.observeSuggestions("new").first().single())
             val other = repo.createTag("Bench research")
@@ -38,7 +38,7 @@ class ConceptsPersistenceTest {
             assertEquals(2, repo.observeNotes().first().count { note -> note.tags.any { it.id == bench.id } })
             repo.saveType(exercise.id, "Movement")
             repo.updateTag(bench.id, "Barbell press", exercise.id)
-            assertEquals("Barbell press · Movement", repo.getNote("old")!!.tags.single().displayName)
+            assertEquals("Barbell press", repo.getNote("old")!!.tags.single().displayName)
             assertTrue(repo.observeSuggestions("new").first().isEmpty())
             assertTrue(runCatching { repo.saveType(null, " movement ") }.isFailure)
             assertTrue(runCatching { repo.updateTag(bench.id, other.name, exercise.id) }.isFailure)
@@ -88,7 +88,7 @@ class ConceptsPersistenceTest {
             old.execSQL("INSERT INTO tag_dismissals VALUES ('a', 't')")
             old.version = 4
         }
-        val db = Room.databaseBuilder(context, NoteDatabase::class.java, name).addMigrations(NoteDatabase.MIGRATION_4_5, NoteDatabase.MIGRATION_5_6).build()
+        val db = Room.databaseBuilder(context, NoteDatabase::class.java, name).addMigrations(NoteDatabase.MIGRATION_4_5, NoteDatabase.MIGRATION_5_6, NoteDatabase.MIGRATION_6_7).build()
         try {
             val repo = RoomNoteRepository(db.noteDao())
             assertEquals(8, repo.observeTypes().first().size)

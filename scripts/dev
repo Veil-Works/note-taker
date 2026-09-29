@@ -1,0 +1,129 @@
+#!/usr/bin/env bash
+set -euo pipefail
+source "$(dirname "$0")/android-env.sh"
+cd "$PROJECT_ROOT"
+
+require_emulator() {
+    if [[ "$(adb -s "$ANDROID_SERIAL" emu avd name 2>/dev/null | head -n 1 | tr -d '\r')" != "$AVD_NAME" ]]; then
+        echo "Start the project emulator first: ./scripts/dev emulator" >&2
+        exit 1
+    fi
+    if [[ "$(adb -s "$ANDROID_SERIAL" shell getprop sys.boot_completed | tr -d '\r')" != 1 ]]; then
+        echo "Emulator is still booting; wait for ./scripts/dev emulator to finish." >&2
+        exit 1
+    fi
+}
+
+case "${1:-help}" in
+    doctor)
+        java -version
+        echo "SDK: $ANDROID_HOME"
+        echo "AVD: $AVD_NAME ($ANDROID_SERIAL)"
+        for tool in sdkmanager avdmanager adb emulator; do command -v "$tool"; done
+        emulator -accel-check
+        emulator -list-avds
+        adb devices -l
+        ;;
+    setup)
+        case "$(uname -m)" in
+            arm64|aarch64) abi=arm64-v8a ;;
+            x86_64) abi=x86_64 ;;
+            *) echo 'Unsupported host architecture' >&2; exit 1 ;;
+        esac
+        image="system-images;android-36;google_apis;$abi"
+        sdkmanager --sdk_root="$ANDROID_HOME" 'platform-tools' 'platforms;android-36.1' 'build-tools;36.0.0' 'emulator' "$image"
+        if ! emulator -list-avds | tr -d '\r' | grep -Fxq "$AVD_NAME"; then
+            printf 'no\n' | avdmanager create avd --name "$AVD_NAME" --package "$image" --device pixel_8
+        fi
+        if [[ ! -f local.properties ]]; then
+            printf 'sdk.dir=%s\n' "$ANDROID_HOME" > local.properties
+        fi
+        ;;
+    emulator)
+        mkdir -p .local/logs
+        if adb -s "$ANDROID_SERIAL" get-state >/dev/null 2>&1; then
+            require_emulator
+            echo "$AVD_NAME is already running."
+            exit 0
+        fi
+        extra_args=(-no-snapshot -no-boot-anim)
+        foreground=false
+        for option in "${@:2}"; do
+            case "$option" in
+                --headless) extra_args+=(-no-window -no-audio) ;;
+                --foreground) foreground=true ;;
+                *) echo "Unknown emulator option: $option" >&2; exit 2 ;;
+            esac
+        done
+        nohup emulator -avd "$AVD_NAME" -port "$EMULATOR_PORT" "${extra_args[@]}" > .local/logs/emulator.log 2>&1 < /dev/null &
+        emulator_pid=$!
+        for ((attempt=0; attempt<180; attempt++)); do
+            if [[ "$(adb -s "$ANDROID_SERIAL" shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" == 1 ]]; then
+                adb -s "$ANDROID_SERIAL" shell input keyevent 82
+                echo "Ready: $AVD_NAME ($ANDROID_SERIAL). Log: .local/logs/emulator.log"
+                if [[ "$foreground" == true ]]; then
+                    trap 'kill "$emulator_pid" 2>/dev/null || true' INT TERM EXIT
+                    wait "$emulator_pid"
+                fi
+                exit 0
+            fi
+            if ! kill -0 "$emulator_pid" 2>/dev/null; then
+                cat .local/logs/emulator.log >&2
+                exit 1
+            fi
+            sleep 2
+        done
+        echo 'Emulator boot timed out; see .local/logs/emulator.log' >&2
+        exit 1
+        ;;
+    check)
+        shift
+        ./gradlew testDebugUnitTest lintDebug assembleDebug assembleDebugAndroidTest "$@"
+        ;;
+    test)
+        require_emulator
+        shift
+        ./gradlew connectedDebugAndroidTest "$@"
+        ;;
+    seed)
+        require_emulator
+        export AVD_NAME
+        shift
+        python3 scripts/seed-notes.py "$@"
+        ;;
+    run)
+        require_emulator
+        ./gradlew assembleDebug
+        adb -s "$ANDROID_SERIAL" install -r app/build/outputs/apk/debug/app-debug.apk
+        adb -s "$ANDROID_SERIAL" shell am start -W -n app.notetaker/.MainActivity
+        ;;
+    stop)
+        require_emulator
+        adb -s "$ANDROID_SERIAL" emu kill
+        ;;
+    logs)
+        require_emulator
+        adb -s "$ANDROID_SERIAL" logcat
+        ;;
+    gradle)
+        shift
+        ./gradlew "$@"
+        ;;
+    help|--help|-h)
+        cat <<'HELP'
+Usage: ./scripts/dev COMMAND
+  doctor                Check Java, SDK, acceleration, and connected devices
+  setup                 Install SDK packages (interactive licenses), create AVD
+  emulator [--headless] [--foreground]  Start the dedicated API 36 emulator
+  check [Gradle args]    Unit tests, lint, debug APK, and instrumentation APK
+  test [Gradle args]     Run instrumentation tests on the dedicated emulator
+  run                   Build, install, and launch the app on that emulator
+  seed [--fixture PATH] Add sample notes without replacing existing notes
+  stop                  Shut down the dedicated emulator
+  logs                  Stream emulator logcat (Ctrl-C to stop)
+  gradle TASK...         Run any Gradle task with the detected Java/SDK
+Overrides: JAVA_HOME, ANDROID_HOME, AVD_NAME, EMULATOR_PORT (default 5554).
+HELP
+        ;;
+    *) echo "Unknown command: $1. Use ./scripts/dev help" >&2; exit 2 ;;
+esac

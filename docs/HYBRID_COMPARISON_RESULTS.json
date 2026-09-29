@@ -1,0 +1,3155 @@
+{
+  "promptVersion": "hybrid-comparison-v1",
+  "model": {
+    "id": "qwen3-0.6b-q8-v1",
+    "repository": "Qwen/Qwen3-0.6B-GGUF",
+    "revision": "23749fefcc72300e3a2ad315e1317431b06b590a",
+    "file": "Qwen3-0.6B-Q8_0.gguf",
+    "bytes": 639446688,
+    "sha256": "9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031",
+    "license": "Apache-2.0",
+    "url": "https://huggingface.co/Qwen/Qwen3-0.6B-GGUF/resolve/23749fefcc72300e3a2ad315e1317431b06b590a/Qwen3-0.6B-Q8_0.gguf",
+    "runtimeRevision": "391fac16460f15233a7740550d858ac96df3419d",
+    "runtimeLicense": "MIT",
+    "distribution": "optional-download; not packaged in base APK",
+    "defaultMode": "rules",
+    "comparisonRuntime": {
+      "contextTokens": 2048,
+      "threads": 4,
+      "batchTokens": 128,
+      "microBatchTokens": 128,
+      "slots": 1,
+      "promptCacheMiB": 0,
+      "thinking": false,
+      "temperature": 0,
+      "seed": 731,
+      "contextShift": false
+    }
+  },
+  "inputSha256": "08f6cf9f4071a2972b4663145dd056e163391a6a3416feda6bd72135b45e7ee1",
+  "execution": "Android emulator; local adb forward; no remote inference",
+  "runs": [
+    {
+      "corpus": "original72",
+      "mode": "rules",
+      "groups": [
+        {
+          "key": "group-2b76f23e1a33f69405fc37fe7f20a4d6dfe6614c98fea409397e40fc1c83d69e",
+          "label": "Atlas",
+          "named": true,
+          "members": [
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "23",
+            "27",
+            "61"
+          ]
+        },
+        {
+          "key": "group-3abb84faa4ca3373ab01785ca64961b67464927f23a440ce996bff1ed402885f",
+          "label": "Orion",
+          "named": true,
+          "members": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "16",
+            "23",
+            "27"
+          ]
+        },
+        {
+          "key": "group-971b0b755d8ac5136c1ee5c4cadbc674e7c7f09db7476afd9e23738ecc252f7a",
+          "label": "Running",
+          "named": false,
+          "members": [
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "41",
+            "42",
+            "46",
+            "63"
+          ]
+        },
+        {
+          "key": "group-f88e7962c0f5a20c809e1e20bd193a55444e00ef15c71d8b2c8ce8b9b8cb47ae",
+          "label": "Beacon",
+          "named": true,
+          "members": [
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23"
+          ]
+        },
+        {
+          "key": "group-698fcfb4760e5269a14f591fd7a20e2a5ddf899d2f13ae16a5dd54b7f71bbc29",
+          "label": "Note-taking",
+          "named": false,
+          "members": [
+            "51",
+            "52",
+            "53",
+            "54",
+            "55",
+            "56",
+            "57",
+            "58",
+            "59",
+            "62"
+          ]
+        },
+        {
+          "key": "group-d7eb456b3b6e07173af6c726f18153327bd0758de6a3a0aff7a93014ffdb6aab",
+          "label": "Strength training",
+          "named": false,
+          "members": [
+            "29",
+            "30",
+            "31",
+            "33",
+            "34"
+          ]
+        },
+        {
+          "key": "group-bc3a8cca26ebf8c1b94c1c9d0cc8f247e7263e2fa1e1169c30de57582789747d",
+          "label": "Balcony rosemary",
+          "named": false,
+          "members": [
+            "48",
+            "64",
+            "66"
+          ]
+        },
+        {
+          "key": "group-2329a238425b5bac2d22c61745a8fe20d23171b7c046df6f49e2f56e82da4372",
+          "label": "Maya",
+          "named": true,
+          "members": [
+            "2",
+            "5",
+            "27"
+          ]
+        },
+        {
+          "key": "group-c03bc7b6083f841a2055232a4120722b548b1bf431c7d9365bc2ff84abed3819",
+          "label": "Meal planning",
+          "named": false,
+          "members": [
+            "42",
+            "44",
+            "49"
+          ]
+        },
+        {
+          "key": "group-f13552a9284829a993fa6dd7f160743a9f08c804e4ffc78c8e2c786c14faf504",
+          "label": "Meetings",
+          "named": false,
+          "members": [
+            "24",
+            "26",
+            "57"
+          ]
+        },
+        {
+          "key": "group-2a06b434c9ad472081058974143c20937d4589c9314302e2b825a6bf4a8b755b",
+          "label": "Running gear",
+          "named": false,
+          "members": [
+            "39",
+            "40",
+            "46"
+          ]
+        },
+        {
+          "key": "group-a62c953596fd3d402cfc009d46d40743ea6e6a13d18b7a3dd7ff27faa5668f25",
+          "label": "Vienna",
+          "named": true,
+          "members": [
+            "67",
+            "68",
+            "69"
+          ]
+        },
+        {
+          "key": "group-058de4f3de25f5c1677a8b2d57529585a53588c81b0a4499eac11493b24ad7e7",
+          "label": "Groceries",
+          "named": false,
+          "members": [
+            "43",
+            "50"
+          ]
+        },
+        {
+          "key": "group-146277e484d90c636118aa360d9cdd7d1d33ef39f48933b58c27043cf2fe365b",
+          "label": "Workout gear",
+          "named": false,
+          "members": [
+            "32",
+            "46"
+          ]
+        }
+      ],
+      "calls": [],
+      "completed": true,
+      "pairChecks": {
+        "positive": {
+          "total": 9,
+          "shared": 9
+        },
+        "negative": {
+          "total": 1,
+          "shared": 0
+        }
+      },
+      "groupedNotes": 63,
+      "latencySummary": null,
+      "invalidResponses": 0
+    },
+    {
+      "corpus": "original72",
+      "mode": "labels",
+      "groups": [
+        {
+          "key": "group-2b76f23e1a33f69405fc37fe7f20a4d6dfe6614c98fea409397e40fc1c83d69e",
+          "label": "Atlas",
+          "named": true,
+          "members": [
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "23",
+            "27",
+            "61"
+          ]
+        },
+        {
+          "key": "group-3abb84faa4ca3373ab01785ca64961b67464927f23a440ce996bff1ed402885f",
+          "label": "Orion",
+          "named": true,
+          "members": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "16",
+            "23",
+            "27"
+          ]
+        },
+        {
+          "key": "group-f88e7962c0f5a20c809e1e20bd193a55444e00ef15c71d8b2c8ce8b9b8cb47ae",
+          "label": "Beacon",
+          "named": true,
+          "members": [
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23"
+          ]
+        },
+        {
+          "key": "group-2329a238425b5bac2d22c61745a8fe20d23171b7c046df6f49e2f56e82da4372",
+          "label": "Maya",
+          "named": true,
+          "members": [
+            "2",
+            "5",
+            "27"
+          ]
+        },
+        {
+          "key": "group-a62c953596fd3d402cfc009d46d40743ea6e6a13d18b7a3dd7ff27faa5668f25",
+          "label": "Vienna",
+          "named": true,
+          "members": [
+            "67",
+            "68",
+            "69"
+          ]
+        },
+        {
+          "key": "group-971b0b755d8ac5136c1ee5c4cadbc674e7c7f09db7476afd9e23738ecc252f7a",
+          "label": "Running Schedule and Notes",
+          "named": false,
+          "members": [
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "41",
+            "42",
+            "46",
+            "63"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-698fcfb4760e5269a14f591fd7a20e2a5ddf899d2f13ae16a5dd54b7f71bbc29",
+          "label": "Notebook Organization and Topics",
+          "named": false,
+          "members": [
+            "51",
+            "52",
+            "53",
+            "54",
+            "55",
+            "56",
+            "57",
+            "58",
+            "59",
+            "62"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-d7eb456b3b6e07173af6c726f18153327bd0758de6a3a0aff7a93014ffdb6aab",
+          "label": "Weight Training Sessions",
+          "named": false,
+          "members": [
+            "29",
+            "30",
+            "31",
+            "33",
+            "34"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-bc3a8cca26ebf8c1b94c1c9d0cc8f247e7263e2fa1e1169c30de57582789747d",
+          "label": "Repot and Maintain Rosemary for Balcony",
+          "named": false,
+          "members": [
+            "48",
+            "64",
+            "66"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-c03bc7b6083f841a2055232a4120722b548b1bf431c7d9365bc2ff84abed3819",
+          "label": "Meal Prep Ideas for Lunch",
+          "named": false,
+          "members": [
+            "42",
+            "44",
+            "49"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-f13552a9284829a993fa6dd7f160743a9f08c804e4ffc78c8e2c786c14faf504",
+          "label": "Planning and Task Management",
+          "named": false,
+          "members": [
+            "24",
+            "26",
+            "57"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-2a06b434c9ad472081058974143c20937d4589c9314302e2b825a6bf4a8b755b",
+          "label": "Running Shoes and Socks Notes",
+          "named": false,
+          "members": [
+            "39",
+            "40",
+            "46"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-058de4f3de25f5c1677a8b2d57529585a53588c81b0a4499eac11493b24ad7e7",
+          "label": "Shopping and Coffee Preparation",
+          "named": false,
+          "members": [
+            "43",
+            "50"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-146277e484d90c636118aa360d9cdd7d1d33ef39f48933b58c27043cf2fe365b",
+          "label": "Gym Activities",
+          "named": false,
+          "members": [
+            "32",
+            "46"
+          ],
+          "fallback": false
+        }
+      ],
+      "calls": [
+        {
+          "key": "56666fe746833757c0fae30bd9dc5aab9c5315101ff437d2afe628642bc2d9d8",
+          "valid": true,
+          "wallSeconds": 1.545,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "9c83c0453dc45b31e4334ee5942faaaa54e3f59e2244ef5eb1e3e553ccefa808",
+          "valid": true,
+          "wallSeconds": 1.248,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "2cf84f6e4d0e8b1a0721b2ff071da8b6b23f34e7ae3d66bebe2afaad5a83bb95",
+          "valid": true,
+          "wallSeconds": 0.798,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "e15248b43322ee9f5ec8d51421388d3b97ccf3985f1e7aae603eb84ef455a652",
+          "valid": true,
+          "wallSeconds": 0.491,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "8aacfd58487f868143034a3555ef183fc7847e65e6ed1390aaf40a88a4dd7872",
+          "valid": true,
+          "wallSeconds": 0.44,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "26279a2e96f555e50f97868ef29862f8bb9a9df3c4377807cd445f42458f69da",
+          "valid": true,
+          "wallSeconds": 0.449,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "6a46a95a53bbec7feb2ec5ad0361c01e283599f34efeb4dcf817b719fd7a1d8d",
+          "valid": true,
+          "wallSeconds": 0.444,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "0e04786e0accad5e9d0e13bc5d57708160fba95ea363729ce137ff4a63cdf4dd",
+          "valid": true,
+          "wallSeconds": 0.33,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "2e20aee21f3330a5ba0ea6d0f27ad61ddb1f460eea3704c8b5810eb2dbe4effc",
+          "valid": true,
+          "wallSeconds": 0.309,
+          "cached": false,
+          "source": "existing-core"
+        }
+      ],
+      "completed": true,
+      "expectedCalls": 9,
+      "pairChecks": {
+        "positive": {
+          "total": 9,
+          "shared": 9
+        },
+        "negative": {
+          "total": 1,
+          "shared": 0
+        }
+      },
+      "groupedNotes": 63,
+      "latencySummary": {
+        "medianSeconds": 0.449,
+        "p95Seconds": 1.545,
+        "sumRequestSeconds": 6.054
+      },
+      "invalidResponses": 0
+    },
+    {
+      "corpus": "original72",
+      "mode": "hybrid",
+      "groups": [
+        {
+          "key": "group-2b76f23e1a33f69405fc37fe7f20a4d6dfe6614c98fea409397e40fc1c83d69e",
+          "label": "Atlas",
+          "named": true,
+          "members": [
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "23",
+            "27",
+            "61"
+          ]
+        },
+        {
+          "key": "group-3abb84faa4ca3373ab01785ca64961b67464927f23a440ce996bff1ed402885f",
+          "label": "Orion",
+          "named": true,
+          "members": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "16",
+            "23",
+            "27"
+          ]
+        },
+        {
+          "key": "group-f88e7962c0f5a20c809e1e20bd193a55444e00ef15c71d8b2c8ce8b9b8cb47ae",
+          "label": "Beacon",
+          "named": true,
+          "members": [
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23"
+          ]
+        },
+        {
+          "key": "group-2329a238425b5bac2d22c61745a8fe20d23171b7c046df6f49e2f56e82da4372",
+          "label": "Maya",
+          "named": true,
+          "members": [
+            "2",
+            "5",
+            "27"
+          ]
+        },
+        {
+          "key": "group-a62c953596fd3d402cfc009d46d40743ea6e6a13d18b7a3dd7ff27faa5668f25",
+          "label": "Vienna",
+          "named": true,
+          "members": [
+            "67",
+            "68",
+            "69"
+          ]
+        },
+        {
+          "label": "Running",
+          "members": [
+            "35",
+            "38",
+            "41",
+            "46"
+          ],
+          "named": false
+        },
+        {
+          "label": "notebook",
+          "members": [
+            "55",
+            "56",
+            "58",
+            "59",
+            "62"
+          ],
+          "named": false
+        },
+        {
+          "label": "Lifting",
+          "members": [
+            "29",
+            "30",
+            "31",
+            "33",
+            "34"
+          ],
+          "named": false
+        },
+        {
+          "label": "lunches",
+          "members": [
+            "44",
+            "48"
+          ],
+          "named": false
+        },
+        {
+          "label": "run",
+          "members": [
+            "38",
+            "46"
+          ],
+          "named": false
+        },
+        {
+          "label": "Planning",
+          "members": [
+            "26",
+            "51",
+            "57"
+          ],
+          "named": false
+        },
+        {
+          "label": "Running",
+          "members": [
+            "35",
+            "39",
+            "40",
+            "42"
+          ],
+          "named": false
+        },
+        {
+          "label": "Shopping",
+          "members": [
+            "43",
+            "45"
+          ],
+          "named": false
+        },
+        {
+          "label": "run",
+          "members": [
+            "40",
+            "42",
+            "46"
+          ],
+          "named": false
+        },
+        {
+          "label": "Orion",
+          "members": [
+            "6",
+            "7"
+          ],
+          "named": false
+        },
+        {
+          "label": "Atlas",
+          "members": [
+            "10",
+            "18"
+          ],
+          "named": false
+        },
+        {
+          "label": "Beacon",
+          "members": [
+            "22",
+            "28"
+          ],
+          "named": false
+        },
+        {
+          "label": "Shopping",
+          "members": [
+            "43",
+            "45",
+            "46"
+          ],
+          "named": false
+        },
+        {
+          "label": "Shopping",
+          "members": [
+            "43",
+            "55"
+          ],
+          "named": false
+        },
+        {
+          "label": "Observation",
+          "members": [
+            "58",
+            "59",
+            "62"
+          ],
+          "named": false
+        },
+        {
+          "label": "run",
+          "members": [
+            "38",
+            "63",
+            "66"
+          ],
+          "named": false
+        }
+      ],
+      "calls": [
+        {
+          "key": "7dbd445ca6e4b4c730ce9a96ae6d946aacc34870b3a2011d86a1fed6ec1bca16",
+          "valid": true,
+          "wallSeconds": 1.995,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "1d527d9ea1e127f25a5448d1feb6449084a3c4ffd7bbed9de84d37372db65657",
+          "valid": true,
+          "wallSeconds": 1.86,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "199f914902e41d8dd5503a5966444710f496b68a2d5abd3c03086c5ce6f9d9cc",
+          "valid": true,
+          "wallSeconds": 1.358,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "c792b9114dfb61cadd7d560ffa26ad1b3ef00270293a64df83a11502a80c0955",
+          "valid": true,
+          "wallSeconds": 0.906,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "79420fee47599a96615a6745b84d0102bc393568f14e8e71c85baad9690b4207",
+          "valid": true,
+          "wallSeconds": 0.87,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "db3a61671649a549feec6bd5d9842c6712f0a57c7015f0c3bc66b33fee63725b",
+          "valid": true,
+          "wallSeconds": 0.919,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "010fa0394dfa2ccc5d3473cf091b48e92760f4f2a4fce4d6ad820aa6c44c7756",
+          "valid": true,
+          "wallSeconds": 0.983,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "019e773fc653c8255538ee4ccc534e366cba36d15a5e9856c030465b87bf8df7",
+          "valid": true,
+          "wallSeconds": 0.627,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "d34df62e3b02a578fa78508465825e521e8a5ee57ab97c97a39ff9cc05cc4c9e",
+          "valid": true,
+          "wallSeconds": 0.696,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "7a7d8f943111e482c57db17646b25430a3d4154cd4046efbc29ee4565b81611f",
+          "valid": true,
+          "wallSeconds": 1.39,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "8278f1f3e30a40453b73fc64c6e728267fc1e24eac06fe7f8993a4f77100d7a2",
+          "valid": true,
+          "wallSeconds": 1.115,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "56673d18dcda4690cdb9336fc815206f156d4d65f6d01036c0de6f0dae36fcb4",
+          "valid": true,
+          "wallSeconds": 1.106,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "cc3e5e6916fbf97e22662ae414e8f1f2779d25d4569ea374361d452598b3b3bb",
+          "valid": true,
+          "wallSeconds": 1.198,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "97fbfa98b560745fb208280158241c28dddf3a336d02ca7b582923e766f79fb8",
+          "valid": true,
+          "wallSeconds": 1.192,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        }
+      ],
+      "completed": true,
+      "expectedCalls": 14,
+      "pairChecks": {
+        "positive": {
+          "total": 9,
+          "shared": 3
+        },
+        "negative": {
+          "total": 1,
+          "shared": 0
+        }
+      },
+      "groupedNotes": 55,
+      "latencySummary": {
+        "medianSeconds": 1.111,
+        "p95Seconds": 1.995,
+        "sumRequestSeconds": 16.215
+      },
+      "invalidResponses": 0
+    },
+    {
+      "corpus": "expanded172",
+      "mode": "rules",
+      "groups": [
+        {
+          "key": "group-ffad2d94b4e9c2641e9e480e3d4e016e0ef7cc3cc81ff6d4e6e82ac9471baa43",
+          "label": "Atlas",
+          "named": true,
+          "members": [
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "23",
+            "27",
+            "61",
+            "78",
+            "79",
+            "80",
+            "81",
+            "82",
+            "88",
+            "89",
+            "90"
+          ]
+        },
+        {
+          "key": "group-a1bf2ebe0815d704e2a375f1ba3b892666f8ed0fae1b39fcf8c83cee2ea252bf",
+          "label": "Orion",
+          "named": true,
+          "members": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "16",
+            "23",
+            "27",
+            "73",
+            "74",
+            "75",
+            "76",
+            "77",
+            "88",
+            "89",
+            "90"
+          ]
+        },
+        {
+          "key": "group-1ce007063b02795e383caae2469110e6e8d5ac0280850f570ee2e55442c17154",
+          "label": "Running gear",
+          "named": false,
+          "members": [
+            "32",
+            "35",
+            "36",
+            "38",
+            "39",
+            "40",
+            "42",
+            "46",
+            "63",
+            "104",
+            "105",
+            "108",
+            "109",
+            "110",
+            "114",
+            "125",
+            "169"
+          ]
+        },
+        {
+          "key": "group-f12b1117f4ef097b609c5bca9e9036cfd4dbe8acd7146d4993c3bada43c095f3",
+          "label": "Beacon",
+          "named": true,
+          "members": [
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "83",
+            "84",
+            "85",
+            "86",
+            "87",
+            "90",
+            "171"
+          ]
+        },
+        {
+          "key": "group-562df1755d463867ae74fa6b84118ad2e94feffc2ffd936f7aba520d0c0ca725",
+          "label": "Running",
+          "named": false,
+          "members": [
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "41",
+            "42",
+            "46",
+            "63",
+            "103",
+            "104",
+            "105",
+            "106",
+            "107",
+            "108",
+            "109",
+            "112",
+            "118"
+          ]
+        },
+        {
+          "key": "group-a3976f6042f74839407cb6fcd442f4567ff4c68874472488ab5d684a18a795f9",
+          "label": "Note-taking",
+          "named": false,
+          "members": [
+            "51",
+            "52",
+            "53",
+            "54",
+            "55",
+            "56",
+            "57",
+            "58",
+            "59",
+            "62",
+            "63",
+            "96",
+            "97",
+            "98",
+            "99",
+            "100",
+            "102",
+            "153",
+            "168"
+          ]
+        },
+        {
+          "key": "group-5874e4ef4fabfbd42c5e5783572cf8802a912ed1bbc7637ff9c4bf1f917a10f1",
+          "label": "Meal preparation",
+          "named": false,
+          "members": [
+            "42",
+            "43",
+            "44",
+            "49",
+            "108",
+            "115",
+            "116",
+            "118",
+            "119",
+            "170"
+          ]
+        },
+        {
+          "key": "group-582742153af40c13aa611bfb4a6e78abb4aa7fe99b19a066a431d3e677531522",
+          "label": "Groceries",
+          "named": false,
+          "members": [
+            "43",
+            "44",
+            "45",
+            "50",
+            "115",
+            "116",
+            "117",
+            "170"
+          ]
+        },
+        {
+          "key": "group-90bee4074aff69327ad91e6109b693d092d01ccc81371f2a9cfd4affe784ab9f",
+          "label": "Strength training",
+          "named": false,
+          "members": [
+            "29",
+            "30",
+            "31",
+            "33",
+            "105",
+            "111",
+            "112",
+            "113"
+          ]
+        },
+        {
+          "key": "group-32386bab61fe1c1c2167f1f5800a15395a6e38ff6137dc34aaa707bd6000ac2e",
+          "label": "Vienna",
+          "named": true,
+          "members": [
+            "67",
+            "68",
+            "69",
+            "123",
+            "124",
+            "125",
+            "167"
+          ]
+        },
+        {
+          "key": "group-7fa5eb6e1c9f94a75c548711f18160950381bee3b674fcbcf7bd51683fba3a26",
+          "label": "Balcony",
+          "named": false,
+          "members": [
+            "48",
+            "64",
+            "66",
+            "120",
+            "121",
+            "122"
+          ]
+        },
+        {
+          "key": "group-0015b75d7fd096b8fef7abb6fabafe5950fefa17234bf62301058d4236a0f46f",
+          "label": "Phrases",
+          "named": false,
+          "members": [
+            "62",
+            "63",
+            "147",
+            "151",
+            "152",
+            "153"
+          ]
+        },
+        {
+          "key": "group-16ef917a0242ae0e5771338d4479db7a6a19b4b983e2bd0cb68ddf7a866b21d2",
+          "label": "Maya",
+          "named": true,
+          "members": [
+            "2",
+            "5",
+            "27",
+            "76",
+            "89"
+          ]
+        },
+        {
+          "key": "group-34bfd7adb33503dc506d8e3c9c054c84abc99b286302294e898f0fe4a3888d0b",
+          "label": "Bike",
+          "named": false,
+          "members": [
+            "71",
+            "127",
+            "128",
+            "169"
+          ]
+        },
+        {
+          "key": "group-21d2fc0e6dfd8fae47b1fa061daa1fa24a770a2bca196b4e48a5fe2116688aab",
+          "label": "Jonas",
+          "named": true,
+          "members": [
+            "13",
+            "27",
+            "80",
+            "89"
+          ]
+        },
+        {
+          "key": "group-f9c23b17f7369e231d38525d675503ba40becc58b4f56814c8f24bf7cd561f0e",
+          "label": "Meeting planning",
+          "named": false,
+          "members": [
+            "26",
+            "91",
+            "92",
+            "171"
+          ]
+        },
+        {
+          "key": "group-582c06164f37fee3dfd601f985c7ea9b07738e29d7b0e2b96f530a8ad4bb9bad",
+          "label": "Workout gear",
+          "named": false,
+          "members": [
+            "29",
+            "33",
+            "111",
+            "113"
+          ]
+        },
+        {
+          "key": "group-6bdd977dc12291c26c5359b19b905787c186e92cdc01e648f391eae3c771ad67",
+          "label": "Basil",
+          "named": false,
+          "members": [
+            "65",
+            "120",
+            "121"
+          ]
+        },
+        {
+          "key": "group-05f7023d5bcc896d8986569b18b6d88afd29f9228457cf63b8c541ea238f4fd5",
+          "label": "Chapter",
+          "named": false,
+          "members": [
+            "143",
+            "145",
+            "168"
+          ]
+        },
+        {
+          "key": "group-03c77cb58da653f0f14e06fd2d2221abafc541f3a5a69f8823945fccfcb535e2",
+          "label": "Coffee",
+          "named": false,
+          "members": [
+            "50",
+            "157",
+            "158"
+          ]
+        },
+        {
+          "key": "group-af0c0d28e9a7b7a6c800d89057d467d6a9dfca82ade1a1aae3148191127abce7",
+          "label": "Meetings",
+          "named": false,
+          "members": [
+            "57",
+            "72",
+            "161"
+          ]
+        },
+        {
+          "key": "group-f13552a9284829a993fa6dd7f160743a9f08c804e4ffc78c8e2c786c14faf504",
+          "label": "Project planning",
+          "named": false,
+          "members": [
+            "24",
+            "26",
+            "57"
+          ]
+        },
+        {
+          "key": "group-01345507086bf1c884b4612717ef25e5866ce4225e55fb7130fdb9f13d2a3bd4",
+          "label": "Cancel",
+          "named": false,
+          "members": [
+            "93",
+            "136"
+          ]
+        },
+        {
+          "key": "group-05f9f0199f0ed2e7699299f8c02f01ceb0e33337cc092c5c1fbf7074e917ced2",
+          "label": "Chat",
+          "named": false,
+          "members": [
+            "28",
+            "94"
+          ]
+        },
+        {
+          "key": "group-235b2fc3fde9d91121e2cc03b8fd7017c22c31a06c8c6c5fb95866b077d4630e",
+          "label": "Library",
+          "named": false,
+          "members": [
+            "66",
+            "144"
+          ]
+        },
+        {
+          "key": "group-bfef52754df042e65fff995da8156d001fae169da9af62de85701b646172d8ce",
+          "label": "Piano",
+          "named": false,
+          "members": [
+            "147",
+            "148"
+          ]
+        },
+        {
+          "key": "group-ab65c35fb9ded7c0576efca1180e9d2edf5191b1bf0ad23401ee1308b8abcc4c",
+          "label": "Path",
+          "named": false,
+          "members": [
+            "106",
+            "129"
+          ]
+        }
+      ],
+      "calls": [],
+      "completed": true,
+      "pairChecks": {
+        "positive": {
+          "total": 33,
+          "shared": 25
+        },
+        "negative": {
+          "total": 13,
+          "shared": 10
+        }
+      },
+      "groupedNotes": 139,
+      "latencySummary": null,
+      "invalidResponses": 0
+    },
+    {
+      "corpus": "expanded172",
+      "mode": "labels",
+      "groups": [
+        {
+          "key": "group-ffad2d94b4e9c2641e9e480e3d4e016e0ef7cc3cc81ff6d4e6e82ac9471baa43",
+          "label": "Atlas",
+          "named": true,
+          "members": [
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "23",
+            "27",
+            "61",
+            "78",
+            "79",
+            "80",
+            "81",
+            "82",
+            "88",
+            "89",
+            "90"
+          ]
+        },
+        {
+          "key": "group-a1bf2ebe0815d704e2a375f1ba3b892666f8ed0fae1b39fcf8c83cee2ea252bf",
+          "label": "Orion",
+          "named": true,
+          "members": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "16",
+            "23",
+            "27",
+            "73",
+            "74",
+            "75",
+            "76",
+            "77",
+            "88",
+            "89",
+            "90"
+          ]
+        },
+        {
+          "key": "group-f12b1117f4ef097b609c5bca9e9036cfd4dbe8acd7146d4993c3bada43c095f3",
+          "label": "Beacon",
+          "named": true,
+          "members": [
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "83",
+            "84",
+            "85",
+            "86",
+            "87",
+            "90",
+            "171"
+          ]
+        },
+        {
+          "key": "group-32386bab61fe1c1c2167f1f5800a15395a6e38ff6137dc34aaa707bd6000ac2e",
+          "label": "Vienna",
+          "named": true,
+          "members": [
+            "67",
+            "68",
+            "69",
+            "123",
+            "124",
+            "125",
+            "167"
+          ]
+        },
+        {
+          "key": "group-16ef917a0242ae0e5771338d4479db7a6a19b4b983e2bd0cb68ddf7a866b21d2",
+          "label": "Maya",
+          "named": true,
+          "members": [
+            "2",
+            "5",
+            "27",
+            "76",
+            "89"
+          ]
+        },
+        {
+          "key": "group-21d2fc0e6dfd8fae47b1fa061daa1fa24a770a2bca196b4e48a5fe2116688aab",
+          "label": "Jonas",
+          "named": true,
+          "members": [
+            "13",
+            "27",
+            "80",
+            "89"
+          ]
+        },
+        {
+          "key": "group-1ce007063b02795e383caae2469110e6e8d5ac0280850f570ee2e55442c17154",
+          "label": "Running Plan and Gear",
+          "named": false,
+          "members": [
+            "32",
+            "35",
+            "36",
+            "38",
+            "39",
+            "40",
+            "42",
+            "46",
+            "63",
+            "104",
+            "105",
+            "108",
+            "109",
+            "110",
+            "114",
+            "125",
+            "169"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-562df1755d463867ae74fa6b84118ad2e94feffc2ffd936f7aba520d0c0ca725",
+          "label": "Running Plan and Notes",
+          "named": false,
+          "members": [
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "41",
+            "42",
+            "46",
+            "63",
+            "103",
+            "104",
+            "105",
+            "106",
+            "107",
+            "108",
+            "109",
+            "112",
+            "118"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-a3976f6042f74839407cb6fcd442f4567ff4c68874472488ab5d684a18a795f9",
+          "label": "Note-taking",
+          "named": false,
+          "members": [
+            "51",
+            "52",
+            "53",
+            "54",
+            "55",
+            "56",
+            "57",
+            "58",
+            "59",
+            "62",
+            "63",
+            "96",
+            "97",
+            "98",
+            "99",
+            "100",
+            "102",
+            "153",
+            "168"
+          ],
+          "fallback": true
+        },
+        {
+          "key": "group-5874e4ef4fabfbd42c5e5783572cf8802a912ed1bbc7637ff9c4bf1f917a10f1",
+          "label": "Meal Prep and Grocery List",
+          "named": false,
+          "members": [
+            "42",
+            "43",
+            "44",
+            "49",
+            "108",
+            "115",
+            "116",
+            "118",
+            "119",
+            "170"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-582742153af40c13aa611bfb4a6e78abb4aa7fe99b19a066a431d3e677531522",
+          "label": "Household Shopping",
+          "named": false,
+          "members": [
+            "43",
+            "44",
+            "45",
+            "50",
+            "115",
+            "116",
+            "117",
+            "170"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-90bee4074aff69327ad91e6109b693d092d01ccc81371f2a9cfd4affe784ab9f",
+          "label": "Gym Session Reps and Loads",
+          "named": false,
+          "members": [
+            "29",
+            "30",
+            "31",
+            "33",
+            "105",
+            "111",
+            "112",
+            "113"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-7fa5eb6e1c9f94a75c548711f18160950381bee3b674fcbcf7bd51683fba3a26",
+          "label": "Balcony",
+          "named": false,
+          "members": [
+            "48",
+            "64",
+            "66",
+            "120",
+            "121",
+            "122"
+          ],
+          "fallback": true
+        },
+        {
+          "key": "group-0015b75d7fd096b8fef7abb6fabafe5950fefa17234bf62301058d4236a0f46f",
+          "label": "Language Practice and Notes",
+          "named": false,
+          "members": [
+            "62",
+            "63",
+            "147",
+            "151",
+            "152",
+            "153"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-34bfd7adb33503dc506d8e3c9c054c84abc99b286302294e898f0fe4a3888d0b",
+          "label": "Maintenance and Commute Planning",
+          "named": false,
+          "members": [
+            "71",
+            "127",
+            "128",
+            "169"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-f9c23b17f7369e231d38525d675503ba40becc58b4f56814c8f24bf7cd561f0e",
+          "label": "Planning Meeting Workflow",
+          "named": false,
+          "members": [
+            "26",
+            "91",
+            "92",
+            "171"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-582c06164f37fee3dfd601f985c7ea9b07738e29d7b0e2b96f530a8ad4bb9bad",
+          "label": "Strength Training",
+          "named": false,
+          "members": [
+            "29",
+            "33",
+            "111",
+            "113"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-6bdd977dc12291c26c5359b19b905787c186e92cdc01e648f391eae3c771ad67",
+          "label": "Manage Basil Potting and Planting",
+          "named": false,
+          "members": [
+            "65",
+            "120",
+            "121"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-05f7023d5bcc896d8986569b18b6d88afd29f9228457cf63b8c541ea238f4fd5",
+          "label": "Connecting Chapter Questions to Book Notes",
+          "named": false,
+          "members": [
+            "143",
+            "145",
+            "168"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-03c77cb58da653f0f14e06fd2d2221abafc541f3a5a69f8823945fccfcb535e2",
+          "label": "Coffee Experiment and Preparation",
+          "named": false,
+          "members": [
+            "50",
+            "157",
+            "158"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-af0c0d28e9a7b7a6c800d89057d467d6a9dfca82ade1a1aae3148191127abce7",
+          "label": "Efficient Meeting Planning and Time Management",
+          "named": false,
+          "members": [
+            "57",
+            "72",
+            "161"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-f13552a9284829a993fa6dd7f160743a9f08c804e4ffc78c8e2c786c14faf504",
+          "label": "Planning and Task Management",
+          "named": false,
+          "members": [
+            "24",
+            "26",
+            "57"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-01345507086bf1c884b4612717ef25e5866ce4225e55fb7130fdb9f13d2a3bd4",
+          "label": "Update and cancel syncs",
+          "named": false,
+          "members": [
+            "93",
+            "136"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-05f9f0199f0ed2e7699299f8c02f01ceb0e33337cc092c5c1fbf7074e917ced2",
+          "label": "Protecting coding efficiency during workday",
+          "named": false,
+          "members": [
+            "28",
+            "94"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-235b2fc3fde9d91121e2cc03b8fd7017c22c31a06c8c6c5fb95866b077d4630e",
+          "label": "Library and Garden Tasks",
+          "named": false,
+          "members": [
+            "66",
+            "144"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-bfef52754df042e65fff995da8156d001fae169da9af62de85701b646172d8ce",
+          "label": "Piano Practice and Recording",
+          "named": false,
+          "members": [
+            "147",
+            "148"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-ab65c35fb9ded7c0576efca1180e9d2edf5191b1bf0ad23401ee1308b8abcc4c",
+          "label": "Cycling Route Idea for Recovery Runs",
+          "named": false,
+          "members": [
+            "106",
+            "129"
+          ],
+          "fallback": false
+        }
+      ],
+      "calls": [
+        {
+          "key": "69c194fbb5eb38b708b720cacc0483f0056dfa043784c4e817c77cd0a7c59b7d",
+          "valid": true,
+          "wallSeconds": 2.448,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "9ae0b8250b761705301274e8396ddb2d9efc55ea002af6f8debe3679453e7fd4",
+          "valid": true,
+          "wallSeconds": 2.45,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "c790538210c7baf5a775a28834b7cbc333b3915b2bdb1dc423f7b6da5ed08a0d",
+          "valid": false,
+          "wallSeconds": 2.615,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "ac849150fc2b93ab7af080d8266c078da56b32bec4d729fa513d68adc5d4bbb5",
+          "valid": true,
+          "wallSeconds": 1.374,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "dd98cbee96160902691ee3b5eeb2fc3395a65c5d05cac6d998f0bd0ed8e60996",
+          "valid": true,
+          "wallSeconds": 1.059,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "329807916023096b8c59b07c8bb23f13b48c0f91727dee7dd3dc021d90db1c31",
+          "valid": true,
+          "wallSeconds": 1.275,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "68bfc448848823eb55ad09e6be638d7154dd380f75d9594385c08f7006dbc5a1",
+          "valid": false,
+          "wallSeconds": 0.889,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "28c6d69b7ebbfcae6f42f828e2f3e3fcf7aa16757d2aa5ceb1a9084d35c42f9a",
+          "valid": true,
+          "wallSeconds": 0.909,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "d62ea7c6b9866a27050873840eaa913fa02cc30014b43de030adc7ef77715391",
+          "valid": true,
+          "wallSeconds": 0.603,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "6efd438b611ac77a5ef0d01c3f19078b832a5e0c60a18679e553d366890dece0",
+          "valid": true,
+          "wallSeconds": 0.65,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "f50e68e217943144c1d8701309d7fc773a8ade7a88418a5730ecdef52cff303f",
+          "valid": true,
+          "wallSeconds": 0.684,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "a81f390b1e3852b7f533e4928b224ffa0f17f461eb94062265395de102c52332",
+          "valid": true,
+          "wallSeconds": 0.511,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "0c17702ce6b395fd940751878560620ef871dc46fc1e09cdef17c0050240951a",
+          "valid": true,
+          "wallSeconds": 0.523,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "cd622e32740e5a297e3743d9a31a9cee0609df39926f651e6e82afba92593243",
+          "valid": true,
+          "wallSeconds": 0.497,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "0fda8933fbee92cfd844e891f74ddaace79090a1232fa7419b07be01a8936d30",
+          "valid": true,
+          "wallSeconds": 0.537,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "26279a2e96f555e50f97868ef29862f8bb9a9df3c4377807cd445f42458f69da",
+          "valid": true,
+          "wallSeconds": 0.449,
+          "cached": true,
+          "source": "existing-core"
+        },
+        {
+          "key": "14cf542527eb09fa685e20c5eb896b083e0c63e5f6d6d0d9101393b7cdd2ce2d",
+          "valid": true,
+          "wallSeconds": 0.395,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "5c6109413a71f49a5d6bb7e81380726a9fb8639bfb9a1de50c49141ac1d5a803",
+          "valid": true,
+          "wallSeconds": 0.405,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "265dac42f9fd938a9bd7695ba8fac5725033eabb589ef0aa036cf7a4e811392c",
+          "valid": true,
+          "wallSeconds": 0.349,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "9e9c8fa3dfd0087862da02395f45ce20d90487f7197f1a468f9e5af914238da1",
+          "valid": true,
+          "wallSeconds": 0.414,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "0782f76d784a15df389574408c9993c589e666faf4c474403d10d752505a32d5",
+          "valid": true,
+          "wallSeconds": 0.405,
+          "cached": false,
+          "source": "existing-core"
+        }
+      ],
+      "completed": true,
+      "expectedCalls": 21,
+      "pairChecks": {
+        "positive": {
+          "total": 33,
+          "shared": 25
+        },
+        "negative": {
+          "total": 13,
+          "shared": 10
+        }
+      },
+      "groupedNotes": 139,
+      "latencySummary": {
+        "medianSeconds": 0.603,
+        "p95Seconds": 2.45,
+        "sumRequestSeconds": 19.441
+      },
+      "invalidResponses": 2
+    },
+    {
+      "corpus": "expanded172",
+      "mode": "hybrid",
+      "groups": [
+        {
+          "key": "group-ffad2d94b4e9c2641e9e480e3d4e016e0ef7cc3cc81ff6d4e6e82ac9471baa43",
+          "label": "Atlas",
+          "named": true,
+          "members": [
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "23",
+            "27",
+            "61",
+            "78",
+            "79",
+            "80",
+            "81",
+            "82",
+            "88",
+            "89",
+            "90"
+          ]
+        },
+        {
+          "key": "group-a1bf2ebe0815d704e2a375f1ba3b892666f8ed0fae1b39fcf8c83cee2ea252bf",
+          "label": "Orion",
+          "named": true,
+          "members": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "16",
+            "23",
+            "27",
+            "73",
+            "74",
+            "75",
+            "76",
+            "77",
+            "88",
+            "89",
+            "90"
+          ]
+        },
+        {
+          "key": "group-f12b1117f4ef097b609c5bca9e9036cfd4dbe8acd7146d4993c3bada43c095f3",
+          "label": "Beacon",
+          "named": true,
+          "members": [
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "83",
+            "84",
+            "85",
+            "86",
+            "87",
+            "90",
+            "171"
+          ]
+        },
+        {
+          "key": "group-32386bab61fe1c1c2167f1f5800a15395a6e38ff6137dc34aaa707bd6000ac2e",
+          "label": "Vienna",
+          "named": true,
+          "members": [
+            "67",
+            "68",
+            "69",
+            "123",
+            "124",
+            "125",
+            "167"
+          ]
+        },
+        {
+          "key": "group-16ef917a0242ae0e5771338d4479db7a6a19b4b983e2bd0cb68ddf7a866b21d2",
+          "label": "Maya",
+          "named": true,
+          "members": [
+            "2",
+            "5",
+            "27",
+            "76",
+            "89"
+          ]
+        },
+        {
+          "key": "group-21d2fc0e6dfd8fae47b1fa061daa1fa24a770a2bca196b4e48a5fe2116688aab",
+          "label": "Jonas",
+          "named": true,
+          "members": [
+            "13",
+            "27",
+            "80",
+            "89"
+          ]
+        },
+        {
+          "key": "group-1ce007063b02795e383caae2469110e6e8d5ac0280850f570ee2e55442c17154",
+          "label": "Running gear",
+          "named": false,
+          "members": [
+            "32",
+            "35",
+            "36",
+            "38",
+            "39",
+            "40",
+            "42",
+            "46",
+            "63",
+            "104",
+            "105",
+            "108",
+            "109",
+            "110",
+            "114",
+            "125",
+            "169"
+          ],
+          "fallback": true
+        },
+        {
+          "label": "run",
+          "members": [
+            "34",
+            "35",
+            "103",
+            "105",
+            "106",
+            "107",
+            "108",
+            "109",
+            "112"
+          ],
+          "named": false
+        },
+        {
+          "label": "notebook-idea",
+          "members": [
+            "55",
+            "56",
+            "59",
+            "99",
+            "100"
+          ],
+          "named": false
+        },
+        {
+          "key": "group-5874e4ef4fabfbd42c5e5783572cf8802a912ed1bbc7637ff9c4bf1f917a10f1",
+          "label": "Meal preparation",
+          "named": false,
+          "members": [
+            "42",
+            "43",
+            "44",
+            "49",
+            "108",
+            "115",
+            "116",
+            "118",
+            "119",
+            "170"
+          ],
+          "fallback": true
+        },
+        {
+          "label": "Shopping",
+          "members": [
+            "43",
+            "45",
+            "115",
+            "116",
+            "117",
+            "118",
+            "119"
+          ],
+          "named": false
+        },
+        {
+          "label": "strength",
+          "members": [
+            "29",
+            "111"
+          ],
+          "named": false
+        },
+        {
+          "label": "squat",
+          "members": [
+            "31",
+            "112"
+          ],
+          "named": false
+        },
+        {
+          "label": "pull-ups",
+          "members": [
+            "33",
+            "113"
+          ],
+          "named": false
+        },
+        {
+          "label": "planting",
+          "members": [
+            "44",
+            "48",
+            "64",
+            "65",
+            "66",
+            "120",
+            "121",
+            "122"
+          ],
+          "named": false
+        },
+        {
+          "label": "note-58",
+          "members": [
+            "58",
+            "62"
+          ],
+          "named": false
+        },
+        {
+          "label": "note-147",
+          "members": [
+            "98",
+            "147"
+          ],
+          "named": false
+        },
+        {
+          "label": "note-151",
+          "members": [
+            "151",
+            "153"
+          ],
+          "named": false
+        },
+        {
+          "label": "packing",
+          "members": [
+            "32",
+            "114",
+            "127",
+            "169"
+          ],
+          "named": false
+        },
+        {
+          "label": "Planning",
+          "members": [
+            "26",
+            "57",
+            "84",
+            "91",
+            "92"
+          ],
+          "named": false
+        },
+        {
+          "label": "planting",
+          "members": [
+            "48",
+            "64",
+            "65",
+            "120",
+            "121",
+            "122"
+          ],
+          "named": false
+        },
+        {
+          "label": "book",
+          "members": [
+            "143",
+            "145",
+            "168"
+          ],
+          "named": false
+        },
+        {
+          "label": "Grocery Shopping",
+          "members": [
+            "43",
+            "50",
+            "116"
+          ],
+          "named": false
+        },
+        {
+          "label": "Meeting Planning",
+          "members": [
+            "57",
+            "62",
+            "92"
+          ],
+          "named": false
+        },
+        {
+          "label": "agenda",
+          "members": [
+            "24",
+            "92"
+          ],
+          "named": false
+        },
+        {
+          "label": "backup",
+          "members": [
+            "136",
+            "141"
+          ],
+          "named": false
+        },
+        {
+          "label": "coding",
+          "members": [
+            "94",
+            "95"
+          ],
+          "named": false
+        },
+        {
+          "label": "book",
+          "members": [
+            "144",
+            "146"
+          ],
+          "named": false
+        },
+        {
+          "label": "Piano Practice",
+          "members": [
+            "147",
+            "148"
+          ],
+          "named": false
+        },
+        {
+          "label": "run",
+          "members": [
+            "35",
+            "103"
+          ],
+          "named": false
+        },
+        {
+          "label": "test",
+          "members": [
+            "18",
+            "22"
+          ],
+          "named": false
+        },
+        {
+          "label": "packing",
+          "members": [
+            "32",
+            "114",
+            "116"
+          ],
+          "named": false
+        },
+        {
+          "label": "capture",
+          "members": [
+            "60",
+            "100"
+          ],
+          "named": false
+        },
+        {
+          "label": "Save",
+          "members": [
+            "59",
+            "100"
+          ],
+          "named": false
+        },
+        {
+          "label": "Continue",
+          "members": [
+            "94",
+            "101"
+          ],
+          "named": false
+        },
+        {
+          "label": "Shutdown",
+          "members": [
+            "95",
+            "136"
+          ],
+          "named": false
+        },
+        {
+          "label": "bike maintenance",
+          "members": [
+            "126",
+            "127"
+          ],
+          "named": false
+        },
+        {
+          "label": "Kitchen Organization",
+          "members": [
+            "50",
+            "116",
+            "132"
+          ],
+          "named": false
+        },
+        {
+          "label": "planting",
+          "members": [
+            "48",
+            "64",
+            "121"
+          ],
+          "named": false
+        },
+        {
+          "label": "Grocery list",
+          "members": [
+            "43",
+            "115",
+            "162"
+          ],
+          "named": false
+        },
+        {
+          "label": "Billing",
+          "members": [
+            "21",
+            "84",
+            "87"
+          ],
+          "named": false
+        },
+        {
+          "label": "Photography",
+          "members": [
+            "139",
+            "140",
+            "142"
+          ],
+          "named": false
+        },
+        {
+          "label": "notebook-idea",
+          "members": [
+            "51",
+            "55",
+            "63",
+            "66",
+            "143",
+            "144",
+            "146",
+            "168"
+          ],
+          "named": false
+        },
+        {
+          "label": "travel",
+          "members": [
+            "67",
+            "124",
+            "125"
+          ],
+          "named": false
+        },
+        {
+          "label": "grocery list",
+          "members": [
+            "44",
+            "48",
+            "115",
+            "119",
+            "170"
+          ],
+          "named": false
+        },
+        {
+          "label": "run",
+          "members": [
+            "38",
+            "42",
+            "108"
+          ],
+          "named": false
+        },
+        {
+          "label": "Payment",
+          "members": [
+            "20",
+            "85",
+            "163"
+          ],
+          "named": false
+        },
+        {
+          "label": "shopping",
+          "members": [
+            "117",
+            "136"
+          ],
+          "named": false
+        },
+        {
+          "label": "warranty",
+          "members": [
+            "137",
+            "160"
+          ],
+          "named": false
+        },
+        {
+          "label": "security",
+          "members": [
+            "97",
+            "165"
+          ],
+          "named": false
+        },
+        {
+          "label": "Vienna trip",
+          "members": [
+            "68",
+            "123",
+            "167"
+          ],
+          "named": false
+        }
+      ],
+      "calls": [
+        {
+          "key": "a274453c2f9b481f1e4685df2eab4bc5cf8173b9cd13a76f95142fb4fd52af6f",
+          "valid": false,
+          "wallSeconds": 3.932,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "40d62d47ccb097f2e01e6d622bbd0ea307cc0e40aeec8fc526f1a0032d0ea1c9",
+          "valid": true,
+          "wallSeconds": 3.412,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "38ee353f41b0997999a06a1916c95ed1e37f649c72a628a47464dda22ab6a9dd",
+          "valid": true,
+          "wallSeconds": 3.374,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "41f7320f4743141930c3ac102796a4ca3d639194c6bf928109cb37803f2f7492",
+          "valid": false,
+          "wallSeconds": 2.181,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "cbc466a82a8adf90cdc2908173f3e6016e6ec628e58a53b9ea3f9b762c382e66",
+          "valid": true,
+          "wallSeconds": 1.807,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "ed75bc719dc98baa2606d9fe9ce8f419814b8af12b7a65808db4baf0e23549cf",
+          "valid": true,
+          "wallSeconds": 2.107,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "2382d19c1ead1b4651985cbeb839e6449727343005b95bb46c33a597e9cd724a",
+          "valid": true,
+          "wallSeconds": 1.501,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "da8282e2e6d28f734a5744f1fbb35ea5b211384720a52e18b78608cc03f01c8e",
+          "valid": true,
+          "wallSeconds": 1.826,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "ff7a9f9e4e46f904241b78033a83c65d83a2efc16235a40d53e56944542f7684",
+          "valid": true,
+          "wallSeconds": 1.118,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "d4a8a4efc639ff9d9651b5e97e77d6ce8cc5ebdd9e8c785eda625b290631b6f1",
+          "valid": true,
+          "wallSeconds": 1.187,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "d0017b61de586714274a371ff3d9d1e287a7aed6074a82b28abf955e4c8f2bec",
+          "valid": true,
+          "wallSeconds": 1.203,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "2e4f41a76b2faba5d34d11d2fe884915d994406a1fbcf7764f23bd4254a332d8",
+          "valid": true,
+          "wallSeconds": 1.112,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "26c7dd6d8c31e9b16b3ba8e44b636f55507afe3ca6116fb98f3788450f9214e7",
+          "valid": true,
+          "wallSeconds": 1.05,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "7c49ba797607297457553c6efef64566125a3f3a214a7649d9a8e4ac284f93b0",
+          "valid": true,
+          "wallSeconds": 1.023,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "b046e81459d185ec4f8e946bbc9d39d97efa12a26c4a7239178a0e4f5c98eb84",
+          "valid": true,
+          "wallSeconds": 1.044,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "fc67f72638458c5ee608cbc45b3d5e384c18ad6879a5e10f37a92350cfb096c3",
+          "valid": true,
+          "wallSeconds": 0.966,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "cdff349d751bafc6055e90b3a2601d745567b924cebb186fa55fe06797edcf73",
+          "valid": true,
+          "wallSeconds": 0.888,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "e113859cf2690273a575775f775a8edaee788eed5e2bee01623de22e999bcc53",
+          "valid": true,
+          "wallSeconds": 1.814,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "5fdd03823abed3d9c01e08865d11ffa3b306f81d02d898e20fffdd8455da7d05",
+          "valid": true,
+          "wallSeconds": 2.332,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "b86036dc96ea58758d5b00b50457b4bc51213fb370e096ce00f9822c493454a4",
+          "valid": true,
+          "wallSeconds": 0.887,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "ccbdff8afb60c3c5a45abca79f0abb87ebaea50a9fcc7806e29cbd33e33f1a55",
+          "valid": true,
+          "wallSeconds": 0.846,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "03fdb541c9f76b93c6fb7a2214196f1c9e1a26a012a60c3292e27f6f58c69ab8",
+          "valid": true,
+          "wallSeconds": 1.196,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "a18c44819e0466533962282bb1d379a8d6ddfa4a39323de0fd9231eb851df553",
+          "valid": true,
+          "wallSeconds": 1.246,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "57e8a9435905cbe72c2435174ab5b9f3277159147636f241e3ec786e164ab86d",
+          "valid": true,
+          "wallSeconds": 1.222,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "9305f48335c889cac6285719370538ceb8b2a0f1af13859a452ee470f62c7bf8",
+          "valid": true,
+          "wallSeconds": 1.569,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "d669c3ae49cd772eba4032ea1c4279ebd64fb1aedd1a9b895e50e8b65e72669d",
+          "valid": true,
+          "wallSeconds": 1.302,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "f43b47d0cdf9742d8f94a494e23f65262f9cc016d68087ced62cba8e606ce025",
+          "valid": true,
+          "wallSeconds": 1.103,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "725e86da637bed08d0d85491bebee486e972b17d9493185f2b2f2320315cb000",
+          "valid": true,
+          "wallSeconds": 1.411,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "8b731d5d2d16aa48666f3c05c1079038757336ba5df0fd6bba82727d82b70fba",
+          "valid": true,
+          "wallSeconds": 1.346,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "0e96ed050510370f3f6213f04043550cded42e963178b84063706ac3463bcbf0",
+          "valid": true,
+          "wallSeconds": 1.366,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "d6e5caa9aca1b6b8f7a860010d6f205a512b888e514ecc2de202b0323648feb8",
+          "valid": true,
+          "wallSeconds": 1.193,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "974a7986b7da87887afc3b3d6668c22c5d3fe8567600902f61e531fb3ed8bc61",
+          "valid": true,
+          "wallSeconds": 1.336,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "0a106953e8c1859506aee2fdbaba2322a5920036c44bd4190564f1b149760ac6",
+          "valid": true,
+          "wallSeconds": 1.519,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "70072a9c1a53ec9338e8b06f145e870f00c5dc59f407e192b9ede92c035231a8",
+          "valid": true,
+          "wallSeconds": 1.26,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "f59255f8acda8fa8af173221eb6358a72d0ce6c60a836b4c289d932f76b85409",
+          "valid": true,
+          "wallSeconds": 1.403,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "e4ee3f15628e732309fa536831c6700d91a338fc8ad1acb1fd5e66244b1c65a6",
+          "valid": true,
+          "wallSeconds": 1.286,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "cd6d702e2b387b725771ad4e1d2e7ac7cbe2b9b6f96d7e30f0ab21c0a91a6a07",
+          "valid": true,
+          "wallSeconds": 1.332,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "ead8965c29c92deb2af9b5ccc116c2637973c2f3c2d9b5f3dcf2f5aed7df2c88",
+          "valid": true,
+          "wallSeconds": 1.568,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "2e4e81a0a558ad17a2accfa215d466399cbd200fc6fe239981f64c2e2e1825a9",
+          "valid": true,
+          "wallSeconds": 1.305,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        }
+      ],
+      "completed": true,
+      "expectedCalls": 39,
+      "pairChecks": {
+        "positive": {
+          "total": 33,
+          "shared": 18
+        },
+        "negative": {
+          "total": 13,
+          "shared": 2
+        }
+      },
+      "groupedNotes": 136,
+      "latencySummary": {
+        "medianSeconds": 1.305,
+        "p95Seconds": 3.412,
+        "sumRequestSeconds": 59.573
+      },
+      "invalidResponses": 2
+    },
+    {
+      "corpus": "heldout40",
+      "mode": "rules",
+      "groups": [
+        {
+          "key": "group-f97eb5bd6e2d044e2ff8a72f3dcbd72ae14057a100d94ec141252cee9c165872",
+          "label": "Japanese",
+          "named": true,
+          "members": [
+            "19",
+            "20",
+            "21",
+            "34"
+          ]
+        },
+        {
+          "key": "group-e4389291e409a97e439a16c8347b9f9d3948d6f239fbb038a89a4b4cf4f80c5d",
+          "label": "Telescope",
+          "named": false,
+          "members": [
+            "1",
+            "2",
+            "31",
+            "35"
+          ]
+        },
+        {
+          "key": "group-42a8940a307e19d5c9128bf16bb6d2a1e98bc629ba24cb0d953b3eecb306a58d",
+          "label": "Loaf",
+          "named": false,
+          "members": [
+            "16",
+            "18",
+            "32"
+          ]
+        },
+        {
+          "key": "group-eb8d7a8a3e14f392a86efb736ebba11c3417c79ecfdf15602f5e625f4c869748",
+          "label": "Seam",
+          "named": false,
+          "members": [
+            "4",
+            "5",
+            "40"
+          ]
+        },
+        {
+          "key": "group-0f341298aa2ca9bf8bee2ce9f3a4660468fb11f896aa97ef7ac05f2fcea5bcf0",
+          "label": "Aquarium",
+          "named": false,
+          "members": [
+            "8",
+            "33"
+          ]
+        },
+        {
+          "key": "group-dd83d5512036fa10e0c8e23c870f1b07e18b650cfaa1270e731aea6b27b4ca4e",
+          "label": "Chess",
+          "named": false,
+          "members": [
+            "28",
+            "29"
+          ]
+        }
+      ],
+      "calls": [],
+      "completed": true,
+      "pairChecks": {
+        "positive": {
+          "total": 69,
+          "shared": 20
+        },
+        "negative": {
+          "total": 5,
+          "shared": 0
+        }
+      },
+      "groupedNotes": 18,
+      "latencySummary": null,
+      "invalidResponses": 0
+    },
+    {
+      "corpus": "heldout40",
+      "mode": "labels",
+      "groups": [
+        {
+          "key": "group-f97eb5bd6e2d044e2ff8a72f3dcbd72ae14057a100d94ec141252cee9c165872",
+          "label": "Japanese",
+          "named": true,
+          "members": [
+            "19",
+            "20",
+            "21",
+            "34"
+          ]
+        },
+        {
+          "key": "group-e4389291e409a97e439a16c8347b9f9d3948d6f239fbb038a89a4b4cf4f80c5d",
+          "label": "telescope setup and observation",
+          "named": false,
+          "members": [
+            "1",
+            "2",
+            "31",
+            "35"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-42a8940a307e19d5c9128bf16bb6d2a1e98bc629ba24cb0d953b3eecb306a58d",
+          "label": "Baking Loaf Shaping and Photography",
+          "named": false,
+          "members": [
+            "16",
+            "18",
+            "32"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-eb8d7a8a3e14f392a86efb736ebba11c3417c79ecfdf15602f5e625f4c869748",
+          "label": "Jacket Repair and Seam Repair",
+          "named": false,
+          "members": [
+            "4",
+            "5",
+            "40"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-0f341298aa2ca9bf8bee2ce9f3a4660468fb11f896aa97ef7ac05f2fcea5bcf0",
+          "label": "Maintain Aquarium Data",
+          "named": false,
+          "members": [
+            "8",
+            "33"
+          ],
+          "fallback": false
+        },
+        {
+          "key": "group-dd83d5512036fa10e0c8e23c870f1b07e18b650cfaa1270e731aea6b27b4ca4e",
+          "label": "Chess Practice and Game Strategy",
+          "named": false,
+          "members": [
+            "28",
+            "29"
+          ],
+          "fallback": false
+        }
+      ],
+      "calls": [
+        {
+          "key": "fd500e65d58665b5faaabd2aa1571852132988e262a8b78a3425cb1da2183948",
+          "valid": true,
+          "wallSeconds": 0.9,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "0e00151e121d1bbf75edfef2c01da95dcef54031b4b11dd8ae6b97a4b613a61e",
+          "valid": true,
+          "wallSeconds": 0.502,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "e9523142b0ff295cc5603b0be4d7aea0ff6c003d9d02e763aa6e2f2e959b3ad3",
+          "valid": true,
+          "wallSeconds": 0.49,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "31e811dff1188d931d6cee77173d6ef18e4ef9883bda0367ad77651f27ffcf35",
+          "valid": true,
+          "wallSeconds": 0.348,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "4ab980ffbbf83c8e176119cc708391df6c2b9f0c9eae64b9149e6507b5cf2164",
+          "valid": true,
+          "wallSeconds": 0.365,
+          "cached": false,
+          "source": "existing-core"
+        }
+      ],
+      "completed": true,
+      "expectedCalls": 5,
+      "pairChecks": {
+        "positive": {
+          "total": 69,
+          "shared": 20
+        },
+        "negative": {
+          "total": 5,
+          "shared": 0
+        }
+      },
+      "groupedNotes": 18,
+      "latencySummary": {
+        "medianSeconds": 0.49,
+        "p95Seconds": 0.9,
+        "sumRequestSeconds": 2.605
+      },
+      "invalidResponses": 0
+    },
+    {
+      "corpus": "heldout40",
+      "mode": "hybrid",
+      "groups": [
+        {
+          "key": "group-f97eb5bd6e2d044e2ff8a72f3dcbd72ae14057a100d94ec141252cee9c165872",
+          "label": "Japanese",
+          "named": true,
+          "members": [
+            "19",
+            "20",
+            "21",
+            "34"
+          ]
+        },
+        {
+          "label": "pottery",
+          "members": [
+            "10",
+            "12",
+            "16"
+          ],
+          "named": false
+        },
+        {
+          "label": "sewing",
+          "members": [
+            "4",
+            "5",
+            "31"
+          ],
+          "named": false
+        },
+        {
+          "label": "Aquarium Maintenance",
+          "members": [
+            "7",
+            "8",
+            "9"
+          ],
+          "named": false
+        },
+        {
+          "label": "practice",
+          "members": [
+            "28",
+            "30"
+          ],
+          "named": false
+        },
+        {
+          "label": "telescope",
+          "members": [
+            "1",
+            "31"
+          ],
+          "named": false
+        },
+        {
+          "label": "seam",
+          "members": [
+            "5",
+            "26",
+            "37"
+          ],
+          "named": false
+        },
+        {
+          "label": "patching",
+          "members": [
+            "6",
+            "40"
+          ],
+          "named": false
+        },
+        {
+          "label": "aquarium maintenance",
+          "members": [
+            "5",
+            "7",
+            "8",
+            "9",
+            "10",
+            "12",
+            "14",
+            "33"
+          ],
+          "named": false
+        },
+        {
+          "label": "test",
+          "members": [
+            "8",
+            "9"
+          ],
+          "named": false
+        },
+        {
+          "label": "clay",
+          "members": [
+            "10",
+            "12"
+          ],
+          "named": false
+        },
+        {
+          "label": "glaze",
+          "members": [
+            "11",
+            "20"
+          ],
+          "named": false
+        },
+        {
+          "label": "Observation",
+          "members": [
+            "2",
+            "9",
+            "16",
+            "17",
+            "18",
+            "25",
+            "26",
+            "35"
+          ],
+          "named": false
+        },
+        {
+          "label": "telescope",
+          "members": [
+            "2",
+            "8"
+          ],
+          "named": false
+        },
+        {
+          "label": "star chart",
+          "members": [
+            "3",
+            "24"
+          ],
+          "named": false
+        },
+        {
+          "label": "aquarium test",
+          "members": [
+            "8",
+            "28"
+          ],
+          "named": false
+        },
+        {
+          "label": "Maintenance",
+          "members": [
+            "7",
+            "14"
+          ],
+          "named": false
+        }
+      ],
+      "calls": [
+        {
+          "key": "7d65033e4a1bc5935626b92238880eed12aa70720f0c2c2843132ab076eb124f",
+          "valid": true,
+          "wallSeconds": 1.282,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "74164c88526512b89d618f865af9cef52d0f5a534b6f964026654164dd6ea766",
+          "valid": true,
+          "wallSeconds": 0.992,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "7f7d306b8d5e6768c3d9faf21d6b374a70f4cf189f10398f2b9c39824a70ee40",
+          "valid": true,
+          "wallSeconds": 0.977,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "9d4037f8b6f3e24ce511d9674256fefc4ffebd34343f37ec46014e2a16a1586a",
+          "valid": true,
+          "wallSeconds": 0.792,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "76e0ed1e62f3f331bd1c8f7f2578243f3d14665301085019138fad25301e612e",
+          "valid": true,
+          "wallSeconds": 0.822,
+          "cached": false,
+          "source": "existing-core"
+        },
+        {
+          "key": "e49dacef546f05efec111ffa4023139de4bee4a11cd621257e03bf082de83874",
+          "valid": true,
+          "wallSeconds": 1.206,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "db6d3f7fc2f98ec3a7bb062fe7d734916aed53933cd15bd3062c82c7b0cfbf57",
+          "valid": true,
+          "wallSeconds": 1.517,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "458bfa51a974a398c2b645b84f8a643c58079b39ed55a89bf00f932102c24edd",
+          "valid": true,
+          "wallSeconds": 1.324,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "82538d6e1dadbe74d0f5f9fff3ab5e530985817cb8569cff9814d1146c178c34",
+          "valid": true,
+          "wallSeconds": 1.441,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "a919bb0d07b9615735a03010f702b3a81293bb1526fe618489de82028965e72f",
+          "valid": true,
+          "wallSeconds": 1.012,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "07224718c088493e92ca592f0e3dc5b9289d3fdb234467734eef10601cdfa51b",
+          "valid": true,
+          "wallSeconds": 1.369,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "61e35c993bf809114c8979582ccfa4bc9a214aefc6c23ad58eb9f839157e3f32",
+          "valid": true,
+          "wallSeconds": 1.368,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        },
+        {
+          "key": "976ccb49a535634863ae553cba55c5e1928f763a2ec120722809b9ab431654b3",
+          "valid": true,
+          "wallSeconds": 1.075,
+          "cached": false,
+          "source": "ungrouped-neighborhood"
+        }
+      ],
+      "completed": true,
+      "expectedCalls": 13,
+      "pairChecks": {
+        "positive": {
+          "total": 69,
+          "shared": 27
+        },
+        "negative": {
+          "total": 5,
+          "shared": 0
+        }
+      },
+      "groupedNotes": 30,
+      "latencySummary": {
+        "medianSeconds": 1.206,
+        "p95Seconds": 1.517,
+        "sumRequestSeconds": 15.177
+      },
+      "invalidResponses": 0
+    }
+  ]
+}

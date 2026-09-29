@@ -71,7 +71,7 @@ class TagSuggestionsPersistenceTest {
             old.execSQL("INSERT INTO note_links VALUES ('a', 'b')")
             old.version = 3
         }
-        val db = Room.databaseBuilder(context, NoteDatabase::class.java, name).addMigrations(NoteDatabase.MIGRATION_3_4, NoteDatabase.MIGRATION_4_5, NoteDatabase.MIGRATION_5_6).build()
+        val db = Room.databaseBuilder(context, NoteDatabase::class.java, name).addMigrations(NoteDatabase.MIGRATION_3_4, NoteDatabase.MIGRATION_4_5, NoteDatabase.MIGRATION_5_6, NoteDatabase.MIGRATION_6_7).build()
         try {
             val repo = RoomNoteRepository(db.noteDao())
             assertEquals(Note("a", "Bench press", 10, 20, linkedNoteIds = setOf("b")), repo.getNote("a"))

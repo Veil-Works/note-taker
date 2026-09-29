@@ -37,7 +37,7 @@ fun SettingsScreen(mode: String, onMode: (String) -> Unit, compact: Boolean, onC
             Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text("Automatic connections", style = MaterialTheme.typography.titleMedium)
                 Text(status.error ?: if (status.pending) "Finding connections…" else "Everything is up to date")
-                Text("Related notes and topics are found on your phone.", style = MaterialTheme.typography.bodySmall)
+                Text("Connections and topics are found on your phone.", style = MaterialTheme.typography.bodySmall)
                 OutlinedButton(onClick = onRetry, enabled = !status.pending) { Text("Refresh connections") }
                 error?.let { Text(it, color = MaterialTheme.colorScheme.error) }
             }

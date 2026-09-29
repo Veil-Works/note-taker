@@ -37,6 +37,31 @@ import org.junit.Rule
 import org.junit.Test
 
 class NoteCaptureFlowTest {
+    @Test fun capture_prefixes_and_focused_detail_panels() {
+        runBlocking { repository.createTag("Atlas") }
+        composeRule.onNodeWithTag("nav_new").performClick()
+        composeRule.onNodeWithTag("capture_field").performTextInput("#ATLAS #orion")
+        composeRule.onNodeWithTag("complete_note").performClick()
+        composeRule.onNodeWithText("Write a note after the topic names.").assertIsDisplayed()
+        composeRule.onNodeWithTag("capture_field").performTextInput(" Review release")
+        composeRule.onNodeWithTag("complete_note").performClick()
+        composeRule.waitUntil(5_000) { runBlocking { repository.observeNotes().first().size == 1 } }
+        val note = runBlocking { repository.observeNotes().first().single() }
+        org.junit.Assert.assertEquals("Review release", note.content)
+        org.junit.Assert.assertEquals(setOf("Atlas", "orion"), note.tags.map { it.name }.toSet())
+        composeRule.onNodeWithTag("note_${note.id}").performClick()
+        composeRule.onNodeWithText("New topic").assertDoesNotExist()
+        composeRule.onNodeWithText("Connect a note").assertDoesNotExist()
+        composeRule.onNodeWithTag("edit_topics").performClick()
+        composeRule.onNodeWithText("New topic").assertExists()
+        composeRule.onNodeWithText("Connect a note").assertDoesNotExist()
+        composeRule.onNodeWithTag("back_to_note").performClick()
+        composeRule.onNodeWithTag("note_popup_content").assertTextEquals("Review release")
+        composeRule.onNodeWithTag("edit_connections").performClick()
+        composeRule.onNodeWithText("New topic").assertDoesNotExist()
+        composeRule.onNodeWithText("Connect a note").assertExists()
+        composeRule.onNodeWithText("Done").performClick()
+    }
     @Test
     fun existing_note_edits_in_popup_and_returns_to_list() {
         val now = System.currentTimeMillis()

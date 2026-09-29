@@ -9,6 +9,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -19,7 +20,9 @@ import java.time.format.FormatStyle
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-internal fun FilterDialog(filters: NoteFilters, onApply: (NoteFilters) -> Unit, onDismiss: () -> Unit) {
+internal fun FilterDialog(filters: NoteFilters, topics: List<app.notetaker.model.Tag>, selectedTopics: Set<String>, onTopicsApply: (Set<String>) -> Unit, onApply: (NoteFilters) -> Unit, onDismiss: () -> Unit) {
+    var chosenTopics by remember { mutableStateOf(selectedTopics) }
+    var topicQuery by remember { mutableStateOf("") }
     var draft by remember { mutableStateOf(filters) }
     var choosingDates by remember { mutableStateOf(false) }
     AlertDialog(
@@ -57,9 +60,21 @@ internal fun FilterDialog(filters: NoteFilters, onApply: (NoteFilters) -> Unit, 
                 NoteSort.entries.forEach { sort ->
                     FilterChip(shape = RoundedCornerShape(50), selected = draft.sort == sort, onClick = { draft = draft.copy(sort = sort) }, label = { Text(sort.label) })
                 }
+                if (topics.isNotEmpty()) {
+                    Text("Topics", style = MaterialTheme.typography.titleSmall)
+                    OutlinedTextField(topicQuery, { topicQuery = it }, label = { Text("Find topics") }, singleLine = true)
+                    Text("Match all selected topics", style = MaterialTheme.typography.bodySmall)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        topics.filter { it.name.contains(topicQuery.trim(), true) }.forEach { tag ->
+                            FilterChip(selected = tag.id in chosenTopics, onClick = {
+                                chosenTopics = if (tag.id in chosenTopics) chosenTopics - tag.id else chosenTopics + tag.id
+                            }, label = { Text(tag.name) }, modifier = Modifier.testTag("filter_topic_${tag.id}"))
+                        }
+                    }
+                }
             }
         },
-        confirmButton = { Button(onClick = { onApply(draft) }) { Text("Apply") } },
+        confirmButton = { Button(onClick = { onTopicsApply(chosenTopics); onApply(draft) }) { Text("Apply") } },
         dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
     )
     if (choosingDates) {

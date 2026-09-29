@@ -11,6 +11,16 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NoteDao {
+    /** Topic creation and explicit membership commit together with the captured note. */
+    @Transaction suspend fun captureWithTopics(note: NoteEntity, names: List<String>) {
+        upsert(note)
+        val ids = names.map { name ->
+            val normalized = name.lowercase(java.util.Locale.ROOT)
+            insertTag(TagEntity(java.util.UUID.randomUUID().toString(), name, normalized, note.createdAt))
+            checkNotNull(findTag(normalized)).id
+        }
+        changeTags(note.id, ids.associateWith { true })
+    }
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun restoreAutomaticTags(rows: List<AutomaticTagEntity>)
 
@@ -27,6 +37,7 @@ interface NoteDao {
         val note = checkNotNull(getById(noteId)) { "This note no longer exists." }
         changes.forEach { (tagId, attached) ->
             check(existingTagIds(listOf(tagId)).isNotEmpty()) { "This concept no longer exists." }
+            retainTopic(tagId)
             if (attached) {
                 clearRejection(noteId, tagId)
                 clearDismissal(noteId, tagId)
@@ -61,7 +72,7 @@ interface NoteDao {
     @Query("DELETE FROM entity_types WHERE id = :id")
     suspend fun deleteType(id: String)
 
-    @Query("UPDATE tags SET name = :name, normalizedName = :normalized, typeId = :typeId WHERE id = :id")
+    @Query("UPDATE tags SET name = :name, normalizedName = :normalized, typeId = :typeId, provisional = 0 WHERE id = :id")
     suspend fun updateTag(id: String, name: String, normalized: String, typeId: String?): Int
 
     @Query("SELECT * FROM tag_aliases ORDER BY normalizedText, id")
@@ -75,6 +86,7 @@ interface NoteDao {
 
     @Transaction
     suspend fun saveAlias(alias: TagAliasEntity) {
+        retainTopic(alias.tagId)
         deleteAlias(alias.id)
         insertAlias(alias)
     }
@@ -122,6 +134,61 @@ interface NoteDao {
 
     @Delete
     suspend fun delete(note: NoteEntity)
+
+    @Query("UPDATE tags SET provisional = 0 WHERE id = :id AND provisional = 1")
+    suspend fun retainTopic(id: String)
+
+    @Query("SELECT * FROM tags WHERE id = :id") suspend fun topicById(id: String): TagEntity?
+    @Query("SELECT * FROM topic_discovery_keys WHERE `key` LIKE 'merged-id:%'")
+    fun observeTopicRedirects(): Flow<List<TopicDiscoveryKeyEntity>>
+    @Upsert suspend fun saveTopicRedirect(row: TopicDiscoveryKeyEntity)
+    @Query("UPDATE topic_discovery_keys SET tagId = :target WHERE tagId = :source")
+    suspend fun redirectDiscoveryKeys(target: String, source: String)
+    @Query("INSERT OR IGNORE INTO note_tags SELECT noteId, :target FROM note_tags WHERE tagId = :source")
+    suspend fun transferManual(target: String, source: String)
+    @Query("INSERT OR IGNORE INTO organization_rejections SELECT noteId, :target, content FROM organization_rejections WHERE tagId = :source")
+    suspend fun transferRejections(target: String, source: String)
+    @Query("INSERT OR IGNORE INTO tag_dismissals SELECT noteId, :target FROM tag_dismissals WHERE tagId = :source")
+    suspend fun transferDismissals(target: String, source: String)
+    @Query("INSERT OR IGNORE INTO automatic_tags SELECT noteId, :target, reason, score FROM automatic_tags WHERE tagId = :source")
+    suspend fun transferAutomatic(target: String, source: String)
+    @Query("DELETE FROM organization_rejections WHERE tagId = :id AND noteId IN (SELECT noteId FROM note_tags WHERE tagId = :id)")
+    suspend fun clearConfirmedRejections(id: String)
+    @Query("DELETE FROM tag_dismissals WHERE tagId = :id AND noteId IN (SELECT noteId FROM note_tags WHERE tagId = :id)")
+    suspend fun clearConfirmedDismissals(id: String)
+    @Query("DELETE FROM automatic_tags WHERE tagId = :id AND (noteId IN (SELECT noteId FROM note_tags WHERE tagId = :id) OR noteId IN (SELECT noteId FROM organization_rejections WHERE tagId = :id) OR noteId IN (SELECT noteId FROM tag_dismissals WHERE tagId = :id))")
+    suspend fun removeConflictingAutomatic(id: String)
+    @Query("SELECT * FROM tag_aliases WHERE tagId = :id") suspend fun aliasesForTopic(id: String): List<TagAliasEntity>
+
+    @Transaction suspend fun mergeTopics(target: String, source: String) {
+        require(target != source) { "Choose a different topic." }
+        val to = checkNotNull(topicById(target)) { "This topic no longer exists." }
+        val from = checkNotNull(topicById(source)) { "This topic no longer exists." }
+        // Legacy type metadata must not block a merge now that types are retired.
+        updateTag(target, to.name, to.normalizedName, to.typeId ?: from.typeId)
+        transferManual(target, source)
+        transferRejections(target, source)
+        transferDismissals(target, source)
+        transferAutomatic(target, source)
+        // An explicit inclusion wins a conflicting exclusion; otherwise exclusion wins.
+        clearConfirmedRejections(target)
+        clearConfirmedDismissals(target)
+        removeConflictingAutomatic(target)
+        aliasesForTopic(source).forEach { alias ->
+            insertAlias(alias.copy(id = java.util.UUID.randomUUID().toString(), tagId = target))
+        }
+        if (from.normalizedName != to.normalizedName) {
+            insertAlias(TagAliasEntity(java.util.UUID.randomUUID().toString(), target, from.name, from.normalizedName))
+        }
+        redirectDiscoveryKeys(target, source)
+        saveTopicRedirect(TopicDiscoveryKeyEntity("merged-id:$source", target))
+        deleteTag(source)
+    }
+
+    @Transaction suspend fun deleteTopic(id: String) {
+        saveTopicRedirect(TopicDiscoveryKeyEntity("merged-id:$id", null))
+        deleteTag(id)
+    }
 
     @Query("DELETE FROM tags WHERE id = :id")
     suspend fun deleteTag(id: String)
@@ -196,6 +263,7 @@ interface NoteDao {
         }
         clearLinks(note.id)
         insertLinks(tags.map { NoteTagEntity(note.id, it.id) })
+        tags.forEach { retainTopic(it.id) }
         if (restoring) {
             val available = existingTagIds((automatic.map { it.tagId } + rejected).distinct()).toSet()
             restoreAutomaticTags(automatic.filter { it.tagId in available && it.tagId !in rejected })

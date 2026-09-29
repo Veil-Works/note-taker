@@ -1,0 +1,90 @@
+{
+  "description": "Editorial reference fixed before inference. Never included in model prompts. Domains represent useful broad subjects, not required exact label text. Unlisted memberships are not automatically false.",
+  "subjects": {
+    "Astronomy": [
+      1,
+      2,
+      3,
+      31,
+      35
+    ],
+    "Sewing": [
+      4,
+      5,
+      6,
+      31,
+      40
+    ],
+    "Aquarium care": [
+      7,
+      8,
+      9,
+      33
+    ],
+    "Pottery": [
+      10,
+      11,
+      12,
+      32
+    ],
+    "Software releases": [
+      13,
+      14,
+      15,
+      33,
+      38
+    ],
+    "Bread baking": [
+      16,
+      17,
+      18,
+      32
+    ],
+    "Japanese study": [
+      19,
+      20,
+      21,
+      34
+    ],
+    "Reading": [
+      22,
+      23,
+      24,
+      34
+    ],
+    "Bedtime routine": [
+      25,
+      26,
+      27,
+      35
+    ],
+    "Chess": [
+      28,
+      29,
+      30
+    ]
+  },
+  "negativePairs": [
+    [
+      36,
+      37
+    ],
+    [
+      38,
+      39
+    ],
+    [
+      5,
+      13
+    ],
+    [
+      8,
+      38
+    ],
+    [
+      10,
+      18
+    ]
+  ],
+  "optionalOverlaps": []
+}
