@@ -1,0 +1,21 @@
+{
+  "description": "Analyst-authored scope descriptions for an observed development experiment, fixed before inference on 2026-09-30. They encode the reviewed distinctions and are neither user-approved taxonomy nor untouched evaluation data. No training or external datasets.",
+  "labels": {
+    "Rosemary": "Growing rosemary in a balcony pot: rosemary plant health, watering, soil and drainage.",
+    "Basil": "Growing basil plants: basil leaf health, watering, soil, light and plant care.",
+    "Running": "Running activity and training: completed runs, pace, distance, recovery and running routes.",
+    "Running gear": "Equipment for running: running shoes, socks, bottles and buying or testing running equipment.",
+    "Meal preparation": "Preparing food to eat: making or packing sandwiches and having meals ready in advance.",
+    "Focused work": "Protecting focused coding time: limiting distractions, closing chat and concentrating on programming.",
+    "Chat": "Conversations through chat: discussing topics in messages and communicating with other people.",
+    "Walking": "Walking as a daily habit: taking walks to improve attention, energy and well-being.",
+    "Meetings": "Improving meetings: useful discussions, decisions, agendas and capturing meeting outcomes.",
+    "Meeting planning": "Organizing a future meeting: scheduling, inviting participants and preparing an agenda.",
+    "Reading notes": "Reading books and capturing their ideas: chapter notes, summaries and reflections on what was read.",
+    "Chapter": "A chapter as a book section: chapter structure, section titles and numbered chapters.",
+    "Piano practice": "Practicing piano: musical phrases, fingering, scales, rhythm and playing passages.",
+    "French practice": "Learning French: practicing vocabulary, useful phrases, pronunciation and language exercises.",
+    "Note-taking": "Capturing ideas as notes: writing useful short notes and organizing or connecting recorded ideas.",
+    "Phrases": "Phrases as units of language: wording, expressions, sentence fragments and their meaning."
+  }
+}

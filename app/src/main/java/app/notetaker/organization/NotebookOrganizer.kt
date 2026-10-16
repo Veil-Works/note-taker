@@ -8,7 +8,11 @@ import kotlinx.coroutines.flow.first
 import kotlin.coroutines.coroutineContext
 
 /** All inference happens outside the transaction; a generation guard rejects stale results. */
-class NotebookOrganizer(private val db: NoteDatabase, private val embedding: TextEmbedding) {
+class NotebookOrganizer(
+    private val db: NoteDatabase,
+    private val embedding: TextEmbedding,
+    private val discover: (List<DiscoveryNote>) -> List<TopicCandidate> = { TopicDiscovery(embedding).discover(it) },
+) {
     suspend fun runOnce(): Boolean {
         val dao = db.organizationDao()
         val state = dao.state() ?: return true
@@ -66,67 +70,62 @@ class NotebookOrganizer(private val db: NoteDatabase, private val embedding: Tex
                 }
             }.sortedWith(compareByDescending<AutomaticTagEntity> { it.score }.thenBy { it.tagId })
         }
-        val groups = TopicDiscovery(embedding).discover(nonempty.map { DiscoveryNote(it.note.id, it.note.content, vectors.getValue(it.note.id)) })
-        val discovered = mutableListOf<TagEntity>()
-        val bindings = mutableListOf<TopicDiscoveryKeyEntity>()
-        val renamed = mutableListOf<TagEntity>()
-        val consolidated = mutableMapOf<String, String>()
-        val claimed = mutableSetOf<String>()
-        val memberships = automatic.associateBy { it.noteId to it.tagId }.toMutableMap()
-        val knownNames = tags.map { it.name.lowercase(java.util.Locale.ROOT) }.toMutableSet()
         val keys = discoveryKeys.associateBy { it.key }
+        val discoveries = distinctDiscoveryKeys(discover(nonempty.map { DiscoveryNote(it.note.id, it.note.content, vectors.getValue(it.note.id)) })
+            .filterNot { keys[it.key]?.let { key -> key.tagId == null } == true }, keys.keys)
         val previousMembers = tags.associate { tag -> tag.id to notes.filter { row ->
-            row.tags.any { it.id == tag.id } || row.automaticTags.any { it.id == tag.id } || row.rejections.any { it.tagId == tag.id }
+            (row.tags.any { it.id == tag.id } || row.automaticTags.any { it.id == tag.id }) &&
+                rejected.none { it.noteId == row.note.id && it.tagId == tag.id } &&
+                (cached[row.note.id]?.takeIf { it.model == embedding.version }?.let {
+                    similarity(vectors.getValue(row.note.id), it.vector.vector()) >= .55
+                } ?: true)
         }.map { it.note.id }.toSet() }
-        groups.forEach { group ->
+        val lineage = discoveryKeys.map { key ->
+            val members = key.memberIds?.let { json ->
+                val array = org.json.JSONArray(json)
+                (0 until array.length()).map { array.getString(it) }.toSet()
+            } ?: emptySet()
+            DiscoveryLineage(key.key, key.tagId, key.subject, members, key.mergeKind, key.branchKey)
+        }
+        val subjectVectors = mutableMapOf<String, FloatArray>()
+        fun subjectVector(text: String) = subjectVectors.getOrPut(text) { embedding.embed(text) }
+        // If every member is explicitly excluded or strongly matches a rejection,
+        // rediscovering it under a fresh ID would evade the user's correction.
+        // This is negative evidence only; it never authorizes a positive assignment.
+        val groups = discoveries.filterNot { group ->
+            tags.any { tag ->
+                lineage.any { it.topicId == tag.id &&
+                    ((it.subject ?: tag.name).equals(group.name, true) || similarity(subjectVector(group.name), subjectVector(it.subject ?: tag.name)) >= .55) } &&
+                    group.members.all { id -> rejected.any { it.noteId == id && it.tagId == tag.id } ||
+                        rejectionVectors.filterKeys { it.tagId == tag.id }.values.any { similarity(vectors.getValue(id), it) >= .80 } }
+            }
+        }
+        val reconciler = TopicReconciliation(
+            subjectSimilarity = { a, b -> if (a.equals(b, true)) 1.0 else similarity(subjectVector(a), subjectVector(b)) },
+            memberSimilarity = { a, b -> similarity(vectors.getValue(a), vectors.getValue(b)) },
+        )
+        val identities = reconciler.reconcile(groups, tags.map { tag ->
+            // Current exact-name/manual-example matches are independent evidence,
+            // unlike memberships produced by another discovered group in this pass.
+            val independent = automatic.filter { it.tagId == tag.id }.map { it.noteId }
+            TopicIdentity(tag.id, tag.name, previousMembers.getValue(tag.id) + independent,
+                rejected.filter { it.tagId == tag.id }.map { it.noteId }.toSet())
+        }, lineage)
+        val independentAssignments = automatic.map { it.noteId to it.tagId }.toSet()
+        val memberships = automatic.associateBy { it.noteId to it.tagId }.toMutableMap()
+        val bindings = mutableListOf<TopicDiscoveryKeyEntity>()
+        val assigned = groups.sortedBy { it.key }.mapNotNull { group ->
             coroutineContext.ensureActive()
-            val binding = keys[group.key]
-            if (binding != null && binding.tagId == null) return@forEach // Explicitly deleted.
-            val candidates = tags.filter { it.id !in consolidated && (!it.provisional || it.id !in claimed) }.mapNotNull { tag ->
-                // Membership overlap identifies a group, but changed text must still agree
-                // with its previous meaning. A matching name by itself is never a merge.
-                val overlap = group.members.count { id ->
-                    memberships.containsKey(id to tag.id) ||
-                        (id in previousMembers.getValue(tag.id) &&
-                            (cached[id]?.let { similarity(vectors.getValue(id), it.vector.vector()) >= .55 } ?: true))
-                }
-                val priorSize = previousMembers.getValue(tag.id).size.coerceAtLeast(1)
-                if (overlap > 0 && (overlap.toDouble() / group.members.size >= .5 || overlap.toDouble() / priorSize >= .5)) tag to overlap else null
-            }.sortedWith(compareByDescending<Pair<Tag, Int>> { it.second }.thenBy { it.first.provisional }.thenBy { it.first.id })
-            val boundId = binding?.tagId?.let { consolidated[it] ?: it }
-            val existing = boundId?.takeIf { id -> tags.any { it.id == id && (!it.provisional || id !in claimed) } }
-                ?: candidates.firstOrNull()?.first?.id
-            val id = existing ?: java.util.UUID.randomUUID().toString()
-            val old = tags.find { it.id == id }
-            if (old != null) {
-                // Only untouched inferred topics can be consolidated automatically.
-                // User-confirmed identities, exclusions, aliases and types remain independent.
-                tags.filter { it.provisional && it.id != id && it.id !in claimed && it.id !in consolidated }.forEach { other ->
-                    val members = previousMembers.getValue(other.id)
-                    val unchanged = members.count { member -> member in group.members &&
-                        (cached[member]?.let { similarity(vectors.getValue(member), it.vector.vector()) >= .55 } ?: true) }
-                    if (members.size >= 2 && unchanged.toDouble() / members.size >= .75) {
-                        consolidated[other.id] = id
-                        knownNames -= other.name.lowercase(java.util.Locale.ROOT)
-                    }
-                }
-            }
-            if (old == null || old.provisional) {
-                if (old != null) knownNames -= old.name.lowercase(java.util.Locale.ROOT)
-                val base = group.name.trim().ifBlank { "Untitled topic" }.take(40)
-                var name = base
-                var suffix = 2
-                while (name.lowercase(java.util.Locale.ROOT) in knownNames) {
-                    val ending = " ($suffix)"
-                    name = base.take(40 - ending.length) + ending
-                    suffix++
-                }
-                knownNames += name.lowercase(java.util.Locale.ROOT)
-                val row = TagEntity(id, name, name.lowercase(java.util.Locale.ROOT), old?.createdAt ?: System.currentTimeMillis(), provisional = true)
-                if (old == null) discovered += row else if (old.name != name) renamed += row
-            }
-            claimed += id
-            bindings += TopicDiscoveryKeyEntity(group.key, id)
+            if (keys[group.key]?.let { it.tagId == null } == true) return@mapNotNull null
+            val match = identities[group.key]
+            // A group already covered by independent user-topic assignments needs no
+            // extra provisional identity, even when two user topics are equally valid.
+            if (match == null && tags.any { tag -> !tag.provisional && group.members.all { id ->
+                notes.first { it.note.id == id }.tags.any { it.id == tag.id } || (id to tag.id) in independentAssignments
+            } }) return@mapNotNull null
+            val id = match?.topicId ?: java.util.UUID.nameUUIDFromBytes(("topic:${state.generation}:" + group.key).toByteArray(Charsets.UTF_8)).toString()
+            bindings += TopicDiscoveryKeyEntity(group.key, id, group.name,
+                org.json.JSONArray(group.members.sorted()).toString(), match?.branchKey ?: id, match?.mergeKind ?: 0)
             group.members.forEach { noteId ->
                 val row = nonempty.first { it.note.id == noteId }
                 val negative = rejectionVectors.filterKeys { it.tagId == id }.values.maxOfOrNull { similarity(vectors.getValue(noteId), it) } ?: 0.0
@@ -135,12 +134,26 @@ class NotebookOrganizer(private val db: NoteDatabase, private val embedding: Tex
                     memberships.putIfAbsent(noteId to id, AutomaticTagEntity(noteId, id, group.reasons.getValue(noteId), group.scores.getValue(noteId)))
                 }
             }
+            group to id
         }
-        return dao.apply(state.generation, newEmbeddings, memberships.values.toList(), links, discovered, bindings, renamed, consolidated)
+        val requestedNames = assigned.filter { (_, id) -> tags.none { it.id == id && !it.provisional } }
+            .associate { (group, id) -> id to group.name }
+        val survivingIds = memberships.values.map { it.tagId }.toSet() + notes.flatMap { it.tags }.map { it.id }
+        val finalNames = allocateTopicNames(requestedNames, tags.filter {
+            it.id !in requestedNames && (!it.provisional || it.id in survivingIds)
+        }.map { it.name })
+        val discovered = mutableListOf<TagEntity>()
+        val renamed = mutableListOf<TagEntity>()
+        finalNames.forEach { (id, name) ->
+            val old = tags.find { it.id == id }
+            val row = TagEntity(id, name, name.lowercase(java.util.Locale.ROOT), old?.createdAt ?: System.currentTimeMillis(), provisional = true)
+            if (old == null) discovered += row else if (old.name != name) renamed += row
+        }
+        return dao.apply(state.generation, newEmbeddings, memberships.values.toList(), links, discovered, bindings, renamed)
     }
 
     companion object {
-        const val RULES_VERSION = 11
+        const val RULES_VERSION = 12
         const val TOPIC_THRESHOLD = 0.42
         const val LEARNED_THRESHOLD = 0.55
     }

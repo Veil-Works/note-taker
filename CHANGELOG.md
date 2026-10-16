@@ -1,5 +1,21 @@
 # Changelog
 
+## Unreleased — identity reconciliation
+
+- Reconcile discovered topics globally with subject compatibility, independent
+  member evidence, ambiguity handling and one-to-one identity assignment.
+- Exclude removed memberships from positive identity overlap; prevent fully rejected
+  discoveries from escaping corrections through a fresh topic ID.
+- Preserve separate branches of explicit user merges and user-owned names/memberships;
+  remove automatic consolidation of saved identities.
+- Add Room schema 8 lineage metadata and conservative legacy-merge migration.
+- Allocate final names after reconciliation and release expiring names transactionally.
+- Keep discovery and embedding model unchanged; benchmarks remain laptop-first.
+
+Validation: 75 JVM tests, builds and lint pass (zero errors). All 15 final targeted
+emulator tests pass, including the manual-topic regression found in the broader run.
+See [identity validation and limitations](docs/TOPICS.md#rules-12-validation-2026-09-29).
+
 ## Unreleased — short-note grouping and label scope
 
 - Recover multiple subjects using corroborated sentence/clause matches.

@@ -1,0 +1,2444 @@
+{
+  "studyId": "d85eb59f1bf200c32d7e06627706103ea28af7019cc8c91ee2881c0ff5f4dd8a",
+  "groups": [
+    {
+      "id": "development-001",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "orion",
+          "onboarding",
+          "maya",
+          "orion onboarding",
+          "people"
+        ],
+        "D_hybrid_semantic": [
+          "orion",
+          "orion onboarding",
+          "onboarding",
+          "workspace",
+          "orion activation"
+        ]
+      },
+      "ratings": {
+        "A_current": {
+          "clarity": 3,
+          "fit": 3
+        },
+        "D_hybrid_semantic": {
+          "clarity": 3,
+          "fit": 3
+        }
+      },
+      "preferred": "tie",
+      "coherence": "good",
+      "flaggedNotes": [],
+      "comment": "",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 1,
+          "text": "Orion onboarding: people abandon setup when we ask for a workspace name before showing the product."
+        },
+        {
+          "id": 2,
+          "text": "Orion todo: sketch a three-step onboarding flow and review it with Maya on Thursday."
+        },
+        {
+          "id": 3,
+          "text": "The first Orion screen should show a useful example before asking the user to configure anything."
+        },
+        {
+          "id": 4,
+          "text": "Orion activation dropped after we added the team invitation step. Check whether skipping invitations helps."
+        },
+        {
+          "id": 5,
+          "text": "Maya suggested moving team invitations until after the first completed task in Orion."
+        },
+        {
+          "id": 6,
+          "text": "For Orion, measure time to first useful action instead of counting completed setup fields."
+        },
+        {
+          "id": 7,
+          "text": "Orion release checklist: finish keyboard navigation, verify empty states, and update the onboarding screenshots."
+        },
+        {
+          "id": 8,
+          "text": "Idea for Orion: let new users try a sample workspace, then replace the sample with their own data."
+        },
+        {
+          "id": 16,
+          "text": "Idea: use the same empty-state pattern in Atlas search and Orion onboarding, with one clear next action."
+        },
+        {
+          "id": 23,
+          "text": "Friday work plan: review the Orion prototype, investigate the Atlas timeout, then check Beacon receipts."
+        },
+        {
+          "id": 27,
+          "text": "Ask Maya to review the Orion copy and ask Jonas to share the Atlas performance trace."
+        },
+        {
+          "id": 73,
+          "text": "Orion onboarding test: three people tried to invite a teammate before creating their first task. Put the invitation after the success screen."
+        },
+        {
+          "id": 74,
+          "text": "For Orion, let people reopen the sample workspace after setup. One participant deleted the examples before understanding the workflow."
+        },
+        {
+          "id": 75,
+          "text": "Orion todo: check the onboarding flow with large text enabled; the final action currently falls below the keyboard."
+        },
+        {
+          "id": 76,
+          "text": "Maya's Orion review: the welcome copy promises collaboration, but the first screen only asks for account details."
+        },
+        {
+          "id": 77,
+          "text": "Orion activation report should separate people who explored the demo from people who created a real workspace."
+        },
+        {
+          "id": 88,
+          "text": "Orion and Atlas both need a useful empty state when someone removes all filters. Review the copy together, but keep the projects separate."
+        },
+        {
+          "id": 89,
+          "text": "Ask Maya to test Orion keyboard navigation and Jonas to test Atlas search without a mouse."
+        },
+        {
+          "id": 90,
+          "text": "Release planning: finish the Atlas cache fix before the Beacon billing review, then publish the Orion onboarding results."
+        }
+      ]
+    },
+    {
+      "id": "development-002",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "search",
+          "atlas",
+          "atlas search",
+          "documents",
+          "document"
+        ],
+        "D_hybrid_semantic": [
+          "atlas search",
+          "atlas",
+          "search",
+          "atlas indexing",
+          "documents"
+        ]
+      },
+      "ratings": {
+        "A_current": {
+          "clarity": 1,
+          "fit": 1
+        },
+        "D_hybrid_semantic": {
+          "clarity": 3,
+          "fit": 3
+        }
+      },
+      "preferred": "D_hybrid_semantic",
+      "coherence": "good",
+      "flaggedNotes": [],
+      "comment": "",
+      "suggestedLabel": "Atlas",
+      "notes": [
+        {
+          "id": 9,
+          "text": "Atlas search: exact project names should rank above loosely related documents."
+        },
+        {
+          "id": 10,
+          "text": "Atlas todo: reproduce the search timeout on a workspace with ten thousand documents."
+        },
+        {
+          "id": 11,
+          "text": "Search feels slow in Atlas even when the response takes only 400 ms. Keep the previous results visible while loading."
+        },
+        {
+          "id": 12,
+          "text": "Atlas search returns duplicate documents when a title and an alias both match."
+        },
+        {
+          "id": 13,
+          "text": "Review the Atlas search logs with Jonas. We need examples of queries that return nothing."
+        },
+        {
+          "id": 14,
+          "text": "Atlas indexing: a failed document should retry on its own rather than restarting the entire batch."
+        },
+        {
+          "id": 15,
+          "text": "The Atlas search filter disappears when I return from a document. Preserve the query and selected project."
+        },
+        {
+          "id": 61,
+          "text": "I keep reopening the same document because I remember its project but not its title. Atlas search should handle that."
+        },
+        {
+          "id": 78,
+          "text": "Atlas search experiment: show the matching paragraph under each result so people can judge relevance without opening five documents."
+        },
+        {
+          "id": 79,
+          "text": "Atlas todo: add a regression case for a deleted document remaining in cached search results."
+        },
+        {
+          "id": 80,
+          "text": "Ask Jonas whether Atlas indexing can report the one failed file while the rest of the upload stays searchable."
+        },
+        {
+          "id": 81,
+          "text": "Atlas search should remember filters per workspace. Carrying a client filter into a personal workspace produces an unexplained empty screen."
+        },
+        {
+          "id": 82,
+          "text": "Compare Atlas search results for “release checklist” and “shipping checklist” using the same saved documents."
+        }
+      ]
+    },
+    {
+      "id": "development-003",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "beacon",
+          "payment",
+          "subscription",
+          "billing",
+          "date"
+        ],
+        "D_hybrid_semantic": [
+          "beacon",
+          "payment",
+          "beacon payment",
+          "billing",
+          "subscription"
+        ]
+      },
+      "ratings": {
+        "D_hybrid_semantic": {
+          "clarity": 3,
+          "fit": 3
+        },
+        "A_current": {
+          "clarity": 3,
+          "fit": 3
+        }
+      },
+      "preferred": "tie",
+      "coherence": "good",
+      "flaggedNotes": [],
+      "comment": "",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 17,
+          "text": "Beacon billing: a payment webhook can arrive twice, so invoice creation needs to be idempotent."
+        },
+        {
+          "id": 18,
+          "text": "Beacon todo: test the annual subscription upgrade and verify the prorated invoice."
+        },
+        {
+          "id": 19,
+          "text": "A Beacon customer was charged correctly but saw an old plan name on the receipt."
+        },
+        {
+          "id": 20,
+          "text": "Beacon launch is blocked by the failed-payment email copy. Ask Lena for the final wording."
+        },
+        {
+          "id": 21,
+          "text": "Beacon billing should show the next charge date before the user confirms a plan change."
+        },
+        {
+          "id": 22,
+          "text": "Add a retry test for Beacon payment webhooks. A delayed event must not overwrite a newer subscription state."
+        },
+        {
+          "id": 83,
+          "text": "Beacon refund test: replay the refund event and confirm that the balance changes only once."
+        },
+        {
+          "id": 84,
+          "text": "Beacon todo: include the billing period on exported receipts so finance can reconcile annual plans."
+        },
+        {
+          "id": 85,
+          "text": "Lena spotted a confusing Beacon payment warning: an expired card should lead directly to updating payment details."
+        },
+        {
+          "id": 86,
+          "text": "Beacon subscription cancellation should explain whether access ends immediately or at the end of the paid period."
+        },
+        {
+          "id": 87,
+          "text": "Check Beacon invoices around midnight UTC; the receipt date and charge date should use the same documented timezone."
+        },
+        {
+          "id": 171,
+          "text": "Discuss the Beacon receipt export with finance in the planning meeting. Leave with an owner and a sample file to verify."
+        }
+      ]
+    },
+    {
+      "id": "development-004",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "train",
+          "agenda",
+          "client",
+          "make short",
+          "tuesday"
+        ],
+        "D_hybrid_semantic": [
+          "train",
+          "todo"
+        ]
+      },
+      "ratings": {
+        "D_hybrid_semantic": {
+          "clarity": 1,
+          "fit": 1
+        },
+        "A_current": {
+          "clarity": 1,
+          "fit": 1
+        }
+      },
+      "preferred": "neither",
+      "coherence": "mixed",
+      "flaggedNotes": [
+        {
+          "id": 24,
+          "text": "Team todo: reserve a quiet room for the roadmap workshop and send the agenda before Tuesday."
+        },
+        {
+          "id": 138,
+          "text": "Expense todo: submit the train receipt from the client visit and attach the meeting date."
+        },
+        {
+          "id": 149,
+          "text": "Music idea: make a short playlist of calm instrumental tracks for the train, downloaded before leaving home."
+        }
+      ],
+      "comment": "all three notes refer to different things, the first two are different todos, the last is a quick little idea/reminder",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 24,
+          "text": "Team todo: reserve a quiet room for the roadmap workshop and send the agenda before Tuesday."
+        },
+        {
+          "id": 138,
+          "text": "Expense todo: submit the train receipt from the client visit and attach the meeting date."
+        },
+        {
+          "id": 149,
+          "text": "Music idea: make a short playlist of calm instrumental tracks for the train, downloaded before leaving home."
+        }
+      ]
+    },
+    {
+      "id": "development-005",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "chat",
+          "short walk",
+          "coding",
+          "minutes",
+          "walk"
+        ],
+        "D_hybrid_semantic": [
+          "chat",
+          "minutes",
+          "coding",
+          "short walk",
+          "afternoon"
+        ]
+      },
+      "ratings": {
+        "D_hybrid_semantic": {
+          "clarity": 1,
+          "fit": 1
+        },
+        "A_current": {
+          "clarity": 1,
+          "fit": 1
+        }
+      },
+      "preferred": "neither",
+      "coherence": "mixed",
+      "flaggedNotes": [
+        {
+          "id": 25,
+          "text": "Our standup runs long because we solve bugs during status updates. Move debugging into a separate follow-up."
+        },
+        {
+          "id": 28,
+          "text": "I get more coding done before opening chat. Try protecting the first ninety minutes of the workday."
+        },
+        {
+          "id": 72,
+          "text": "Try a short walk after lunch instead of another coffee. Afternoon meetings feel harder when I stay at the desk all day."
+        },
+        {
+          "id": 94,
+          "text": "Protect a morning coding block by closing chat until the first task is finished. Record whether interruptions actually decrease."
+        },
+        {
+          "id": 159,
+          "text": "Sleep observation: I stayed up later on the nights I started a new episode after ten. Choose the stopping time before pressing play."
+        },
+        {
+          "id": 160,
+          "text": "Charge the phone outside the bedroom tonight. Reaching for the alarm has turned into twenty minutes of scrolling."
+        },
+        {
+          "id": 161,
+          "text": "A short walk between calls helped me return to the next meeting with more attention. Put a gap between the two afternoon reviews."
+        }
+      ],
+      "comment": "the notes are a mix of everything, some dont even mention chats",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 25,
+          "text": "Our standup runs long because we solve bugs during status updates. Move debugging into a separate follow-up."
+        },
+        {
+          "id": 28,
+          "text": "I get more coding done before opening chat. Try protecting the first ninety minutes of the workday."
+        },
+        {
+          "id": 72,
+          "text": "Try a short walk after lunch instead of another coffee. Afternoon meetings feel harder when I stay at the desk all day."
+        },
+        {
+          "id": 94,
+          "text": "Protect a morning coding block by closing chat until the first task is finished. Record whether interruptions actually decrease."
+        },
+        {
+          "id": 159,
+          "text": "Sleep observation: I stayed up later on the nights I started a new episode after ten. Choose the stopping time before pressing play."
+        },
+        {
+          "id": 160,
+          "text": "Charge the phone outside the bedroom tonight. Reaching for the alarm has turned into twenty minutes of scrolling."
+        },
+        {
+          "id": 161,
+          "text": "A short walk between calls helped me return to the next meeting with more attention. Put a gap between the two afternoon reviews."
+        }
+      ]
+    },
+    {
+      "id": "development-006",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "decision",
+          "owner",
+          "decision owner",
+          "planning meeting",
+          "planning"
+        ],
+        "D_hybrid_semantic": [
+          "planning",
+          "owner",
+          "decision",
+          "planning meeting",
+          "meeting"
+        ]
+      },
+      "ratings": {
+        "A_current": {
+          "clarity": 1,
+          "fit": 1
+        },
+        "D_hybrid_semantic": {
+          "clarity": 1,
+          "fit": 2
+        }
+      },
+      "preferred": "D_hybrid_semantic",
+      "coherence": "mixed",
+      "flaggedNotes": [
+        {
+          "id": 92,
+          "text": "Try a fifteen-minute agenda for the design review: context, decision, owner. Put detailed status updates in the document beforehand."
+        }
+      ],
+      "comment": "fifteen-minute agenda note doesnt necessarily refer to the same planning meetings as the rest of the notes",
+      "suggestedLabel": "Planning meeting",
+      "notes": [
+        {
+          "id": 26,
+          "text": "Write down the decision and owner at the end of each planning meeting. Too many tasks currently have neither."
+        },
+        {
+          "id": 91,
+          "text": "At the next planning meeting, read back the decision before assigning an owner. Last week's notes captured three different interpretations."
+        },
+        {
+          "id": 92,
+          "text": "Try a fifteen-minute agenda for the design review: context, decision, owner. Put detailed status updates in the document beforehand."
+        }
+      ]
+    },
+    {
+      "id": "development-007",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "kg",
+          "session",
+          "80",
+          "80 kg",
+          "bench"
+        ],
+        "D_hybrid_semantic": [
+          "80 kg",
+          "press 80 kg",
+          "squat session",
+          "bench press 80",
+          "kg"
+        ]
+      },
+      "ratings": {
+        "D_hybrid_semantic": {
+          "clarity": 1,
+          "fit": 1
+        },
+        "A_current": {
+          "clarity": 1,
+          "fit": 1
+        }
+      },
+      "preferred": "neither",
+      "coherence": "mixed",
+      "flaggedNotes": [
+        {
+          "id": 34,
+          "text": "A heavy squat session the night before a long run makes my legs feel flat. Move lower-body training earlier in the week."
+        }
+      ],
+      "comment": "the group has a mix of exercises, splitting them into separate topics each for its own exercise would have been better",
+      "suggestedLabel": "Strength session",
+      "notes": [
+        {
+          "id": 29,
+          "text": "Strength session: bench press 80 kg for 3 sets of 5. Last set was slow but controlled."
+        },
+        {
+          "id": 30,
+          "text": "Next gym session: repeat bench at 80 kg and focus on keeping the shoulder blades stable."
+        },
+        {
+          "id": 31,
+          "text": "Squats 90 kg, 3x5, then Romanian deadlifts 60 kg, 3x8. Leave another rep in reserve next time."
+        },
+        {
+          "id": 34,
+          "text": "A heavy squat session the night before a long run makes my legs feel flat. Move lower-body training earlier in the week."
+        },
+        {
+          "id": 111,
+          "text": "Bench press 80 kg: all three sets of five moved evenly today. Keep the same load for another session."
+        },
+        {
+          "id": 112,
+          "text": "Squat session: filmed the final set to check whether depth changes when I get tired."
+        }
+      ]
+    },
+    {
+      "id": "development-008",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "gym",
+          "pack",
+          "lifting",
+          "lifting shoes",
+          "towel"
+        ],
+        "D_hybrid_semantic": [
+          "gym",
+          "pack",
+          "bag",
+          "lifting shoes",
+          "lifting"
+        ]
+      },
+      "ratings": {
+        "D_hybrid_semantic": {
+          "clarity": 1,
+          "fit": 2
+        },
+        "A_current": {
+          "clarity": 1,
+          "fit": 2
+        }
+      },
+      "preferred": "neither",
+      "coherence": "mixed",
+      "flaggedNotes": [
+        {
+          "id": 110,
+          "text": "Running gear todo: compare small waist belts that hold a phone and keys without bouncing."
+        }
+      ],
+      "comment": "",
+      "suggestedLabel": "Gym gear",
+      "notes": [
+        {
+          "id": 32,
+          "text": "Gym todo: pack lifting shoes, water bottle, and a clean towel before leaving work."
+        },
+        {
+          "id": 110,
+          "text": "Running gear todo: compare small waist belts that hold a phone and keys without bouncing."
+        },
+        {
+          "id": 114,
+          "text": "Pack the gym bag tonight: lifting shoes, towel, lock, and water bottle."
+        },
+        {
+          "id": 169,
+          "text": "After the bike commute, pack tomorrow's gym clothes while the work bag is already open."
+        }
+      ]
+    },
+    {
+      "id": "development-009",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "rest",
+          "pull",
+          "pull ups",
+          "ups",
+          "time"
+        ],
+        "D_hybrid_semantic": [
+          "pull-ups",
+          "pull",
+          "ups",
+          "rest",
+          "time"
+        ]
+      },
+      "ratings": {
+        "D_hybrid_semantic": {
+          "clarity": 3,
+          "fit": 2
+        },
+        "A_current": {
+          "clarity": 1,
+          "fit": 1
+        }
+      },
+      "preferred": "D_hybrid_semantic",
+      "coherence": "mixed",
+      "flaggedNotes": [
+        {
+          "id": 38,
+          "text": "Intervals tomorrow: warm up, run six short repeats, then cool down. Keep the first repeat controlled."
+        }
+      ],
+      "comment": "",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 33,
+          "text": "Pull-ups felt easier today: 6, 6, and 5 reps. Keep the same rest time next session."
+        },
+        {
+          "id": 38,
+          "text": "Intervals tomorrow: warm up, run six short repeats, then cool down. Keep the first repeat controlled."
+        },
+        {
+          "id": 113,
+          "text": "Pull-ups: 6, 6, 6 with the same rest between sets. Write the rest interval in the log next time."
+        }
+      ]
+    },
+    {
+      "id": "development-010",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "run",
+          "km",
+          "easy",
+          "pace",
+          "run km"
+        ],
+        "D_hybrid_semantic": [
+          "run",
+          "km",
+          "long run",
+          "running",
+          "easy"
+        ]
+      },
+      "ratings": {
+        "D_hybrid_semantic": {
+          "clarity": 3,
+          "fit": 3
+        },
+        "A_current": {
+          "clarity": 3,
+          "fit": 3
+        }
+      },
+      "preferred": "tie",
+      "coherence": "good",
+      "flaggedNotes": [
+        {
+          "id": 63,
+          "text": "The best ideas on my runs usually disappear before I get home. Capture one sentence as soon as I stop."
+        }
+      ],
+      "comment": "",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 35,
+          "text": "Run 7 km Thursday, easy pace along the river. Felt comfortable enough to talk the whole way."
+        },
+        {
+          "id": 36,
+          "text": "Sunday long run: 12 km, started too fast and slowed down after the bridge."
+        },
+        {
+          "id": 37,
+          "text": "Running goal: build a consistent three-run week before adding more speed work."
+        },
+        {
+          "id": 41,
+          "text": "Rainy run this morning was surprisingly quiet. The river path is much less crowded before seven."
+        },
+        {
+          "id": 63,
+          "text": "The best ideas on my runs usually disappear before I get home. Capture one sentence as soon as I stop."
+        },
+        {
+          "id": 103,
+          "text": "Easy run: 6 km beside the canal, kept the pace relaxed even on the last kilometre."
+        },
+        {
+          "id": 104,
+          "text": "Long run was 14 km with an even second half. Starting slower made the final climb feel manageable."
+        },
+        {
+          "id": 105,
+          "text": "Running plan: keep Tuesday easy and move the faster session away from Friday squats."
+        },
+        {
+          "id": 107,
+          "text": "Running log: windy weather made pace inconsistent, so I used breathing and effort instead of chasing the watch."
+        }
+      ]
+    },
+    {
+      "id": "development-011",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "socks",
+          "running",
+          "shoes",
+          "heel",
+          "running shoes"
+        ],
+        "D_hybrid_semantic": [
+          "running shoes",
+          "shoes",
+          "socks",
+          "running socks",
+          "running"
+        ]
+      },
+      "ratings": {
+        "A_current": {
+          "clarity": 2,
+          "fit": 2
+        },
+        "D_hybrid_semantic": {
+          "clarity": 1,
+          "fit": 1
+        }
+      },
+      "preferred": "A_current",
+      "coherence": "unsure",
+      "flaggedNotes": [
+        {
+          "id": 40,
+          "text": "Look for running shoes with a wider toe box. Try them on after work when my feet are less fresh."
+        }
+      ],
+      "comment": "",
+      "suggestedLabel": "Running socks",
+      "notes": [
+        {
+          "id": 39,
+          "text": "My running shoes rub the right heel after about 8 km. Try different socks before buying another pair."
+        },
+        {
+          "id": 40,
+          "text": "Look for running shoes with a wider toe box. Try them on after work when my feet are less fresh."
+        },
+        {
+          "id": 46,
+          "text": "Pick up running socks and a small water bottle before Sunday's long run."
+        },
+        {
+          "id": 109,
+          "text": "The new running socks stopped the heel rubbing on an 8 km run. Keep the old shoes for now."
+        }
+      ]
+    },
+    {
+      "id": "development-012",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "bowls",
+          "chickpeas",
+          "late",
+          "lunches",
+          "sunday"
+        ],
+        "D_hybrid_semantic": [
+          "meal prep",
+          "bowls",
+          "meal",
+          "roast",
+          "lunches"
+        ]
+      },
+      "ratings": {
+        "A_current": {
+          "clarity": 1,
+          "fit": 1
+        },
+        "D_hybrid_semantic": {
+          "clarity": 3,
+          "fit": 3
+        }
+      },
+      "preferred": "D_hybrid_semantic",
+      "coherence": "good",
+      "flaggedNotes": [],
+      "comment": "",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 42,
+          "text": "After a long run I forget to eat until late afternoon. Prepare lunch before heading out on Sunday."
+        },
+        {
+          "id": 44,
+          "text": "Buy chickpeas, tomatoes, spinach, and rice for lunches next week."
+        },
+        {
+          "id": 49,
+          "text": "Meal prep idea: roast vegetables once and use them in rice bowls and wraps during the week."
+        },
+        {
+          "id": 108,
+          "text": "Pack a sandwich before Sunday's long run. Having lunch ready would avoid another afternoon of random snacks."
+        },
+        {
+          "id": 118,
+          "text": "Meal prep: make lentil soup on Sunday and freeze two portions for evenings when work runs late."
+        },
+        {
+          "id": 119,
+          "text": "Roast a tray of peppers and courgettes for lunches, then add chickpeas when assembling the bowls."
+        },
+        {
+          "id": 156,
+          "text": "Test a smaller batch of pancake batter next weekend. The last two pancakes sat too long while the first ones were eaten."
+        }
+      ]
+    },
+    {
+      "id": "development-013",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "shopping",
+          "grocery",
+          "bin",
+          "bin bags",
+          "carrots"
+        ],
+        "D_hybrid_semantic": [
+          "shopping",
+          "grocery",
+          "grocery list",
+          "laundry detergent",
+          "freezer"
+        ]
+      },
+      "ratings": {
+        "A_current": {
+          "clarity": 3,
+          "fit": 3
+        },
+        "D_hybrid_semantic": {
+          "clarity": 3,
+          "fit": 3
+        }
+      },
+      "preferred": "tie",
+      "coherence": "good",
+      "flaggedNotes": [],
+      "comment": "",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 43,
+          "text": "Shopping: oats, Greek yogurt, bananas, coffee, and eggs."
+        },
+        {
+          "id": 45,
+          "text": "Shopping todo: laundry detergent, bin bags, dish soap, and a replacement kitchen sponge."
+        },
+        {
+          "id": 115,
+          "text": "Grocery list: lentils, carrots, onions, yogurt, apples, and coffee filters."
+        },
+        {
+          "id": 116,
+          "text": "Before grocery shopping, check the freezer for bread and the cupboard for rice. Buy only what is missing."
+        },
+        {
+          "id": 117,
+          "text": "Household shopping: dishwasher tablets, laundry detergent, toilet paper, and bin bags."
+        },
+        {
+          "id": 135,
+          "text": "Monthly budget review: separate annual subscriptions from regular groceries so an annual renewal does not look like a food-spending spike."
+        },
+        {
+          "id": 170,
+          "text": "Grocery list for meal prep: lentils, tomatoes, carrots, and freezer containers. Make soup before the busy release week."
+        }
+      ]
+    },
+    {
+      "id": "development-014",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "day",
+          "kitchen",
+          "laptop",
+          "open",
+          "spare"
+        ],
+        "D_hybrid_semantic": []
+      },
+      "ratings": {
+        "A_current": {
+          "clarity": 1,
+          "fit": 1
+        },
+        "D_hybrid_semantic": {
+          "clarity": null,
+          "fit": null
+        }
+      },
+      "preferred": "D_hybrid_semantic",
+      "coherence": "mixed",
+      "flaggedNotes": [
+        {
+          "id": 47,
+          "text": "Need a USB-C cable for the work bag. The spare one at home only charges and cannot connect the monitor."
+        },
+        {
+          "id": 70,
+          "text": "The cafe near the station is quiet in the morning and has enough space to open a laptop."
+        },
+        {
+          "id": 132,
+          "text": "The kitchen cabinet door catches the drawer below it. Mark the hinge position before trying a small adjustment."
+        },
+        {
+          "id": 133,
+          "text": "Buy felt pads for the dining chairs; the floor scratches line up with the two chairs used every day."
+        }
+      ],
+      "comment": "This is just a mix of notes, no need to form a group out of it",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 47,
+          "text": "Need a USB-C cable for the work bag. The spare one at home only charges and cannot connect the monitor."
+        },
+        {
+          "id": 70,
+          "text": "The cafe near the station is quiet in the morning and has enough space to open a laptop."
+        },
+        {
+          "id": 132,
+          "text": "The kitchen cabinet door catches the drawer below it. Mark the hinge position before trying a small adjustment."
+        },
+        {
+          "id": 133,
+          "text": "Buy felt pads for the dining chairs; the floor scratches line up with the two chairs used every day."
+        }
+      ]
+    },
+    {
+      "id": "development-015",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "pot",
+          "balcony",
+          "balcony rosemary",
+          "rosemary",
+          "basil"
+        ],
+        "D_hybrid_semantic": [
+          "balcony rosemary",
+          "rosemary",
+          "pot",
+          "balcony",
+          "watering"
+        ]
+      },
+      "ratings": {
+        "A_current": {
+          "clarity": 1,
+          "fit": 1
+        },
+        "D_hybrid_semantic": {
+          "clarity": 3,
+          "fit": 3
+        }
+      },
+      "preferred": "D_hybrid_semantic",
+      "coherence": "mixed",
+      "flaggedNotes": [
+        {
+          "id": 65,
+          "text": "Turn the basil pot every few days so it does not keep leaning toward the window."
+        },
+        {
+          "id": 121,
+          "text": "Basil has new leaves on the window side. Rotate the pot and trim enough for tonight's pasta."
+        }
+      ],
+      "comment": "Mixes basil with rosemary based on balcony/pot connection. Balcony pots would have been more fitting for this merged topic",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 48,
+          "text": "Buy a terracotta pot and fresh soil for the balcony rosemary."
+        },
+        {
+          "id": 64,
+          "text": "Balcony rosemary looks dry even though the soil is damp. Check how much sun that corner gets."
+        },
+        {
+          "id": 65,
+          "text": "Turn the basil pot every few days so it does not keep leaning toward the window."
+        },
+        {
+          "id": 120,
+          "text": "The balcony rosemary pot still feels heavy two days after watering. Check the drainage holes before adding more water."
+        },
+        {
+          "id": 121,
+          "text": "Basil has new leaves on the window side. Rotate the pot and trim enough for tonight's pasta."
+        },
+        {
+          "id": 122,
+          "text": "Buy a shallow tray for the balcony pots so watering does not drip onto the neighbour's chair."
+        }
+      ]
+    },
+    {
+      "id": "development-016",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "coffee",
+          "changing",
+          "cupboard",
+          "experiment",
+          "oats"
+        ],
+        "D_hybrid_semantic": [
+          "coffee"
+        ]
+      },
+      "ratings": {
+        "A_current": {
+          "clarity": 3,
+          "fit": 3
+        },
+        "D_hybrid_semantic": {
+          "clarity": 3,
+          "fit": 3
+        }
+      },
+      "preferred": "tie",
+      "coherence": "good",
+      "flaggedNotes": [],
+      "comment": "",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 50,
+          "text": "Check the cupboard before buying more coffee. There are probably two unopened bags behind the oats."
+        },
+        {
+          "id": 157,
+          "text": "Coffee experiment: grind slightly coarser tomorrow and keep the water amount unchanged so only one variable moves."
+        },
+        {
+          "id": 158,
+          "text": "Clean the coffee grinder catch cup before changing beans. The first cup tasted like a mixture of the old and new roast."
+        }
+      ]
+    },
+    {
+      "id": "development-017",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "notebook",
+          "topic",
+          "note",
+          "automatic",
+          "notes"
+        ],
+        "D_hybrid_semantic": [
+          "notebook",
+          "topic",
+          "notebook todo",
+          "notebook idea",
+          "automatic"
+        ]
+      },
+      "ratings": {
+        "D_hybrid_semantic": {
+          "clarity": 2,
+          "fit": 2
+        },
+        "A_current": {
+          "clarity": 2,
+          "fit": 2
+        }
+      },
+      "preferred": "tie",
+      "coherence": "good",
+      "flaggedNotes": [],
+      "comment": "",
+      "suggestedLabel": "Notebook app, notebook idea",
+      "notes": [
+        {
+          "id": 51,
+          "text": "App idea: a tiny notebook that finds recurring subjects without making me organize every thought."
+        },
+        {
+          "id": 52,
+          "text": "For the notebook app, topic names should explain the connection between notes rather than repeat generic words."
+        },
+        {
+          "id": 53,
+          "text": "Idea: show why a note belongs to a topic using a short phrase from a related note."
+        },
+        {
+          "id": 54,
+          "text": "Automatic grouping should be patient with vague notes. A wrong confident connection is more distracting than no group yet."
+        },
+        {
+          "id": 55,
+          "text": "A shopping note can also be about running. The notebook should allow both topics without merging them."
+        },
+        {
+          "id": 56,
+          "text": "Notebook todo: check whether renaming a topic keeps its identity when more related notes arrive."
+        },
+        {
+          "id": 96,
+          "text": "Notebook idea: let me inspect the strongest two connections behind an automatic topic before I accept it."
+        },
+        {
+          "id": 97,
+          "text": "Notebook todo: verify that editing one sentence removes obsolete topic memberships without losing manual choices."
+        },
+        {
+          "id": 98,
+          "text": "For automatic note grouping, a person mentioned once should not outweigh the subject of the whole note."
+        },
+        {
+          "id": 99,
+          "text": "The notebook should preserve a renamed topic when a new note uses the old wording. Internal matching can remember the previous name."
+        },
+        {
+          "id": 102,
+          "text": "In the notebook topic view, show a useful excerpt for each note instead of repeating the topic name on every row."
+        },
+        {
+          "id": 168,
+          "text": "Notebook idea from reading: connect chapter questions with earlier notes, but keep the exact book title visible in the explanation."
+        }
+      ]
+    },
+    {
+      "id": "development-018",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "concrete",
+          "short notes",
+          "capture",
+          "observation",
+          "note"
+        ],
+        "D_hybrid_semantic": [
+          "short notes",
+          "capture",
+          "note",
+          "notes",
+          "short"
+        ]
+      },
+      "ratings": {
+        "A_current": {
+          "clarity": 1,
+          "fit": 1
+        },
+        "D_hybrid_semantic": {
+          "clarity": 2,
+          "fit": 2
+        }
+      },
+      "preferred": "D_hybrid_semantic",
+      "coherence": "good",
+      "flaggedNotes": [],
+      "comment": "",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 57,
+          "text": "Idea for meetings: capture decisions as short notes and let recurring project names connect them later."
+        },
+        {
+          "id": 58,
+          "text": "Observation: I remember a task better when the note starts with a concrete verb."
+        },
+        {
+          "id": 62,
+          "text": "Observation: short notes are easiest to write immediately after a conversation, before details start blending together."
+        },
+        {
+          "id": 95,
+          "text": "Keep a shutdown note with the next concrete coding step. It takes too long to reconstruct yesterday's context every morning."
+        },
+        {
+          "id": 100,
+          "text": "Try a capture shortcut that opens directly to an empty note with the keyboard ready. Saving two sentences should take one action."
+        }
+      ]
+    },
+    {
+      "id": "development-019",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "continue",
+          "use",
+          "draft",
+          "attention",
+          "change"
+        ],
+        "D_hybrid_semantic": [
+          "continue",
+          "use"
+        ]
+      },
+      "ratings": {
+        "D_hybrid_semantic": {
+          "clarity": 1,
+          "fit": 1
+        },
+        "A_current": {
+          "clarity": 1,
+          "fit": 1
+        }
+      },
+      "preferred": "neither",
+      "coherence": "mixed",
+      "flaggedNotes": [],
+      "comment": "This shouldnt be a topic",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 59,
+          "text": "People ask fewer questions when a button describes the result, such as Save note, instead of saying Continue."
+        },
+        {
+          "id": 60,
+          "text": "A loading animation attracts more attention than a quiet placeholder. Use motion only when it explains a change."
+        },
+        {
+          "id": 101,
+          "text": "A label like “Continue” hides what a dialog will do. Use “Delete draft” when the action actually deletes something."
+        }
+      ]
+    },
+    {
+      "id": "development-020",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "library",
+          "return library",
+          "return",
+          "disappears",
+          "free"
+        ],
+        "D_hybrid_semantic": [
+          "library",
+          "return the library",
+          "return"
+        ]
+      },
+      "ratings": {
+        "A_current": {
+          "clarity": 3,
+          "fit": 3
+        },
+        "D_hybrid_semantic": {
+          "clarity": 3,
+          "fit": 3
+        }
+      },
+      "preferred": "tie",
+      "coherence": "good",
+      "flaggedNotes": [
+        {
+          "id": 162,
+          "text": "On Sunday, plan one evening with no errands or projects. A free slot disappears unless I leave it visible in the calendar."
+        }
+      ],
+      "comment": "",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 66,
+          "text": "Weekend todo: repot the rosemary, clean the balcony table, and return the library book."
+        },
+        {
+          "id": 144,
+          "text": "Return the library novel on Saturday and pick up the reserved essay collection."
+        },
+        {
+          "id": 162,
+          "text": "On Sunday, plan one evening with no errands or projects. A free slot disappears unless I leave it visible in the calendar."
+        }
+      ]
+    },
+    {
+      "id": "development-021",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "vienna",
+          "train",
+          "trip",
+          "leave afternoon",
+          "packing"
+        ],
+        "D_hybrid_semantic": [
+          "vienna",
+          "vienna trip",
+          "train",
+          "station",
+          "trip"
+        ]
+      },
+      "ratings": {
+        "D_hybrid_semantic": {
+          "clarity": 3,
+          "fit": 3
+        },
+        "A_current": {
+          "clarity": 3,
+          "fit": 3
+        }
+      },
+      "preferred": "tie",
+      "coherence": "good",
+      "flaggedNotes": [],
+      "comment": "",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 67,
+          "text": "Plan a weekend train trip to Vienna. Compare an early Saturday departure with leaving Friday after work."
+        },
+        {
+          "id": 68,
+          "text": "Vienna trip: find a place near public transport and leave one afternoon free for walking."
+        },
+        {
+          "id": 69,
+          "text": "Book the train before choosing a hotel for Vienna. The return time decides whether Sunday dinner is realistic."
+        },
+        {
+          "id": 123,
+          "text": "Vienna weekend: reserve the museum for Saturday morning and leave the afternoon unscheduled."
+        },
+        {
+          "id": 124,
+          "text": "Save the Vienna train tickets offline before leaving. The station connection was unreliable last time."
+        },
+        {
+          "id": 125,
+          "text": "Vienna packing list: walking shoes, rain jacket, charger, and a small bag for the train."
+        },
+        {
+          "id": 167,
+          "text": "For the Vienna trip, take the small camera and use the station wait for a photo walk. Keep the rest of the packing light."
+        }
+      ]
+    },
+    {
+      "id": "development-022",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "bike",
+          "bike light",
+          "light",
+          "commute",
+          "check"
+        ],
+        "D_hybrid_semantic": [
+          "bike light",
+          "bike",
+          "light",
+          "check"
+        ]
+      },
+      "ratings": {
+        "D_hybrid_semantic": {
+          "clarity": 1,
+          "fit": 1
+        },
+        "A_current": {
+          "clarity": 3,
+          "fit": 3
+        }
+      },
+      "preferred": "A_current",
+      "coherence": "good",
+      "flaggedNotes": [],
+      "comment": "",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 71,
+          "text": "Todo: book a haircut, replace the bike light batteries, and collect the parcel from the pickup point."
+        },
+        {
+          "id": 126,
+          "text": "Bike maintenance: the rear brake rubs after I put the wheel back in. Check that the wheel is seated before adjusting the caliper."
+        },
+        {
+          "id": 127,
+          "text": "Clean the bike chain this weekend and wipe off excess lubricant before the next commute."
+        },
+        {
+          "id": 128,
+          "text": "The front bike light fades halfway home. Recharge it at work and check the battery before Friday's ride."
+        }
+      ]
+    },
+    {
+      "id": "development-023",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "cancel",
+          "access",
+          "account",
+          "email",
+          "export"
+        ],
+        "D_hybrid_semantic": [
+          "cancel"
+        ]
+      },
+      "ratings": {
+        "D_hybrid_semantic": {
+          "clarity": 1,
+          "fit": 1
+        },
+        "A_current": {
+          "clarity": 1,
+          "fit": 1
+        }
+      },
+      "preferred": "neither",
+      "coherence": "mixed",
+      "flaggedNotes": [],
+      "comment": "Shouldnt be a topic",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 93,
+          "text": "Cancel the weekly sync when there is no decision to make. A short written update should cover routine progress."
+        },
+        {
+          "id": 136,
+          "text": "Cancel the unused cloud storage trial before it renews. Export the two files I still need first."
+        },
+        {
+          "id": 137,
+          "text": "Keep warranty receipts in one folder named by appliance and purchase date. Searching email for “receipt” returns too many unrelated orders."
+        },
+        {
+          "id": 165,
+          "text": "Security housekeeping: review which old devices still have access to my account and remove the ones I no longer own."
+        }
+      ]
+    },
+    {
+      "id": "development-024",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "path",
+          "bridge",
+          "canal",
+          "river path",
+          "turn"
+        ],
+        "D_hybrid_semantic": [
+          "path"
+        ]
+      },
+      "ratings": {
+        "A_current": {
+          "clarity": 1,
+          "fit": 1
+        },
+        "D_hybrid_semantic": {
+          "clarity": 1,
+          "fit": 1
+        }
+      },
+      "preferred": "neither",
+      "coherence": "mixed",
+      "flaggedNotes": [],
+      "comment": "Shouldnt be a topic",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 106,
+          "text": "Try the park loop for the next recovery run; the river path has construction near the bridge."
+        },
+        {
+          "id": 129,
+          "text": "Cycling route idea: take the canal path to avoid the junction where cars turn across the bike lane."
+        }
+      ]
+    },
+    {
+      "id": "development-025",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "drip",
+          "measure",
+          "replacement",
+          "spare",
+          "yesterday"
+        ],
+        "D_hybrid_semantic": []
+      },
+      "ratings": {
+        "D_hybrid_semantic": {
+          "clarity": null,
+          "fit": null
+        },
+        "A_current": {
+          "clarity": 1,
+          "fit": 1
+        }
+      },
+      "preferred": "neither",
+      "coherence": "mixed",
+      "flaggedNotes": [],
+      "comment": "shouldnt be a topic",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 130,
+          "text": "Keep a spare inner tube and tyre levers in the saddle bag. The pump alone was not enough after yesterday's puncture."
+        },
+        {
+          "id": 131,
+          "text": "Home repair todo: measure the bathroom tap washer before buying a replacement for the slow drip."
+        }
+      ]
+    },
+    {
+      "id": "development-026",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "street",
+          "changing",
+          "photo",
+          "photo walk",
+          "scene"
+        ],
+        "D_hybrid_semantic": [
+          "street"
+        ]
+      },
+      "ratings": {
+        "D_hybrid_semantic": {
+          "clarity": 1,
+          "fit": 1
+        },
+        "A_current": {
+          "clarity": 1,
+          "fit": 1
+        }
+      },
+      "preferred": "neither",
+      "coherence": "good",
+      "flaggedNotes": [],
+      "comment": "",
+      "suggestedLabel": "Photography, photo",
+      "notes": [
+        {
+          "id": 139,
+          "text": "Photography practice: take the same street scene from three positions before changing camera settings."
+        },
+        {
+          "id": 142,
+          "text": "Photo walk idea: look for repeated shapes in station windows and bicycle racks rather than another wide street view."
+        }
+      ]
+    },
+    {
+      "id": "development-027",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "card",
+          "files",
+          "laptop",
+          "second",
+          "camera"
+        ],
+        "D_hybrid_semantic": []
+      },
+      "ratings": {
+        "D_hybrid_semantic": {
+          "clarity": null,
+          "fit": null
+        },
+        "A_current": {
+          "clarity": 1,
+          "fit": 1
+        }
+      },
+      "preferred": "neither",
+      "coherence": "mixed",
+      "flaggedNotes": [],
+      "comment": "not a coherent topic",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 140,
+          "text": "The sunset photos lost detail in the bright sky. Next time compare exposures on location instead of trusting the screen brightness."
+        },
+        {
+          "id": 141,
+          "text": "Back up the camera card before deleting blurry shots. Keep the original files until the second copy is verified."
+        },
+        {
+          "id": 166,
+          "text": "Set a reminder to test restoring a file from the laptop backup. A green backup icon does not show whether I can recover what I need."
+        }
+      ]
+    },
+    {
+      "id": "development-028",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "argument",
+          "chapter",
+          "finished",
+          "novel",
+          "saying"
+        ],
+        "D_hybrid_semantic": [
+          "argument"
+        ]
+      },
+      "ratings": {
+        "D_hybrid_semantic": {
+          "clarity": 1,
+          "fit": 1
+        },
+        "A_current": {
+          "clarity": 1,
+          "fit": 1
+        }
+      },
+      "preferred": "neither",
+      "coherence": "mixed",
+      "flaggedNotes": [],
+      "comment": "not a coherent topic",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 143,
+          "text": "Reading note: the most memorable scene in the novel reveals the argument through what the characters avoid saying."
+        },
+        {
+          "id": 145,
+          "text": "For book notes, write one claim and one question after each chapter. Copying long paragraphs is not helping me remember the argument."
+        },
+        {
+          "id": 146,
+          "text": "Start a small list of books I actually finished, with one sentence about who might enjoy each one."
+        }
+      ]
+    },
+    {
+      "id": "development-029",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "piano",
+          "practice",
+          "falls",
+          "phrase",
+          "record"
+        ],
+        "D_hybrid_semantic": [
+          "piano",
+          "practice"
+        ]
+      },
+      "ratings": {
+        "D_hybrid_semantic": {
+          "clarity": 3,
+          "fit": 3
+        },
+        "A_current": {
+          "clarity": 3,
+          "fit": 3
+        }
+      },
+      "preferred": "tie",
+      "coherence": "good",
+      "flaggedNotes": [
+        {
+          "id": 150,
+          "text": "Replace the worn guitar strings before recording the chord progression. The third string drifts out of tune after a few minutes."
+        }
+      ],
+      "comment": "one note is about a guitar, a broader topic like Music instruments would've been fine",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 147,
+          "text": "Piano practice: isolate the two bars where the left hand falls behind, then join them back into the phrase slowly."
+        },
+        {
+          "id": 148,
+          "text": "Record the piano piece once at the end of practice. I miss uneven pauses while concentrating on the fingering."
+        },
+        {
+          "id": 150,
+          "text": "Replace the worn guitar strings before recording the chord progression. The third string drifts out of tune after a few minutes."
+        }
+      ]
+    },
+    {
+      "id": "development-030",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "french",
+          "phrases",
+          "conversation",
+          "asking",
+          "faster"
+        ],
+        "D_hybrid_semantic": [
+          "phrases",
+          "french",
+          "conversation"
+        ]
+      },
+      "ratings": {
+        "D_hybrid_semantic": {
+          "clarity": 1,
+          "fit": 1
+        },
+        "A_current": {
+          "clarity": 3,
+          "fit": 3
+        }
+      },
+      "preferred": "A_current",
+      "coherence": "good",
+      "flaggedNotes": [],
+      "comment": "",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 151,
+          "text": "French practice: save three phrases from the podcast and say them aloud in a sentence of my own."
+        },
+        {
+          "id": 152,
+          "text": "I recognize French words on the page faster than in conversation. Replay a short audio clip without reading the transcript first."
+        },
+        {
+          "id": 153,
+          "text": "Language study todo: review the phrases for asking someone to repeat or speak more slowly before the conversation session."
+        }
+      ]
+    },
+    {
+      "id": "development-031",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "pasta",
+          "reserved",
+          "water",
+          "time",
+          "note"
+        ],
+        "D_hybrid_semantic": []
+      },
+      "ratings": {
+        "D_hybrid_semantic": {
+          "clarity": null,
+          "fit": null
+        },
+        "A_current": {
+          "clarity": 1,
+          "fit": 1
+        }
+      },
+      "preferred": "neither",
+      "coherence": "mixed",
+      "flaggedNotes": [],
+      "comment": "not a coherent topic",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 154,
+          "text": "Cook the mushroom pasta with a little reserved cooking water; the sauce was too thick by the time it reached the plate."
+        },
+        {
+          "id": 155,
+          "text": "Recipe note: lemon zest made the chickpea salad brighter without needing another spoonful of dressing."
+        }
+      ]
+    },
+    {
+      "id": "development-032",
+      "corpus": "development",
+      "labels": {
+        "A_current": [
+          "error",
+          "failed",
+          "explanation",
+          "fields",
+          "uses"
+        ],
+        "D_hybrid_semantic": [
+          "error",
+          "failed"
+        ]
+      },
+      "ratings": {
+        "A_current": {
+          "clarity": 1,
+          "fit": 1
+        },
+        "D_hybrid_semantic": {
+          "clarity": 1,
+          "fit": 1
+        }
+      },
+      "preferred": "neither",
+      "coherence": "mixed",
+      "flaggedNotes": [],
+      "comment": "not a coherent topic",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 163,
+          "text": "Accessibility review: the error message uses colour alone. Add a short explanation beside the field that failed."
+        },
+        {
+          "id": 164,
+          "text": "The checkout form clears valid fields after a network error. Keep the entered values and let the user retry the failed step."
+        }
+      ]
+    },
+    {
+      "id": "transfer-001",
+      "corpus": "transfer",
+      "labels": {
+        "A_current": [
+          "telescope",
+          "measure",
+          "cloth",
+          "cutting",
+          "night"
+        ],
+        "D_hybrid_semantic": [
+          "telescope"
+        ]
+      },
+      "ratings": {
+        "D_hybrid_semantic": {
+          "clarity": 2,
+          "fit": 2
+        },
+        "A_current": {
+          "clarity": 2,
+          "fit": 2
+        }
+      },
+      "preferred": "tie",
+      "coherence": "good",
+      "flaggedNotes": [],
+      "comment": "",
+      "suggestedLabel": "Stargazing",
+      "notes": [
+        {
+          "id": 1,
+          "text": "The telescope image shakes whenever I touch the focus wheel. Tighten the tripod brace before the next observing session."
+        },
+        {
+          "id": 2,
+          "text": "Saturn looked sharper after the telescope had been outside for half an hour. Set it up before dinner next time."
+        },
+        {
+          "id": 3,
+          "text": "Keep a red torch beside the star chart so I can read it without losing my night vision."
+        },
+        {
+          "id": 31,
+          "text": "Sew a padded sleeve for the telescope tube. Measure the circumference with the lens cap attached before cutting the cloth."
+        }
+      ]
+    },
+    {
+      "id": "transfer-002",
+      "corpus": "transfer",
+      "labels": {
+        "A_current": [
+          "fabric",
+          "jacket",
+          "seam",
+          "cloth",
+          "cutting"
+        ],
+        "D_hybrid_semantic": [
+          "fabric",
+          "seam",
+          "jacket"
+        ]
+      },
+      "ratings": {
+        "A_current": {
+          "clarity": 1,
+          "fit": 1
+        },
+        "D_hybrid_semantic": {
+          "clarity": 1,
+          "fit": 1
+        }
+      },
+      "preferred": "neither",
+      "coherence": "good",
+      "flaggedNotes": [],
+      "comment": "",
+      "suggestedLabel": "Sewing",
+      "notes": [
+        {
+          "id": 4,
+          "text": "Shorten the jacket sleeves by two centimetres, but baste the new hem before cutting any fabric."
+        },
+        {
+          "id": 5,
+          "text": "The sewing machine skips stitches on the thick seam. Try a fresh needle on a scrap of the same cloth."
+        },
+        {
+          "id": 40,
+          "text": "Patch the torn jacket pocket using the leftover lining fabric. Sew a sample seam before opening the lining."
+        }
+      ]
+    },
+    {
+      "id": "transfer-003",
+      "corpus": "transfer",
+      "labels": {
+        "A_current": [
+          "aquarium",
+          "check",
+          "deployment",
+          "temperature",
+          "build"
+        ],
+        "D_hybrid_semantic": [
+          "aquarium"
+        ]
+      },
+      "ratings": {
+        "A_current": {
+          "clarity": 3,
+          "fit": 3
+        },
+        "D_hybrid_semantic": {
+          "clarity": 3,
+          "fit": 3
+        }
+      },
+      "preferred": "tie",
+      "coherence": "good",
+      "flaggedNotes": [],
+      "comment": "",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 7,
+          "text": "The aquarium filter flow has weakened. Rinse the removable sponge during the next tank maintenance session."
+        },
+        {
+          "id": 8,
+          "text": "Write down the aquarium test results in one place so changes are visible across weeks."
+        },
+        {
+          "id": 9,
+          "text": "The fish leave some food untouched in the evening. Record the amount offered and what remains rather than guessing each day."
+        },
+        {
+          "id": 33,
+          "text": "Build an aquarium temperature dashboard. The deployment should roll back if the sensor update check fails."
+        }
+      ]
+    },
+    {
+      "id": "transfer-004",
+      "corpus": "transfer",
+      "labels": {
+        "A_current": [
+          "glaze",
+          "clay",
+          "pottery",
+          "ask",
+          "baking"
+        ],
+        "D_hybrid_semantic": [
+          "pottery",
+          "glaze",
+          "clay"
+        ]
+      },
+      "ratings": {
+        "A_current": {
+          "clarity": 2,
+          "fit": 2
+        },
+        "D_hybrid_semantic": {
+          "clarity": 3,
+          "fit": 3
+        }
+      },
+      "preferred": "D_hybrid_semantic",
+      "coherence": "good",
+      "flaggedNotes": [],
+      "comment": "",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 10,
+          "text": "The clay bowl dried unevenly near the rim. Cover the thinner edge during the next drying session."
+        },
+        {
+          "id": 11,
+          "text": "Label each glaze test tile with the firing schedule as well as the glaze name."
+        },
+        {
+          "id": 12,
+          "text": "Trim the foot of the pottery cup before its base becomes too dry to cut cleanly."
+        },
+        {
+          "id": 32,
+          "text": "Make a ceramic dish for baking a small loaf. Ask the pottery studio which clay and glaze are suitable for that use."
+        }
+      ]
+    },
+    {
+      "id": "transfer-005",
+      "corpus": "transfer",
+      "labels": {
+        "A_current": [
+          "configuration",
+          "failed",
+          "build",
+          "test",
+          "deployment"
+        ],
+        "D_hybrid_semantic": [
+          "failed",
+          "configuration",
+          "build",
+          "test"
+        ]
+      },
+      "ratings": {
+        "A_current": {
+          "clarity": 1,
+          "fit": 1
+        },
+        "D_hybrid_semantic": {
+          "clarity": 1,
+          "fit": 1
+        }
+      },
+      "preferred": "neither",
+      "coherence": "mixed",
+      "flaggedNotes": [],
+      "comment": "not a coherent topic",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 13,
+          "text": "The deployment failed because the configuration key was missing. Add a validation step before publishing the build."
+        },
+        {
+          "id": 15,
+          "text": "A rollback should restore the application and its configuration together. Test that path in staging before the release."
+        },
+        {
+          "id": 38,
+          "text": "Let the integration tests run overnight and save the failed test logs with the build number."
+        }
+      ]
+    },
+    {
+      "id": "transfer-006",
+      "corpus": "transfer",
+      "labels": {
+        "A_current": [
+          "cancel",
+          "release",
+          "new"
+        ],
+        "D_hybrid_semantic": []
+      },
+      "ratings": {
+        "A_current": {
+          "clarity": 1,
+          "fit": 1
+        },
+        "D_hybrid_semantic": {
+          "clarity": null,
+          "fit": null
+        }
+      },
+      "preferred": "neither",
+      "coherence": "mixed",
+      "flaggedNotes": [],
+      "comment": "not a coherent topic",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 14,
+          "text": "Keep the previous release available until the new service passes its health checks."
+        },
+        {
+          "id": 36,
+          "text": "Cancel the unused music-streaming subscription before its annual renewal."
+        }
+      ]
+    },
+    {
+      "id": "transfer-007",
+      "corpus": "transfer",
+      "labels": {
+        "A_current": [
+          "loaf",
+          "baking",
+          "temperature",
+          "time",
+          "compare"
+        ],
+        "D_hybrid_semantic": [
+          "loaf"
+        ]
+      },
+      "ratings": {
+        "A_current": {
+          "clarity": 1,
+          "fit": 1
+        },
+        "D_hybrid_semantic": {
+          "clarity": 1,
+          "fit": 1
+        }
+      },
+      "preferred": "neither",
+      "coherence": "good",
+      "flaggedNotes": [],
+      "comment": "",
+      "suggestedLabel": "Baking, Bread",
+      "notes": [
+        {
+          "id": 16,
+          "text": "The bread dough spread sideways during the final proof. Compare the next loaf after shaping it more tightly."
+        },
+        {
+          "id": 17,
+          "text": "Write the room temperature beside the sourdough rise time; the kitchen was much colder this morning."
+        },
+        {
+          "id": 18,
+          "text": "Score the loaf just before it goes into the oven and photograph the result after baking."
+        }
+      ]
+    },
+    {
+      "id": "transfer-008",
+      "corpus": "transfer",
+      "labels": {
+        "A_current": [
+          "japanese",
+          "sentence",
+          "listening",
+          "record",
+          "short"
+        ],
+        "D_hybrid_semantic": [
+          "japanese",
+          "sentence",
+          "listening",
+          "record"
+        ]
+      },
+      "ratings": {
+        "D_hybrid_semantic": {
+          "clarity": 3,
+          "fit": 3
+        },
+        "A_current": {
+          "clarity": 3,
+          "fit": 3
+        }
+      },
+      "preferred": "tie",
+      "coherence": "good",
+      "flaggedNotes": [],
+      "comment": "",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 19,
+          "text": "Japanese listening practice: replay one short dialogue until I can hear where each sentence ends."
+        },
+        {
+          "id": 20,
+          "text": "Write a Japanese example sentence for each new word instead of memorizing a translation alone."
+        },
+        {
+          "id": 21,
+          "text": "Record the same Japanese sentence twice, once after reading it and once after listening to the speaker."
+        },
+        {
+          "id": 34,
+          "text": "Read one page of the Japanese short-story collection and record the phrases that only make sense in context."
+        }
+      ]
+    },
+    {
+      "id": "transfer-009",
+      "corpus": "transfer",
+      "labels": {
+        "A_current": [
+          "compare",
+          "game",
+          "open",
+          "reading",
+          "short"
+        ],
+        "D_hybrid_semantic": [
+          "compare"
+        ]
+      },
+      "ratings": {
+        "A_current": {
+          "clarity": 1,
+          "fit": 1
+        },
+        "D_hybrid_semantic": {
+          "clarity": 1,
+          "fit": 1
+        }
+      },
+      "preferred": "neither",
+      "coherence": "mixed",
+      "flaggedNotes": [],
+      "comment": "not a coherent topic",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 23,
+          "text": "The novel switches narrator halfway through the chapter. Mark the change so I can compare what each character knows."
+        },
+        {
+          "id": 24,
+          "text": "Keep a short reading note after each finished book: the idea I remember and the question it left open."
+        },
+        {
+          "id": 30,
+          "text": "Review the rapid game without an engine first, then compare my notes with the computer analysis."
+        }
+      ]
+    },
+    {
+      "id": "transfer-010",
+      "corpus": "transfer",
+      "labels": {
+        "A_current": [
+          "bedtime",
+          "evening routine",
+          "routine",
+          "evening",
+          "tomorrow"
+        ],
+        "D_hybrid_semantic": [
+          "bedtime",
+          "evening routine",
+          "routine",
+          "evening"
+        ]
+      },
+      "ratings": {
+        "A_current": {
+          "clarity": 3,
+          "fit": 3
+        },
+        "D_hybrid_semantic": {
+          "clarity": 3,
+          "fit": 3
+        }
+      },
+      "preferred": "tie",
+      "coherence": "good",
+      "flaggedNotes": [
+        {
+          "id": 39,
+          "text": "An easy run around the lake felt comfortable today. Keep the next outing short too."
+        }
+      ],
+      "comment": "",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 25,
+          "text": "I went to bed later when the laptop stayed open on the sofa. Put it away before starting the evening routine."
+        },
+        {
+          "id": 26,
+          "text": "Set out tomorrow's clothes before winding down so bedtime does not become another round of chores."
+        },
+        {
+          "id": 35,
+          "text": "Late telescope sessions keep pushing bedtime back. Choose one observing night and keep the usual evening routine on the others."
+        },
+        {
+          "id": 39,
+          "text": "An easy run around the lake felt comfortable today. Keep the next outing short too."
+        }
+      ]
+    },
+    {
+      "id": "transfer-011",
+      "corpus": "transfer",
+      "labels": {
+        "A_current": [
+          "chess",
+          "check",
+          "game",
+          "let",
+          "practice"
+        ],
+        "D_hybrid_semantic": [
+          "chess"
+        ]
+      },
+      "ratings": {
+        "A_current": {
+          "clarity": 3,
+          "fit": 3
+        },
+        "D_hybrid_semantic": {
+          "clarity": 3,
+          "fit": 3
+        }
+      },
+      "preferred": "tie",
+      "coherence": "good",
+      "flaggedNotes": [],
+      "comment": "",
+      "suggestedLabel": "",
+      "notes": [
+        {
+          "id": 28,
+          "text": "Chess practice: replay the rook ending and identify the move where I let the king become inactive."
+        },
+        {
+          "id": 29,
+          "text": "In the next chess game, check the opponent's forcing moves before choosing an attacking move."
+        }
+      ]
+    }
+  ],
+  "sourceSha256": {
+    ".local/embeddings/reviews/d85eb59f1bf200c3/reviews.json": "15c663edbe9ff9871e51b7ba3f70c66b205cb5239d5776c9f70cf1c1b131e0cb",
+    ".local/embeddings/reviews/d85eb59f1bf200c3/blind-key.json": "ac59fb67f63eb41167686677534eeb782ef4e6d8bf1bc80149562b8a5ddd5d74",
+    "docs/LABEL_COMPARISON_RESULTS.json": "95277f7f3a66ec1128137f574aeefb7f7f9b58551d432b3f311d834e02368e66"
+  },
+  "analysisDate": "2026-09-30",
+  "interpretation": "One reviewer; fixed groups; unflagged memberships are not exhaustive positive ground truth. Empty label preference is abstention, not a successful generated name."
+}

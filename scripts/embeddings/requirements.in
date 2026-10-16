@@ -1,0 +1,8 @@
+# Desktop benchmark only; no new Android runtime dependencies.
+sentence-transformers==5.1.2
+transformers==4.57.1
+torch==2.8.0
+onnxruntime==1.23.2
+numpy==2.2.6
+scikit-learn==1.7.2
+psutil==7.1.2

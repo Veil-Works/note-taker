@@ -29,20 +29,20 @@ interface OrganizationDao {
     @Query("DELETE FROM tags WHERE provisional = 1 AND id NOT IN (SELECT tagId FROM automatic_tags) AND id NOT IN (SELECT tagId FROM note_tags)")
     suspend fun pruneUnusedTopics()
 
-    @Query("UPDATE topic_discovery_keys SET tagId = :target WHERE tagId = :source")
-    suspend fun redirectKeys(source: String, target: String)
-    @Query("DELETE FROM tags WHERE id = :id AND provisional = 1") suspend fun deleteProvisional(id: String)
     @Query("UPDATE tags SET name = :name, normalizedName = :normalized WHERE id = :id AND provisional = 1")
     suspend fun renameProvisional(id: String, name: String, normalized: String)
+    @Query("SELECT id FROM tags WHERE provisional = 1 AND id NOT IN (:activeIds) AND id NOT IN (SELECT tagId FROM note_tags)")
+    suspend fun unusedProvisionalIds(activeIds: List<String>): List<String>
 
     @Transaction
-    suspend fun apply(generation: Long, embeddings: List<NoteEmbeddingEntity>, tags: List<AutomaticTagEntity>, links: List<SemanticLinkEntity>, discovered: List<TagEntity>, keys: List<TopicDiscoveryKeyEntity>, renamed: List<TagEntity> = emptyList(), consolidated: Map<String, String> = emptyMap()): Boolean {
+    suspend fun apply(generation: Long, embeddings: List<NoteEmbeddingEntity>, tags: List<AutomaticTagEntity>, links: List<SemanticLinkEntity>, discovered: List<TagEntity>, keys: List<TopicDiscoveryKeyEntity>, renamed: List<TagEntity> = emptyList()): Boolean {
         if (state()?.generation != generation) return false
         saveEmbeddings(embeddings)
-        consolidated.forEach { (source, target) ->
-            redirectKeys(source, target)
-            saveDiscoveryKeys(listOf(TopicDiscoveryKeyEntity("merged-id:$source", target)))
-            deleteProvisional(source)
+        // Expiring topics must release names before final renames/inserts. Keep the
+        // rows until memberships and redirects are committed below.
+        unusedProvisionalIds(tags.map { it.tagId }).forEach { id ->
+            val temporary = "expiring-${java.util.UUID.randomUUID()}"
+            renameProvisional(id, temporary, temporary)
         }
         // Free all old names first, including when two provisional topics exchange names.
         renamed.forEach {

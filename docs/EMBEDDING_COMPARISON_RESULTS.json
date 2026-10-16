@@ -1,0 +1,4575 @@
+{
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "machine": "arm64",
+  "python": "3.12.14",
+  "reproductionHashes": {
+    "scripts/embeddings/benchmark.py": "5e6bf0b83c8b3c44b588a78123cb406a0b3d22b6082d510d613a9de0e327814d",
+    "scripts/embeddings/requirements.txt": "bff878a2e18c36e7f0f243cf9e0ffa6746f6ee0e6ee7dfc54b590802a9565ebf",
+    "scripts/embeddings/model-manifest.json": "1bf2920fe457c5c90b089ef1e28caf9febffd29847a12ceba9627f8eb818ec5c",
+    "app/src/main/assets/minilm-vocab.txt": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3"
+  },
+  "inputSha256": "807a9ffe65c7d88c25d9b286d8c97239d20bd973a3d9502c2fb1a858604f8db3",
+  "limitations": "Small observed development fixtures; no held-out accuracy, no Android performance, scope replacements include proposals.",
+  "results": [
+    {
+      "model": "production-onnx",
+      "loadSeconds": 3.155333916000018,
+      "encodeSeconds": 0.25567399999999907,
+      "texts": 228,
+      "textsPerSecond": 891.7606013908369,
+      "warmSingleMedianMs": 1.0767914995994943,
+      "warmSingleP95Ms": 1.2880748502539061,
+      "peakRssMiB": 291.1875,
+      "maxFixtureTokens": 31,
+      "tokenLimit": "chunked at 256",
+      "threads": 2,
+      "vectorSha256": "65fa1c5d0ac04b05e86d4414008b550c3f3b2c302b6da0434ff1d8a1747dde25",
+      "artifacts": {
+        "sha256": "4278337fd0ff3c68bfb6291042cad8ab363e1d9fbc43dcb499fe91c871902474",
+        "weightMiB": 21.959355354309082,
+        "license": "apache-2.0"
+      },
+      "development": {
+        "positivePairs": 33,
+        "negativePairs": 13,
+        "rocAuc": 0.9020979020979021,
+        "averagePrecision": 0.962442709703515,
+        "knownPositiveRecall": {
+          "5": 0.803030303030303,
+          "10": 0.9393939393939394
+        },
+        "pairScores": [
+          {
+            "pair": [
+              24,
+              26
+            ],
+            "positive": true,
+            "cosine": 0.5163798313534409
+          },
+          {
+            "pair": [
+              25,
+              93
+            ],
+            "positive": true,
+            "cosine": 0.3129860546825456
+          },
+          {
+            "pair": [
+              26,
+              91
+            ],
+            "positive": true,
+            "cosine": 0.5767256645748142
+          },
+          {
+            "pair": [
+              28,
+              94
+            ],
+            "positive": true,
+            "cosine": 0.6736043396358481
+          },
+          {
+            "pair": [
+              29,
+              30
+            ],
+            "positive": true,
+            "cosine": 0.6234754624046935
+          },
+          {
+            "pair": [
+              29,
+              111
+            ],
+            "positive": true,
+            "cosine": 0.8247594624760108
+          },
+          {
+            "pair": [
+              31,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.4084891501000254
+          },
+          {
+            "pair": [
+              31,
+              112
+            ],
+            "positive": true,
+            "cosine": 0.42167382704001255
+          },
+          {
+            "pair": [
+              35,
+              41
+            ],
+            "positive": true,
+            "cosine": 0.5447520482664446
+          },
+          {
+            "pair": [
+              35,
+              103
+            ],
+            "positive": true,
+            "cosine": 0.6136395515449637
+          },
+          {
+            "pair": [
+              42,
+              49
+            ],
+            "positive": true,
+            "cosine": 0.3575364067804403
+          },
+          {
+            "pair": [
+              43,
+              50
+            ],
+            "positive": true,
+            "cosine": 0.5231496862608138
+          },
+          {
+            "pair": [
+              43,
+              115
+            ],
+            "positive": true,
+            "cosine": 0.5568525085398413
+          },
+          {
+            "pair": [
+              44,
+              49
+            ],
+            "positive": true,
+            "cosine": 0.49836833170200967
+          },
+          {
+            "pair": [
+              45,
+              117
+            ],
+            "positive": true,
+            "cosine": 0.7440250087521755
+          },
+          {
+            "pair": [
+              48,
+              64
+            ],
+            "positive": true,
+            "cosine": 0.6847586411270334
+          },
+          {
+            "pair": [
+              51,
+              52
+            ],
+            "positive": true,
+            "cosine": 0.4869371349425759
+          },
+          {
+            "pair": [
+              51,
+              96
+            ],
+            "positive": true,
+            "cosine": 0.4879624965580315
+          },
+          {
+            "pair": [
+              51,
+              168
+            ],
+            "positive": true,
+            "cosine": 0.4598979354772793
+          },
+          {
+            "pair": [
+              65,
+              121
+            ],
+            "positive": true,
+            "cosine": 0.6590443022225778
+          },
+          {
+            "pair": [
+              108,
+              118
+            ],
+            "positive": true,
+            "cosine": 0.5091749918777937
+          },
+          {
+            "pair": [
+              126,
+              127
+            ],
+            "positive": true,
+            "cosine": 0.274352293859902
+          },
+          {
+            "pair": [
+              127,
+              128
+            ],
+            "positive": true,
+            "cosine": 0.4237768019525634
+          },
+          {
+            "pair": [
+              127,
+              130
+            ],
+            "positive": true,
+            "cosine": 0.279715796473953
+          },
+          {
+            "pair": [
+              139,
+              140
+            ],
+            "positive": true,
+            "cosine": 0.33122265437251797
+          },
+          {
+            "pair": [
+              139,
+              142
+            ],
+            "positive": true,
+            "cosine": 0.372230677842714
+          },
+          {
+            "pair": [
+              140,
+              141
+            ],
+            "positive": true,
+            "cosine": 0.2806068601583825
+          },
+          {
+            "pair": [
+              143,
+              145
+            ],
+            "positive": true,
+            "cosine": 0.4771048903770506
+          },
+          {
+            "pair": [
+              145,
+              146
+            ],
+            "positive": true,
+            "cosine": 0.27450844429128696
+          },
+          {
+            "pair": [
+              147,
+              148
+            ],
+            "positive": true,
+            "cosine": 0.5056018182479417
+          },
+          {
+            "pair": [
+              151,
+              152
+            ],
+            "positive": true,
+            "cosine": 0.5908566779968941
+          },
+          {
+            "pair": [
+              152,
+              153
+            ],
+            "positive": true,
+            "cosine": 0.5306381476403177
+          },
+          {
+            "pair": [
+              157,
+              158
+            ],
+            "positive": true,
+            "cosine": 0.4891424095085798
+          },
+          {
+            "pair": [
+              29,
+              39
+            ],
+            "positive": false,
+            "cosine": 0.2003289359453258
+          },
+          {
+            "pair": [
+              35,
+              112
+            ],
+            "positive": false,
+            "cosine": 0.1469291702233248
+          },
+          {
+            "pair": [
+              35,
+              118
+            ],
+            "positive": false,
+            "cosine": 0.17864668880939338
+          },
+          {
+            "pair": [
+              35,
+              125
+            ],
+            "positive": false,
+            "cosine": 0.1938199686691998
+          },
+          {
+            "pair": [
+              36,
+              118
+            ],
+            "positive": false,
+            "cosine": 0.13539361044521472
+          },
+          {
+            "pair": [
+              51,
+              153
+            ],
+            "positive": false,
+            "cosine": 0.30224041354537934
+          },
+          {
+            "pair": [
+              62,
+              151
+            ],
+            "positive": false,
+            "cosine": 0.28123671697350394
+          },
+          {
+            "pair": [
+              63,
+              151
+            ],
+            "positive": false,
+            "cosine": 0.36900866903368257
+          },
+          {
+            "pair": [
+              64,
+              144
+            ],
+            "positive": false,
+            "cosine": 0.0623136761880176
+          },
+          {
+            "pair": [
+              93,
+              136
+            ],
+            "positive": false,
+            "cosine": 0.43352966104918567
+          },
+          {
+            "pair": [
+              109,
+              113
+            ],
+            "positive": false,
+            "cosine": 0.20108814897853194
+          },
+          {
+            "pair": [
+              147,
+              151
+            ],
+            "positive": false,
+            "cosine": 0.39702710697074706
+          },
+          {
+            "pair": [
+              147,
+              153
+            ],
+            "positive": false,
+            "cosine": 0.37423045375457287
+          }
+        ]
+      },
+      "transfer": {
+        "positivePairs": 69,
+        "negativePairs": 5,
+        "rocAuc": 0.8782608695652174,
+        "averagePrecision": 0.9906498677778223,
+        "knownPositiveRecall": {
+          "5": 0.855072463768116,
+          "10": 0.9710144927536232
+        },
+        "pairScores": [
+          {
+            "pair": [
+              1,
+              2
+            ],
+            "positive": true,
+            "cosine": 0.5173455543754419
+          },
+          {
+            "pair": [
+              1,
+              3
+            ],
+            "positive": true,
+            "cosine": 0.2869511388179665
+          },
+          {
+            "pair": [
+              1,
+              31
+            ],
+            "positive": true,
+            "cosine": 0.4098291744117801
+          },
+          {
+            "pair": [
+              1,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.46002274574263413
+          },
+          {
+            "pair": [
+              2,
+              3
+            ],
+            "positive": true,
+            "cosine": 0.3945830802187928
+          },
+          {
+            "pair": [
+              2,
+              31
+            ],
+            "positive": true,
+            "cosine": 0.3815540689683708
+          },
+          {
+            "pair": [
+              2,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.4680294559431841
+          },
+          {
+            "pair": [
+              3,
+              31
+            ],
+            "positive": true,
+            "cosine": 0.3369546507729807
+          },
+          {
+            "pair": [
+              3,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.4333700580591524
+          },
+          {
+            "pair": [
+              4,
+              5
+            ],
+            "positive": true,
+            "cosine": 0.39497874758540646
+          },
+          {
+            "pair": [
+              4,
+              6
+            ],
+            "positive": true,
+            "cosine": 0.24231981880918116
+          },
+          {
+            "pair": [
+              4,
+              31
+            ],
+            "positive": true,
+            "cosine": 0.2800206505195896
+          },
+          {
+            "pair": [
+              4,
+              40
+            ],
+            "positive": true,
+            "cosine": 0.6046519395075036
+          },
+          {
+            "pair": [
+              5,
+              6
+            ],
+            "positive": true,
+            "cosine": 0.30885882821234956
+          },
+          {
+            "pair": [
+              5,
+              31
+            ],
+            "positive": true,
+            "cosine": 0.33947741708840007
+          },
+          {
+            "pair": [
+              5,
+              40
+            ],
+            "positive": true,
+            "cosine": 0.4580440339301865
+          },
+          {
+            "pair": [
+              6,
+              31
+            ],
+            "positive": true,
+            "cosine": 0.23451585598770217
+          },
+          {
+            "pair": [
+              6,
+              40
+            ],
+            "positive": true,
+            "cosine": 0.3165862946786231
+          },
+          {
+            "pair": [
+              7,
+              8
+            ],
+            "positive": true,
+            "cosine": 0.3338576956726235
+          },
+          {
+            "pair": [
+              7,
+              9
+            ],
+            "positive": true,
+            "cosine": 0.22046253659856477
+          },
+          {
+            "pair": [
+              7,
+              33
+            ],
+            "positive": true,
+            "cosine": 0.31023943169782464
+          },
+          {
+            "pair": [
+              8,
+              9
+            ],
+            "positive": true,
+            "cosine": 0.4586749369767638
+          },
+          {
+            "pair": [
+              8,
+              33
+            ],
+            "positive": true,
+            "cosine": 0.5016747849546099
+          },
+          {
+            "pair": [
+              9,
+              33
+            ],
+            "positive": true,
+            "cosine": 0.25419947609356486
+          },
+          {
+            "pair": [
+              10,
+              11
+            ],
+            "positive": true,
+            "cosine": 0.19648109737608954
+          },
+          {
+            "pair": [
+              10,
+              12
+            ],
+            "positive": true,
+            "cosine": 0.4315578116623938
+          },
+          {
+            "pair": [
+              10,
+              32
+            ],
+            "positive": true,
+            "cosine": 0.22355250925902592
+          },
+          {
+            "pair": [
+              11,
+              12
+            ],
+            "positive": true,
+            "cosine": 0.20042719727234806
+          },
+          {
+            "pair": [
+              11,
+              32
+            ],
+            "positive": true,
+            "cosine": 0.2728115208323923
+          },
+          {
+            "pair": [
+              12,
+              32
+            ],
+            "positive": true,
+            "cosine": 0.2834162351337882
+          },
+          {
+            "pair": [
+              13,
+              14
+            ],
+            "positive": true,
+            "cosine": 0.11870902606129993
+          },
+          {
+            "pair": [
+              13,
+              15
+            ],
+            "positive": true,
+            "cosine": 0.48133105136733234
+          },
+          {
+            "pair": [
+              13,
+              33
+            ],
+            "positive": true,
+            "cosine": 0.29550026231577603
+          },
+          {
+            "pair": [
+              13,
+              38
+            ],
+            "positive": true,
+            "cosine": 0.5177955282592872
+          },
+          {
+            "pair": [
+              14,
+              15
+            ],
+            "positive": true,
+            "cosine": 0.4262230895398837
+          },
+          {
+            "pair": [
+              14,
+              33
+            ],
+            "positive": true,
+            "cosine": 0.36903292243097174
+          },
+          {
+            "pair": [
+              14,
+              38
+            ],
+            "positive": true,
+            "cosine": 0.28323882198137784
+          },
+          {
+            "pair": [
+              15,
+              33
+            ],
+            "positive": true,
+            "cosine": 0.32578115515607453
+          },
+          {
+            "pair": [
+              15,
+              38
+            ],
+            "positive": true,
+            "cosine": 0.4506522822067642
+          },
+          {
+            "pair": [
+              16,
+              17
+            ],
+            "positive": true,
+            "cosine": 0.2743723550834026
+          },
+          {
+            "pair": [
+              16,
+              18
+            ],
+            "positive": true,
+            "cosine": 0.5872122054032944
+          },
+          {
+            "pair": [
+              16,
+              32
+            ],
+            "positive": true,
+            "cosine": 0.4108769151824654
+          },
+          {
+            "pair": [
+              17,
+              18
+            ],
+            "positive": true,
+            "cosine": 0.35074536305579807
+          },
+          {
+            "pair": [
+              17,
+              32
+            ],
+            "positive": true,
+            "cosine": 0.18155080993329636
+          },
+          {
+            "pair": [
+              18,
+              32
+            ],
+            "positive": true,
+            "cosine": 0.6027562849490888
+          },
+          {
+            "pair": [
+              19,
+              20
+            ],
+            "positive": true,
+            "cosine": 0.5252134363639991
+          },
+          {
+            "pair": [
+              19,
+              21
+            ],
+            "positive": true,
+            "cosine": 0.7764452642544495
+          },
+          {
+            "pair": [
+              19,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.5466653600717898
+          },
+          {
+            "pair": [
+              20,
+              21
+            ],
+            "positive": true,
+            "cosine": 0.6141381352803017
+          },
+          {
+            "pair": [
+              20,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.5369912765804712
+          },
+          {
+            "pair": [
+              21,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.5531020692254476
+          },
+          {
+            "pair": [
+              22,
+              23
+            ],
+            "positive": true,
+            "cosine": 0.3702391496176809
+          },
+          {
+            "pair": [
+              22,
+              24
+            ],
+            "positive": true,
+            "cosine": 0.3955597556466323
+          },
+          {
+            "pair": [
+              22,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.3360867422682497
+          },
+          {
+            "pair": [
+              23,
+              24
+            ],
+            "positive": true,
+            "cosine": 0.3948677462129352
+          },
+          {
+            "pair": [
+              23,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.35432542893472163
+          },
+          {
+            "pair": [
+              24,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.3294356446388982
+          },
+          {
+            "pair": [
+              25,
+              26
+            ],
+            "positive": true,
+            "cosine": 0.410461207849922
+          },
+          {
+            "pair": [
+              25,
+              27
+            ],
+            "positive": true,
+            "cosine": 0.259907209688715
+          },
+          {
+            "pair": [
+              25,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.37541038709493996
+          },
+          {
+            "pair": [
+              26,
+              27
+            ],
+            "positive": true,
+            "cosine": 0.1656630055068128
+          },
+          {
+            "pair": [
+              26,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.43943748405101246
+          },
+          {
+            "pair": [
+              27,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.1915736938191215
+          },
+          {
+            "pair": [
+              28,
+              29
+            ],
+            "positive": true,
+            "cosine": 0.5610825986684886
+          },
+          {
+            "pair": [
+              28,
+              30
+            ],
+            "positive": true,
+            "cosine": 0.18596695108398265
+          },
+          {
+            "pair": [
+              29,
+              30
+            ],
+            "positive": true,
+            "cosine": 0.24290374531666875
+          },
+          {
+            "pair": [
+              31,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.3507173941190703
+          },
+          {
+            "pair": [
+              31,
+              40
+            ],
+            "positive": true,
+            "cosine": 0.2457713915158007
+          },
+          {
+            "pair": [
+              33,
+              38
+            ],
+            "positive": true,
+            "cosine": 0.30805264865010573
+          },
+          {
+            "pair": [
+              5,
+              13
+            ],
+            "positive": false,
+            "cosine": 0.05626756223064756
+          },
+          {
+            "pair": [
+              8,
+              38
+            ],
+            "positive": false,
+            "cosine": 0.2575099276819587
+          },
+          {
+            "pair": [
+              10,
+              18
+            ],
+            "positive": false,
+            "cosine": 0.2516064465663757
+          },
+          {
+            "pair": [
+              36,
+              37
+            ],
+            "positive": false,
+            "cosine": 0.2625180744664754
+          },
+          {
+            "pair": [
+              38,
+              39
+            ],
+            "positive": false,
+            "cosine": 0.10016005734613208
+          }
+        ]
+      },
+      "scopeProbes": [
+        {
+          "note": 120,
+          "preferred": "Rosemary",
+          "rejected": "Basil",
+          "basis": "user-reported species mismatch",
+          "preferredCosine": 0.312274307012558,
+          "rejectedCosine": 0.18915094435214996,
+          "margin": 0.12312336266040802
+        },
+        {
+          "note": 35,
+          "preferred": "Running",
+          "rejected": "Running gear",
+          "basis": "user-reported scope; representative plain run",
+          "preferredCosine": 0.4961702823638916,
+          "rejectedCosine": 0.42286020517349243,
+          "margin": 0.07331007719039917
+        },
+        {
+          "note": 103,
+          "preferred": "Running",
+          "rejected": "Running gear",
+          "basis": "user-reported scope; representative plain run",
+          "preferredCosine": 0.3735300302505493,
+          "rejectedCosine": 0.3535844683647156,
+          "margin": 0.01994556188583374
+        },
+        {
+          "note": 108,
+          "preferred": "Meal preparation",
+          "rejected": "Running gear",
+          "basis": "rejection confirmed; preferred label proposed",
+          "preferredCosine": 0.46791520714759827,
+          "rejectedCosine": 0.2117283046245575,
+          "margin": 0.25618690252304077
+        },
+        {
+          "note": 28,
+          "preferred": "Focused work",
+          "rejected": "Chat",
+          "basis": "rejection confirmed; preferred label proposed",
+          "preferredCosine": 0.23161880671977997,
+          "rejectedCosine": 0.40350592136383057,
+          "margin": -0.1718871146440506
+        },
+        {
+          "note": 94,
+          "preferred": "Focused work",
+          "rejected": "Chat",
+          "basis": "rejection confirmed; preferred label proposed",
+          "preferredCosine": 0.250405490398407,
+          "rejectedCosine": 0.40559670329093933,
+          "margin": -0.15519121289253235
+        },
+        {
+          "note": 72,
+          "preferred": "Walking",
+          "rejected": "Meetings",
+          "basis": "rejection confirmed; preferred label proposed",
+          "preferredCosine": 0.1816485971212387,
+          "rejectedCosine": 0.44327083230018616,
+          "margin": -0.26162223517894745
+        },
+        {
+          "note": 161,
+          "preferred": "Walking",
+          "rejected": "Meetings",
+          "basis": "rejection confirmed; preferred label proposed",
+          "preferredCosine": 0.12391912937164307,
+          "rejectedCosine": 0.4303637444972992,
+          "margin": -0.30644461512565613
+        },
+        {
+          "note": 57,
+          "preferred": "Meetings",
+          "rejected": "Meeting planning",
+          "basis": "explicit user scope preference",
+          "preferredCosine": 0.593119740486145,
+          "rejectedCosine": 0.5490626096725464,
+          "margin": 0.04405713081359863
+        },
+        {
+          "note": 145,
+          "preferred": "Reading notes",
+          "rejected": "Chapter",
+          "basis": "rejection confirmed; preferred label proposed",
+          "preferredCosine": 0.3855089843273163,
+          "rejectedCosine": 0.38030552864074707,
+          "margin": 0.005203455686569214
+        },
+        {
+          "note": 147,
+          "preferred": "Piano practice",
+          "rejected": "Phrases",
+          "basis": "mixed topic rejected; preferred label proposed",
+          "preferredCosine": 0.5257508754730225,
+          "rejectedCosine": 0.24152237176895142,
+          "margin": 0.28422850370407104
+        },
+        {
+          "note": 151,
+          "preferred": "French practice",
+          "rejected": "Phrases",
+          "basis": "mixed topic rejected; preferred label proposed",
+          "preferredCosine": 0.5195258855819702,
+          "rejectedCosine": 0.4518433213233948,
+          "margin": 0.06768256425857544
+        },
+        {
+          "note": 63,
+          "preferred": "Note-taking",
+          "rejected": "Phrases",
+          "basis": "mixed topic rejected; preferred label proposed",
+          "preferredCosine": 0.3425036072731018,
+          "rejectedCosine": 0.3232109248638153,
+          "margin": 0.0192926824092865
+        },
+        {
+          "note": 46,
+          "preferred": "Running gear",
+          "rejected": "Running",
+          "basis": "user scope preference; exact socks note ambiguous",
+          "preferredCosine": 0.45753055810928345,
+          "rejectedCosine": 0.44981932640075684,
+          "margin": 0.007711231708526611
+        },
+        {
+          "note": 109,
+          "preferred": "Running gear",
+          "rejected": "Running",
+          "basis": "user scope preference; exact socks note ambiguous",
+          "preferredCosine": 0.3549993634223938,
+          "rejectedCosine": 0.3308863043785095,
+          "margin": 0.024113059043884277
+        }
+      ]
+    },
+    {
+      "model": "minilm",
+      "loadSeconds": 1.8373432909993426,
+      "encodeSeconds": 0.1919419169998946,
+      "texts": 228,
+      "textsPerSecond": 1187.8593460131233,
+      "warmSingleMedianMs": 2.7460210003482644,
+      "warmSingleP95Ms": 3.3145938996767645,
+      "peakRssMiB": 435.34375,
+      "maxFixtureTokens": 31,
+      "tokenLimit": 256,
+      "threads": 4,
+      "vectorSha256": "46ca7a3343c73f745c75c18b6eba1cac4307e0b3a2299f7e581d87a7d908b864",
+      "artifacts": {
+        "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+        "license": "apache-2.0",
+        "weightMiB": 86.6588363647461
+      },
+      "development": {
+        "positivePairs": 33,
+        "negativePairs": 13,
+        "rocAuc": 0.916083916083916,
+        "averagePrecision": 0.9676718317627406,
+        "knownPositiveRecall": {
+          "5": 0.7878787878787878,
+          "10": 0.9393939393939394
+        },
+        "pairScores": [
+          {
+            "pair": [
+              24,
+              26
+            ],
+            "positive": true,
+            "cosine": 0.5198444079015304
+          },
+          {
+            "pair": [
+              25,
+              93
+            ],
+            "positive": true,
+            "cosine": 0.3025218631498984
+          },
+          {
+            "pair": [
+              26,
+              91
+            ],
+            "positive": true,
+            "cosine": 0.5793316403293431
+          },
+          {
+            "pair": [
+              28,
+              94
+            ],
+            "positive": true,
+            "cosine": 0.6850727321883551
+          },
+          {
+            "pair": [
+              29,
+              30
+            ],
+            "positive": true,
+            "cosine": 0.6458994953957911
+          },
+          {
+            "pair": [
+              29,
+              111
+            ],
+            "positive": true,
+            "cosine": 0.8497840220370156
+          },
+          {
+            "pair": [
+              31,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.4152952290624014
+          },
+          {
+            "pair": [
+              31,
+              112
+            ],
+            "positive": true,
+            "cosine": 0.41386022791903726
+          },
+          {
+            "pair": [
+              35,
+              41
+            ],
+            "positive": true,
+            "cosine": 0.5540690284871564
+          },
+          {
+            "pair": [
+              35,
+              103
+            ],
+            "positive": true,
+            "cosine": 0.6270606218297421
+          },
+          {
+            "pair": [
+              42,
+              49
+            ],
+            "positive": true,
+            "cosine": 0.3725406533186093
+          },
+          {
+            "pair": [
+              43,
+              50
+            ],
+            "positive": true,
+            "cosine": 0.5199032229559795
+          },
+          {
+            "pair": [
+              43,
+              115
+            ],
+            "positive": true,
+            "cosine": 0.5767311497036505
+          },
+          {
+            "pair": [
+              44,
+              49
+            ],
+            "positive": true,
+            "cosine": 0.5171450026504298
+          },
+          {
+            "pair": [
+              45,
+              117
+            ],
+            "positive": true,
+            "cosine": 0.7674812094161763
+          },
+          {
+            "pair": [
+              48,
+              64
+            ],
+            "positive": true,
+            "cosine": 0.6895019169964274
+          },
+          {
+            "pair": [
+              51,
+              52
+            ],
+            "positive": true,
+            "cosine": 0.49691870571536645
+          },
+          {
+            "pair": [
+              51,
+              96
+            ],
+            "positive": true,
+            "cosine": 0.4633646284169905
+          },
+          {
+            "pair": [
+              51,
+              168
+            ],
+            "positive": true,
+            "cosine": 0.4738642270967024
+          },
+          {
+            "pair": [
+              65,
+              121
+            ],
+            "positive": true,
+            "cosine": 0.6478168136117465
+          },
+          {
+            "pair": [
+              108,
+              118
+            ],
+            "positive": true,
+            "cosine": 0.5175657094781216
+          },
+          {
+            "pair": [
+              126,
+              127
+            ],
+            "positive": true,
+            "cosine": 0.2702605176970111
+          },
+          {
+            "pair": [
+              127,
+              128
+            ],
+            "positive": true,
+            "cosine": 0.43601883043198264
+          },
+          {
+            "pair": [
+              127,
+              130
+            ],
+            "positive": true,
+            "cosine": 0.28158216178060713
+          },
+          {
+            "pair": [
+              139,
+              140
+            ],
+            "positive": true,
+            "cosine": 0.33793807812702015
+          },
+          {
+            "pair": [
+              139,
+              142
+            ],
+            "positive": true,
+            "cosine": 0.3932492976418967
+          },
+          {
+            "pair": [
+              140,
+              141
+            ],
+            "positive": true,
+            "cosine": 0.2882403083537136
+          },
+          {
+            "pair": [
+              143,
+              145
+            ],
+            "positive": true,
+            "cosine": 0.46438451024221383
+          },
+          {
+            "pair": [
+              145,
+              146
+            ],
+            "positive": true,
+            "cosine": 0.28680237950789866
+          },
+          {
+            "pair": [
+              147,
+              148
+            ],
+            "positive": true,
+            "cosine": 0.5100524712130489
+          },
+          {
+            "pair": [
+              151,
+              152
+            ],
+            "positive": true,
+            "cosine": 0.5460491634907702
+          },
+          {
+            "pair": [
+              152,
+              153
+            ],
+            "positive": true,
+            "cosine": 0.5344424230577723
+          },
+          {
+            "pair": [
+              157,
+              158
+            ],
+            "positive": true,
+            "cosine": 0.5072440624523553
+          },
+          {
+            "pair": [
+              29,
+              39
+            ],
+            "positive": false,
+            "cosine": 0.2021945773494567
+          },
+          {
+            "pair": [
+              35,
+              112
+            ],
+            "positive": false,
+            "cosine": 0.15736144094687773
+          },
+          {
+            "pair": [
+              35,
+              118
+            ],
+            "positive": false,
+            "cosine": 0.16834981507427227
+          },
+          {
+            "pair": [
+              35,
+              125
+            ],
+            "positive": false,
+            "cosine": 0.19390078102490932
+          },
+          {
+            "pair": [
+              36,
+              118
+            ],
+            "positive": false,
+            "cosine": 0.13086384659470418
+          },
+          {
+            "pair": [
+              51,
+              153
+            ],
+            "positive": false,
+            "cosine": 0.30043170810460024
+          },
+          {
+            "pair": [
+              62,
+              151
+            ],
+            "positive": false,
+            "cosine": 0.2796283634543604
+          },
+          {
+            "pair": [
+              63,
+              151
+            ],
+            "positive": false,
+            "cosine": 0.3554947386788019
+          },
+          {
+            "pair": [
+              64,
+              144
+            ],
+            "positive": false,
+            "cosine": 0.06974186920003377
+          },
+          {
+            "pair": [
+              93,
+              136
+            ],
+            "positive": false,
+            "cosine": 0.4307399522119651
+          },
+          {
+            "pair": [
+              109,
+              113
+            ],
+            "positive": false,
+            "cosine": 0.23116077117391712
+          },
+          {
+            "pair": [
+              147,
+              151
+            ],
+            "positive": false,
+            "cosine": 0.4093876099935919
+          },
+          {
+            "pair": [
+              147,
+              153
+            ],
+            "positive": false,
+            "cosine": 0.3809380153429848
+          }
+        ]
+      },
+      "transfer": {
+        "positivePairs": 69,
+        "negativePairs": 5,
+        "rocAuc": 0.8869565217391304,
+        "averagePrecision": 0.9913362836620965,
+        "knownPositiveRecall": {
+          "5": 0.855072463768116,
+          "10": 0.9710144927536232
+        },
+        "pairScores": [
+          {
+            "pair": [
+              1,
+              2
+            ],
+            "positive": true,
+            "cosine": 0.5327607887815213
+          },
+          {
+            "pair": [
+              1,
+              3
+            ],
+            "positive": true,
+            "cosine": 0.30524163522856046
+          },
+          {
+            "pair": [
+              1,
+              31
+            ],
+            "positive": true,
+            "cosine": 0.3919132908095225
+          },
+          {
+            "pair": [
+              1,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.4988885241113785
+          },
+          {
+            "pair": [
+              2,
+              3
+            ],
+            "positive": true,
+            "cosine": 0.3956776335831843
+          },
+          {
+            "pair": [
+              2,
+              31
+            ],
+            "positive": true,
+            "cosine": 0.36103199894690885
+          },
+          {
+            "pair": [
+              2,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.49488080872088813
+          },
+          {
+            "pair": [
+              3,
+              31
+            ],
+            "positive": true,
+            "cosine": 0.3243382089617199
+          },
+          {
+            "pair": [
+              3,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.4396203365149183
+          },
+          {
+            "pair": [
+              4,
+              5
+            ],
+            "positive": true,
+            "cosine": 0.3755118643852955
+          },
+          {
+            "pair": [
+              4,
+              6
+            ],
+            "positive": true,
+            "cosine": 0.24311717187761434
+          },
+          {
+            "pair": [
+              4,
+              31
+            ],
+            "positive": true,
+            "cosine": 0.30194438575828275
+          },
+          {
+            "pair": [
+              4,
+              40
+            ],
+            "positive": true,
+            "cosine": 0.6084361926663253
+          },
+          {
+            "pair": [
+              5,
+              6
+            ],
+            "positive": true,
+            "cosine": 0.29714279872421084
+          },
+          {
+            "pair": [
+              5,
+              31
+            ],
+            "positive": true,
+            "cosine": 0.33594612322636
+          },
+          {
+            "pair": [
+              5,
+              40
+            ],
+            "positive": true,
+            "cosine": 0.44789311979817975
+          },
+          {
+            "pair": [
+              6,
+              31
+            ],
+            "positive": true,
+            "cosine": 0.21901669179121913
+          },
+          {
+            "pair": [
+              6,
+              40
+            ],
+            "positive": true,
+            "cosine": 0.3125031779182266
+          },
+          {
+            "pair": [
+              7,
+              8
+            ],
+            "positive": true,
+            "cosine": 0.36630965468705423
+          },
+          {
+            "pair": [
+              7,
+              9
+            ],
+            "positive": true,
+            "cosine": 0.22980218909228803
+          },
+          {
+            "pair": [
+              7,
+              33
+            ],
+            "positive": true,
+            "cosine": 0.3258231614652696
+          },
+          {
+            "pair": [
+              8,
+              9
+            ],
+            "positive": true,
+            "cosine": 0.44540850374135865
+          },
+          {
+            "pair": [
+              8,
+              33
+            ],
+            "positive": true,
+            "cosine": 0.5148704317869207
+          },
+          {
+            "pair": [
+              9,
+              33
+            ],
+            "positive": true,
+            "cosine": 0.24423129663700935
+          },
+          {
+            "pair": [
+              10,
+              11
+            ],
+            "positive": true,
+            "cosine": 0.20098385926191492
+          },
+          {
+            "pair": [
+              10,
+              12
+            ],
+            "positive": true,
+            "cosine": 0.44645483523738616
+          },
+          {
+            "pair": [
+              10,
+              32
+            ],
+            "positive": true,
+            "cosine": 0.2379335526308904
+          },
+          {
+            "pair": [
+              11,
+              12
+            ],
+            "positive": true,
+            "cosine": 0.22010755588705638
+          },
+          {
+            "pair": [
+              11,
+              32
+            ],
+            "positive": true,
+            "cosine": 0.26843842844017973
+          },
+          {
+            "pair": [
+              12,
+              32
+            ],
+            "positive": true,
+            "cosine": 0.3046357295558524
+          },
+          {
+            "pair": [
+              13,
+              14
+            ],
+            "positive": true,
+            "cosine": 0.12661468753638483
+          },
+          {
+            "pair": [
+              13,
+              15
+            ],
+            "positive": true,
+            "cosine": 0.5066783795379387
+          },
+          {
+            "pair": [
+              13,
+              33
+            ],
+            "positive": true,
+            "cosine": 0.3038561028914739
+          },
+          {
+            "pair": [
+              13,
+              38
+            ],
+            "positive": true,
+            "cosine": 0.5375564347575835
+          },
+          {
+            "pair": [
+              14,
+              15
+            ],
+            "positive": true,
+            "cosine": 0.4160562339473439
+          },
+          {
+            "pair": [
+              14,
+              33
+            ],
+            "positive": true,
+            "cosine": 0.35121897643099154
+          },
+          {
+            "pair": [
+              14,
+              38
+            ],
+            "positive": true,
+            "cosine": 0.27761817373334086
+          },
+          {
+            "pair": [
+              15,
+              33
+            ],
+            "positive": true,
+            "cosine": 0.3289923993982161
+          },
+          {
+            "pair": [
+              15,
+              38
+            ],
+            "positive": true,
+            "cosine": 0.45361207062100317
+          },
+          {
+            "pair": [
+              16,
+              17
+            ],
+            "positive": true,
+            "cosine": 0.2548759979801458
+          },
+          {
+            "pair": [
+              16,
+              18
+            ],
+            "positive": true,
+            "cosine": 0.582181509502051
+          },
+          {
+            "pair": [
+              16,
+              32
+            ],
+            "positive": true,
+            "cosine": 0.4023922874042448
+          },
+          {
+            "pair": [
+              17,
+              18
+            ],
+            "positive": true,
+            "cosine": 0.34044632824776055
+          },
+          {
+            "pair": [
+              17,
+              32
+            ],
+            "positive": true,
+            "cosine": 0.1667946343039991
+          },
+          {
+            "pair": [
+              18,
+              32
+            ],
+            "positive": true,
+            "cosine": 0.6024818873159884
+          },
+          {
+            "pair": [
+              19,
+              20
+            ],
+            "positive": true,
+            "cosine": 0.5204879568459633
+          },
+          {
+            "pair": [
+              19,
+              21
+            ],
+            "positive": true,
+            "cosine": 0.776201519139389
+          },
+          {
+            "pair": [
+              19,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.5485831695085195
+          },
+          {
+            "pair": [
+              20,
+              21
+            ],
+            "positive": true,
+            "cosine": 0.632203639738695
+          },
+          {
+            "pair": [
+              20,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.5581096115802
+          },
+          {
+            "pair": [
+              21,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.5702803819999474
+          },
+          {
+            "pair": [
+              22,
+              23
+            ],
+            "positive": true,
+            "cosine": 0.36203267395963185
+          },
+          {
+            "pair": [
+              22,
+              24
+            ],
+            "positive": true,
+            "cosine": 0.3657202044271217
+          },
+          {
+            "pair": [
+              22,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.32458258906069737
+          },
+          {
+            "pair": [
+              23,
+              24
+            ],
+            "positive": true,
+            "cosine": 0.4046647561225868
+          },
+          {
+            "pair": [
+              23,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.3488605746662673
+          },
+          {
+            "pair": [
+              24,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.33721519806010664
+          },
+          {
+            "pair": [
+              25,
+              26
+            ],
+            "positive": true,
+            "cosine": 0.4280585925957768
+          },
+          {
+            "pair": [
+              25,
+              27
+            ],
+            "positive": true,
+            "cosine": 0.25014081728683796
+          },
+          {
+            "pair": [
+              25,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.3516021378623042
+          },
+          {
+            "pair": [
+              26,
+              27
+            ],
+            "positive": true,
+            "cosine": 0.15461930504345295
+          },
+          {
+            "pair": [
+              26,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.42770302040832386
+          },
+          {
+            "pair": [
+              27,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.19580902697618296
+          },
+          {
+            "pair": [
+              28,
+              29
+            ],
+            "positive": true,
+            "cosine": 0.556005567870445
+          },
+          {
+            "pair": [
+              28,
+              30
+            ],
+            "positive": true,
+            "cosine": 0.18447120481235907
+          },
+          {
+            "pair": [
+              29,
+              30
+            ],
+            "positive": true,
+            "cosine": 0.2545351759721691
+          },
+          {
+            "pair": [
+              31,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.3531086004204256
+          },
+          {
+            "pair": [
+              31,
+              40
+            ],
+            "positive": true,
+            "cosine": 0.26449147957227054
+          },
+          {
+            "pair": [
+              33,
+              38
+            ],
+            "positive": true,
+            "cosine": 0.3035911592997728
+          },
+          {
+            "pair": [
+              5,
+              13
+            ],
+            "positive": false,
+            "cosine": 0.062567078521189
+          },
+          {
+            "pair": [
+              8,
+              38
+            ],
+            "positive": false,
+            "cosine": 0.26738412737882555
+          },
+          {
+            "pair": [
+              10,
+              18
+            ],
+            "positive": false,
+            "cosine": 0.24878064411359524
+          },
+          {
+            "pair": [
+              36,
+              37
+            ],
+            "positive": false,
+            "cosine": 0.24315146039126517
+          },
+          {
+            "pair": [
+              38,
+              39
+            ],
+            "positive": false,
+            "cosine": 0.10358992567226777
+          }
+        ]
+      },
+      "scopeProbes": [
+        {
+          "note": 120,
+          "preferred": "Rosemary",
+          "rejected": "Basil",
+          "basis": "user-reported species mismatch",
+          "preferredCosine": 0.3310878574848175,
+          "rejectedCosine": 0.180868461728096,
+          "margin": 0.1502193957567215
+        },
+        {
+          "note": 35,
+          "preferred": "Running",
+          "rejected": "Running gear",
+          "basis": "user-reported scope; representative plain run",
+          "preferredCosine": 0.5366130471229553,
+          "rejectedCosine": 0.42779242992401123,
+          "margin": 0.10882061719894409
+        },
+        {
+          "note": 103,
+          "preferred": "Running",
+          "rejected": "Running gear",
+          "basis": "user-reported scope; representative plain run",
+          "preferredCosine": 0.39477235078811646,
+          "rejectedCosine": 0.3581191897392273,
+          "margin": 0.03665316104888916
+        },
+        {
+          "note": 108,
+          "preferred": "Meal preparation",
+          "rejected": "Running gear",
+          "basis": "rejection confirmed; preferred label proposed",
+          "preferredCosine": 0.45998555421829224,
+          "rejectedCosine": 0.20781080424785614,
+          "margin": 0.2521747499704361
+        },
+        {
+          "note": 28,
+          "preferred": "Focused work",
+          "rejected": "Chat",
+          "basis": "rejection confirmed; preferred label proposed",
+          "preferredCosine": 0.23369435966014862,
+          "rejectedCosine": 0.4137100279331207,
+          "margin": -0.1800156682729721
+        },
+        {
+          "note": 94,
+          "preferred": "Focused work",
+          "rejected": "Chat",
+          "basis": "rejection confirmed; preferred label proposed",
+          "preferredCosine": 0.24187572300434113,
+          "rejectedCosine": 0.3992334008216858,
+          "margin": -0.15735767781734467
+        },
+        {
+          "note": 72,
+          "preferred": "Walking",
+          "rejected": "Meetings",
+          "basis": "rejection confirmed; preferred label proposed",
+          "preferredCosine": 0.18327808380126953,
+          "rejectedCosine": 0.46307095885276794,
+          "margin": -0.2797928750514984
+        },
+        {
+          "note": 161,
+          "preferred": "Walking",
+          "rejected": "Meetings",
+          "basis": "rejection confirmed; preferred label proposed",
+          "preferredCosine": 0.15471503138542175,
+          "rejectedCosine": 0.44023358821868896,
+          "margin": -0.2855185568332672
+        },
+        {
+          "note": 57,
+          "preferred": "Meetings",
+          "rejected": "Meeting planning",
+          "basis": "explicit user scope preference",
+          "preferredCosine": 0.5853678584098816,
+          "rejectedCosine": 0.5531872510910034,
+          "margin": 0.032180607318878174
+        },
+        {
+          "note": 145,
+          "preferred": "Reading notes",
+          "rejected": "Chapter",
+          "basis": "rejection confirmed; preferred label proposed",
+          "preferredCosine": 0.3920965790748596,
+          "rejectedCosine": 0.38933825492858887,
+          "margin": 0.002758324146270752
+        },
+        {
+          "note": 147,
+          "preferred": "Piano practice",
+          "rejected": "Phrases",
+          "basis": "mixed topic rejected; preferred label proposed",
+          "preferredCosine": 0.5170921683311462,
+          "rejectedCosine": 0.2627193331718445,
+          "margin": 0.25437283515930176
+        },
+        {
+          "note": 151,
+          "preferred": "French practice",
+          "rejected": "Phrases",
+          "basis": "mixed topic rejected; preferred label proposed",
+          "preferredCosine": 0.5224330425262451,
+          "rejectedCosine": 0.47625234723091125,
+          "margin": 0.04618069529533386
+        },
+        {
+          "note": 63,
+          "preferred": "Note-taking",
+          "rejected": "Phrases",
+          "basis": "mixed topic rejected; preferred label proposed",
+          "preferredCosine": 0.3515293598175049,
+          "rejectedCosine": 0.31467390060424805,
+          "margin": 0.036855459213256836
+        },
+        {
+          "note": 46,
+          "preferred": "Running gear",
+          "rejected": "Running",
+          "basis": "user scope preference; exact socks note ambiguous",
+          "preferredCosine": 0.4706822335720062,
+          "rejectedCosine": 0.467846155166626,
+          "margin": 0.002836078405380249
+        },
+        {
+          "note": 109,
+          "preferred": "Running gear",
+          "rejected": "Running",
+          "basis": "user scope preference; exact socks note ambiguous",
+          "preferredCosine": 0.3246174454689026,
+          "rejectedCosine": 0.33395838737487793,
+          "margin": -0.009340941905975342
+        }
+      ]
+    },
+    {
+      "model": "bge-small",
+      "loadSeconds": 1.5253446249998888,
+      "encodeSeconds": 0.33316937500057975,
+      "texts": 228,
+      "textsPerSecond": 684.3366080679032,
+      "warmSingleMedianMs": 4.907311999886588,
+      "warmSingleP95Ms": 5.0440582998362515,
+      "peakRssMiB": 476.140625,
+      "maxFixtureTokens": 31,
+      "tokenLimit": 512,
+      "threads": 4,
+      "vectorSha256": "c9cb1d99fa866db713b957812983b2059f53727ff3a4df63662b1953dbcaca8e",
+      "artifacts": {
+        "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+        "license": "mit",
+        "weightMiB": 127.28338623046875
+      },
+      "development": {
+        "positivePairs": 33,
+        "negativePairs": 13,
+        "rocAuc": 0.9370629370629371,
+        "averagePrecision": 0.9754994070925442,
+        "knownPositiveRecall": {
+          "5": 0.8636363636363636,
+          "10": 0.8939393939393939
+        },
+        "pairScores": [
+          {
+            "pair": [
+              24,
+              26
+            ],
+            "positive": true,
+            "cosine": 0.7218946865590793
+          },
+          {
+            "pair": [
+              25,
+              93
+            ],
+            "positive": true,
+            "cosine": 0.6564550220382822
+          },
+          {
+            "pair": [
+              26,
+              91
+            ],
+            "positive": true,
+            "cosine": 0.7725815491189852
+          },
+          {
+            "pair": [
+              28,
+              94
+            ],
+            "positive": true,
+            "cosine": 0.7917540844306172
+          },
+          {
+            "pair": [
+              29,
+              30
+            ],
+            "positive": true,
+            "cosine": 0.80131832589952
+          },
+          {
+            "pair": [
+              29,
+              111
+            ],
+            "positive": true,
+            "cosine": 0.9042484626134494
+          },
+          {
+            "pair": [
+              31,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.6786574522641007
+          },
+          {
+            "pair": [
+              31,
+              112
+            ],
+            "positive": true,
+            "cosine": 0.6766891219217746
+          },
+          {
+            "pair": [
+              35,
+              41
+            ],
+            "positive": true,
+            "cosine": 0.7037563153756433
+          },
+          {
+            "pair": [
+              35,
+              103
+            ],
+            "positive": true,
+            "cosine": 0.717548738996286
+          },
+          {
+            "pair": [
+              42,
+              49
+            ],
+            "positive": true,
+            "cosine": 0.6852785103494274
+          },
+          {
+            "pair": [
+              43,
+              50
+            ],
+            "positive": true,
+            "cosine": 0.7246059440162953
+          },
+          {
+            "pair": [
+              43,
+              115
+            ],
+            "positive": true,
+            "cosine": 0.8248265174216535
+          },
+          {
+            "pair": [
+              44,
+              49
+            ],
+            "positive": true,
+            "cosine": 0.7412383437020167
+          },
+          {
+            "pair": [
+              45,
+              117
+            ],
+            "positive": true,
+            "cosine": 0.8554399413762332
+          },
+          {
+            "pair": [
+              48,
+              64
+            ],
+            "positive": true,
+            "cosine": 0.7442582777379858
+          },
+          {
+            "pair": [
+              51,
+              52
+            ],
+            "positive": true,
+            "cosine": 0.7562331678628981
+          },
+          {
+            "pair": [
+              51,
+              96
+            ],
+            "positive": true,
+            "cosine": 0.7450563308850108
+          },
+          {
+            "pair": [
+              51,
+              168
+            ],
+            "positive": true,
+            "cosine": 0.7509812943127985
+          },
+          {
+            "pair": [
+              65,
+              121
+            ],
+            "positive": true,
+            "cosine": 0.7693264522142739
+          },
+          {
+            "pair": [
+              108,
+              118
+            ],
+            "positive": true,
+            "cosine": 0.7721786486501009
+          },
+          {
+            "pair": [
+              126,
+              127
+            ],
+            "positive": true,
+            "cosine": 0.6479739084396837
+          },
+          {
+            "pair": [
+              127,
+              128
+            ],
+            "positive": true,
+            "cosine": 0.7544205017446366
+          },
+          {
+            "pair": [
+              127,
+              130
+            ],
+            "positive": true,
+            "cosine": 0.6632135704979922
+          },
+          {
+            "pair": [
+              139,
+              140
+            ],
+            "positive": true,
+            "cosine": 0.6798864316432978
+          },
+          {
+            "pair": [
+              139,
+              142
+            ],
+            "positive": true,
+            "cosine": 0.7283063191224577
+          },
+          {
+            "pair": [
+              140,
+              141
+            ],
+            "positive": true,
+            "cosine": 0.6681834111833631
+          },
+          {
+            "pair": [
+              143,
+              145
+            ],
+            "positive": true,
+            "cosine": 0.6016797383540994
+          },
+          {
+            "pair": [
+              145,
+              146
+            ],
+            "positive": true,
+            "cosine": 0.6814650109965495
+          },
+          {
+            "pair": [
+              147,
+              148
+            ],
+            "positive": true,
+            "cosine": 0.7360474605602575
+          },
+          {
+            "pair": [
+              151,
+              152
+            ],
+            "positive": true,
+            "cosine": 0.8165565803694341
+          },
+          {
+            "pair": [
+              152,
+              153
+            ],
+            "positive": true,
+            "cosine": 0.6486352694746782
+          },
+          {
+            "pair": [
+              157,
+              158
+            ],
+            "positive": true,
+            "cosine": 0.7574167873799369
+          },
+          {
+            "pair": [
+              29,
+              39
+            ],
+            "positive": false,
+            "cosine": 0.5903515210706457
+          },
+          {
+            "pair": [
+              35,
+              112
+            ],
+            "positive": false,
+            "cosine": 0.5770178723120307
+          },
+          {
+            "pair": [
+              35,
+              118
+            ],
+            "positive": false,
+            "cosine": 0.5790215193709208
+          },
+          {
+            "pair": [
+              35,
+              125
+            ],
+            "positive": false,
+            "cosine": 0.5331893490675318
+          },
+          {
+            "pair": [
+              36,
+              118
+            ],
+            "positive": false,
+            "cosine": 0.49812848301751234
+          },
+          {
+            "pair": [
+              51,
+              153
+            ],
+            "positive": false,
+            "cosine": 0.6348849563178194
+          },
+          {
+            "pair": [
+              62,
+              151
+            ],
+            "positive": false,
+            "cosine": 0.6764067186353679
+          },
+          {
+            "pair": [
+              63,
+              151
+            ],
+            "positive": false,
+            "cosine": 0.6573872758070448
+          },
+          {
+            "pair": [
+              64,
+              144
+            ],
+            "positive": false,
+            "cosine": 0.4650188716905083
+          },
+          {
+            "pair": [
+              93,
+              136
+            ],
+            "positive": false,
+            "cosine": 0.6836090544340654
+          },
+          {
+            "pair": [
+              109,
+              113
+            ],
+            "positive": false,
+            "cosine": 0.5488840349182016
+          },
+          {
+            "pair": [
+              147,
+              151
+            ],
+            "positive": false,
+            "cosine": 0.6644489967337661
+          },
+          {
+            "pair": [
+              147,
+              153
+            ],
+            "positive": false,
+            "cosine": 0.6249032308769225
+          }
+        ]
+      },
+      "transfer": {
+        "positivePairs": 69,
+        "negativePairs": 5,
+        "rocAuc": 0.863768115942029,
+        "averagePrecision": 0.9880511500671585,
+        "knownPositiveRecall": {
+          "5": 0.782608695652174,
+          "10": 0.9202898550724637
+        },
+        "pairScores": [
+          {
+            "pair": [
+              1,
+              2
+            ],
+            "positive": true,
+            "cosine": 0.7220585745563342
+          },
+          {
+            "pair": [
+              1,
+              3
+            ],
+            "positive": true,
+            "cosine": 0.6144276338682241
+          },
+          {
+            "pair": [
+              1,
+              31
+            ],
+            "positive": true,
+            "cosine": 0.6877760889974408
+          },
+          {
+            "pair": [
+              1,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.6987724559867305
+          },
+          {
+            "pair": [
+              2,
+              3
+            ],
+            "positive": true,
+            "cosine": 0.6140901535375656
+          },
+          {
+            "pair": [
+              2,
+              31
+            ],
+            "positive": true,
+            "cosine": 0.6246357279607446
+          },
+          {
+            "pair": [
+              2,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.686393622175208
+          },
+          {
+            "pair": [
+              3,
+              31
+            ],
+            "positive": true,
+            "cosine": 0.5727747055515287
+          },
+          {
+            "pair": [
+              3,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.652183473799256
+          },
+          {
+            "pair": [
+              4,
+              5
+            ],
+            "positive": true,
+            "cosine": 0.6106157508281068
+          },
+          {
+            "pair": [
+              4,
+              6
+            ],
+            "positive": true,
+            "cosine": 0.5404210440742825
+          },
+          {
+            "pair": [
+              4,
+              31
+            ],
+            "positive": true,
+            "cosine": 0.5951602275131974
+          },
+          {
+            "pair": [
+              4,
+              40
+            ],
+            "positive": true,
+            "cosine": 0.690034048521799
+          },
+          {
+            "pair": [
+              5,
+              6
+            ],
+            "positive": true,
+            "cosine": 0.6388583977172626
+          },
+          {
+            "pair": [
+              5,
+              31
+            ],
+            "positive": true,
+            "cosine": 0.6155242228089552
+          },
+          {
+            "pair": [
+              5,
+              40
+            ],
+            "positive": true,
+            "cosine": 0.7195700374936751
+          },
+          {
+            "pair": [
+              6,
+              31
+            ],
+            "positive": true,
+            "cosine": 0.5623594617793664
+          },
+          {
+            "pair": [
+              6,
+              40
+            ],
+            "positive": true,
+            "cosine": 0.6192829171540112
+          },
+          {
+            "pair": [
+              7,
+              8
+            ],
+            "positive": true,
+            "cosine": 0.6171179234900561
+          },
+          {
+            "pair": [
+              7,
+              9
+            ],
+            "positive": true,
+            "cosine": 0.5691526168998449
+          },
+          {
+            "pair": [
+              7,
+              33
+            ],
+            "positive": true,
+            "cosine": 0.6156194812435618
+          },
+          {
+            "pair": [
+              8,
+              9
+            ],
+            "positive": true,
+            "cosine": 0.6418594546572096
+          },
+          {
+            "pair": [
+              8,
+              33
+            ],
+            "positive": true,
+            "cosine": 0.6813242847651335
+          },
+          {
+            "pair": [
+              9,
+              33
+            ],
+            "positive": true,
+            "cosine": 0.53824898500338
+          },
+          {
+            "pair": [
+              10,
+              11
+            ],
+            "positive": true,
+            "cosine": 0.49996955729326775
+          },
+          {
+            "pair": [
+              10,
+              12
+            ],
+            "positive": true,
+            "cosine": 0.6423304316437588
+          },
+          {
+            "pair": [
+              10,
+              32
+            ],
+            "positive": true,
+            "cosine": 0.5610880585647764
+          },
+          {
+            "pair": [
+              11,
+              12
+            ],
+            "positive": true,
+            "cosine": 0.5234261771493757
+          },
+          {
+            "pair": [
+              11,
+              32
+            ],
+            "positive": true,
+            "cosine": 0.6397894368029702
+          },
+          {
+            "pair": [
+              12,
+              32
+            ],
+            "positive": true,
+            "cosine": 0.5957460158669
+          },
+          {
+            "pair": [
+              13,
+              14
+            ],
+            "positive": true,
+            "cosine": 0.46351523338869705
+          },
+          {
+            "pair": [
+              13,
+              15
+            ],
+            "positive": true,
+            "cosine": 0.648755524664953
+          },
+          {
+            "pair": [
+              13,
+              33
+            ],
+            "positive": true,
+            "cosine": 0.6551383682620884
+          },
+          {
+            "pair": [
+              13,
+              38
+            ],
+            "positive": true,
+            "cosine": 0.6106173716379293
+          },
+          {
+            "pair": [
+              14,
+              15
+            ],
+            "positive": true,
+            "cosine": 0.5914905076835284
+          },
+          {
+            "pair": [
+              14,
+              33
+            ],
+            "positive": true,
+            "cosine": 0.5256668932368632
+          },
+          {
+            "pair": [
+              14,
+              38
+            ],
+            "positive": true,
+            "cosine": 0.4937506283400539
+          },
+          {
+            "pair": [
+              15,
+              33
+            ],
+            "positive": true,
+            "cosine": 0.6772096797891219
+          },
+          {
+            "pair": [
+              15,
+              38
+            ],
+            "positive": true,
+            "cosine": 0.5969993349513669
+          },
+          {
+            "pair": [
+              16,
+              17
+            ],
+            "positive": true,
+            "cosine": 0.585349479609197
+          },
+          {
+            "pair": [
+              16,
+              18
+            ],
+            "positive": true,
+            "cosine": 0.726616198982261
+          },
+          {
+            "pair": [
+              16,
+              32
+            ],
+            "positive": true,
+            "cosine": 0.5829208789106675
+          },
+          {
+            "pair": [
+              17,
+              18
+            ],
+            "positive": true,
+            "cosine": 0.6280785710616639
+          },
+          {
+            "pair": [
+              17,
+              32
+            ],
+            "positive": true,
+            "cosine": 0.5829180224472117
+          },
+          {
+            "pair": [
+              18,
+              32
+            ],
+            "positive": true,
+            "cosine": 0.6421006518663621
+          },
+          {
+            "pair": [
+              19,
+              20
+            ],
+            "positive": true,
+            "cosine": 0.7841803069988456
+          },
+          {
+            "pair": [
+              19,
+              21
+            ],
+            "positive": true,
+            "cosine": 0.8671607603993836
+          },
+          {
+            "pair": [
+              19,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.7278972495250224
+          },
+          {
+            "pair": [
+              20,
+              21
+            ],
+            "positive": true,
+            "cosine": 0.7796141538268366
+          },
+          {
+            "pair": [
+              20,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.7410280710630159
+          },
+          {
+            "pair": [
+              21,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.7249817770930878
+          },
+          {
+            "pair": [
+              22,
+              23
+            ],
+            "positive": true,
+            "cosine": 0.6131805859785788
+          },
+          {
+            "pair": [
+              22,
+              24
+            ],
+            "positive": true,
+            "cosine": 0.664783415380392
+          },
+          {
+            "pair": [
+              22,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.6254230096061192
+          },
+          {
+            "pair": [
+              23,
+              24
+            ],
+            "positive": true,
+            "cosine": 0.7009358124274367
+          },
+          {
+            "pair": [
+              23,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.5962634542617071
+          },
+          {
+            "pair": [
+              24,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.6139261574522084
+          },
+          {
+            "pair": [
+              25,
+              26
+            ],
+            "positive": true,
+            "cosine": 0.6484345701307457
+          },
+          {
+            "pair": [
+              25,
+              27
+            ],
+            "positive": true,
+            "cosine": 0.6571808983006422
+          },
+          {
+            "pair": [
+              25,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.5934300231951688
+          },
+          {
+            "pair": [
+              26,
+              27
+            ],
+            "positive": true,
+            "cosine": 0.5784017703624509
+          },
+          {
+            "pair": [
+              26,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.627863062597245
+          },
+          {
+            "pair": [
+              27,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.5648486867515629
+          },
+          {
+            "pair": [
+              28,
+              29
+            ],
+            "positive": true,
+            "cosine": 0.7900007114525038
+          },
+          {
+            "pair": [
+              28,
+              30
+            ],
+            "positive": true,
+            "cosine": 0.6447123534863559
+          },
+          {
+            "pair": [
+              29,
+              30
+            ],
+            "positive": true,
+            "cosine": 0.617444551351952
+          },
+          {
+            "pair": [
+              31,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.59718890523656
+          },
+          {
+            "pair": [
+              31,
+              40
+            ],
+            "positive": true,
+            "cosine": 0.6521969410452078
+          },
+          {
+            "pair": [
+              33,
+              38
+            ],
+            "positive": true,
+            "cosine": 0.6406855392232637
+          },
+          {
+            "pair": [
+              5,
+              13
+            ],
+            "positive": false,
+            "cosine": 0.3916597975930021
+          },
+          {
+            "pair": [
+              8,
+              38
+            ],
+            "positive": false,
+            "cosine": 0.5838201322388241
+          },
+          {
+            "pair": [
+              10,
+              18
+            ],
+            "positive": false,
+            "cosine": 0.49210852965910823
+          },
+          {
+            "pair": [
+              36,
+              37
+            ],
+            "positive": false,
+            "cosine": 0.6162386225536691
+          },
+          {
+            "pair": [
+              38,
+              39
+            ],
+            "positive": false,
+            "cosine": 0.4565448341220043
+          }
+        ]
+      },
+      "scopeProbes": [
+        {
+          "note": 120,
+          "preferred": "Rosemary",
+          "rejected": "Basil",
+          "basis": "user-reported species mismatch",
+          "preferredCosine": 0.6585835218429565,
+          "rejectedCosine": 0.6079292893409729,
+          "margin": 0.05065423250198364
+        },
+        {
+          "note": 35,
+          "preferred": "Running",
+          "rejected": "Running gear",
+          "basis": "user-reported scope; representative plain run",
+          "preferredCosine": 0.7325220108032227,
+          "rejectedCosine": 0.6651366949081421,
+          "margin": 0.06738531589508057
+        },
+        {
+          "note": 103,
+          "preferred": "Running",
+          "rejected": "Running gear",
+          "basis": "user-reported scope; representative plain run",
+          "preferredCosine": 0.5985404253005981,
+          "rejectedCosine": 0.5580300092697144,
+          "margin": 0.04051041603088379
+        },
+        {
+          "note": 108,
+          "preferred": "Meal preparation",
+          "rejected": "Running gear",
+          "basis": "rejection confirmed; preferred label proposed",
+          "preferredCosine": 0.6851723194122314,
+          "rejectedCosine": 0.5674371719360352,
+          "margin": 0.11773514747619629
+        },
+        {
+          "note": 28,
+          "preferred": "Focused work",
+          "rejected": "Chat",
+          "basis": "rejection confirmed; preferred label proposed",
+          "preferredCosine": 0.6284056901931763,
+          "rejectedCosine": 0.7167812585830688,
+          "margin": -0.08837556838989258
+        },
+        {
+          "note": 94,
+          "preferred": "Focused work",
+          "rejected": "Chat",
+          "basis": "rejection confirmed; preferred label proposed",
+          "preferredCosine": 0.5675277709960938,
+          "rejectedCosine": 0.6613947749137878,
+          "margin": -0.09386700391769409
+        },
+        {
+          "note": 72,
+          "preferred": "Walking",
+          "rejected": "Meetings",
+          "basis": "rejection confirmed; preferred label proposed",
+          "preferredCosine": 0.6917197108268738,
+          "rejectedCosine": 0.6839318871498108,
+          "margin": 0.007787823677062988
+        },
+        {
+          "note": 161,
+          "preferred": "Walking",
+          "rejected": "Meetings",
+          "basis": "rejection confirmed; preferred label proposed",
+          "preferredCosine": 0.6223412156105042,
+          "rejectedCosine": 0.6434870958328247,
+          "margin": -0.021145880222320557
+        },
+        {
+          "note": 57,
+          "preferred": "Meetings",
+          "rejected": "Meeting planning",
+          "basis": "explicit user scope preference",
+          "preferredCosine": 0.7212674617767334,
+          "rejectedCosine": 0.7861058115959167,
+          "margin": -0.06483834981918335
+        },
+        {
+          "note": 145,
+          "preferred": "Reading notes",
+          "rejected": "Chapter",
+          "basis": "rejection confirmed; preferred label proposed",
+          "preferredCosine": 0.7603187561035156,
+          "rejectedCosine": 0.6584393978118896,
+          "margin": 0.10187935829162598
+        },
+        {
+          "note": 147,
+          "preferred": "Piano practice",
+          "rejected": "Phrases",
+          "basis": "mixed topic rejected; preferred label proposed",
+          "preferredCosine": 0.7526065707206726,
+          "rejectedCosine": 0.5611751079559326,
+          "margin": 0.19143146276474
+        },
+        {
+          "note": 151,
+          "preferred": "French practice",
+          "rejected": "Phrases",
+          "basis": "mixed topic rejected; preferred label proposed",
+          "preferredCosine": 0.6967355012893677,
+          "rejectedCosine": 0.6945498585700989,
+          "margin": 0.002185642719268799
+        },
+        {
+          "note": 63,
+          "preferred": "Note-taking",
+          "rejected": "Phrases",
+          "basis": "mixed topic rejected; preferred label proposed",
+          "preferredCosine": 0.5887405276298523,
+          "rejectedCosine": 0.5841631293296814,
+          "margin": 0.0045773983001708984
+        },
+        {
+          "note": 46,
+          "preferred": "Running gear",
+          "rejected": "Running",
+          "basis": "user scope preference; exact socks note ambiguous",
+          "preferredCosine": 0.7156598567962646,
+          "rejectedCosine": 0.6796457171440125,
+          "margin": 0.0360141396522522
+        },
+        {
+          "note": 109,
+          "preferred": "Running gear",
+          "rejected": "Running",
+          "basis": "user scope preference; exact socks note ambiguous",
+          "preferredCosine": 0.7122060060501099,
+          "rejectedCosine": 0.6670472621917725,
+          "margin": 0.0451587438583374
+        }
+      ]
+    },
+    {
+      "model": "granite-small",
+      "loadSeconds": 1.963249624999662,
+      "encodeSeconds": 0.42289720799999486,
+      "texts": 228,
+      "textsPerSecond": 539.1381065821621,
+      "warmSingleMedianMs": 5.447104499580746,
+      "warmSingleP95Ms": 5.5143537998446845,
+      "peakRssMiB": 668.703125,
+      "maxFixtureTokens": 31,
+      "tokenLimit": 8192,
+      "threads": 4,
+      "vectorSha256": "5a2855ea0905f8ae84d2752362428b9c81b4f3571b4225455aa29b883e62a89c",
+      "artifacts": {
+        "revision": "2ab6fa8ea2d674564defd37171ae19079b864b33",
+        "license": "apache-2.0",
+        "weightMiB": 90.91572570800781
+      },
+      "development": {
+        "positivePairs": 33,
+        "negativePairs": 13,
+        "rocAuc": 0.951048951048951,
+        "averagePrecision": 0.9800054081226094,
+        "knownPositiveRecall": {
+          "5": 0.803030303030303,
+          "10": 0.9848484848484849
+        },
+        "pairScores": [
+          {
+            "pair": [
+              24,
+              26
+            ],
+            "positive": true,
+            "cosine": 0.8483183818264378
+          },
+          {
+            "pair": [
+              25,
+              93
+            ],
+            "positive": true,
+            "cosine": 0.8145166082836051
+          },
+          {
+            "pair": [
+              26,
+              91
+            ],
+            "positive": true,
+            "cosine": 0.9211411258649845
+          },
+          {
+            "pair": [
+              28,
+              94
+            ],
+            "positive": true,
+            "cosine": 0.8911913014841182
+          },
+          {
+            "pair": [
+              29,
+              30
+            ],
+            "positive": true,
+            "cosine": 0.872123893258192
+          },
+          {
+            "pair": [
+              29,
+              111
+            ],
+            "positive": true,
+            "cosine": 0.9267097736034028
+          },
+          {
+            "pair": [
+              31,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.8134872907478783
+          },
+          {
+            "pair": [
+              31,
+              112
+            ],
+            "positive": true,
+            "cosine": 0.8051531696526103
+          },
+          {
+            "pair": [
+              35,
+              41
+            ],
+            "positive": true,
+            "cosine": 0.8760861884324663
+          },
+          {
+            "pair": [
+              35,
+              103
+            ],
+            "positive": true,
+            "cosine": 0.8886337361235204
+          },
+          {
+            "pair": [
+              42,
+              49
+            ],
+            "positive": true,
+            "cosine": 0.8447616162621865
+          },
+          {
+            "pair": [
+              43,
+              50
+            ],
+            "positive": true,
+            "cosine": 0.8572401317560592
+          },
+          {
+            "pair": [
+              43,
+              115
+            ],
+            "positive": true,
+            "cosine": 0.8803113848508954
+          },
+          {
+            "pair": [
+              44,
+              49
+            ],
+            "positive": true,
+            "cosine": 0.872667997224927
+          },
+          {
+            "pair": [
+              45,
+              117
+            ],
+            "positive": true,
+            "cosine": 0.9399270279926076
+          },
+          {
+            "pair": [
+              48,
+              64
+            ],
+            "positive": true,
+            "cosine": 0.9006349846242552
+          },
+          {
+            "pair": [
+              51,
+              52
+            ],
+            "positive": true,
+            "cosine": 0.8654818999456311
+          },
+          {
+            "pair": [
+              51,
+              96
+            ],
+            "positive": true,
+            "cosine": 0.8505464048729598
+          },
+          {
+            "pair": [
+              51,
+              168
+            ],
+            "positive": true,
+            "cosine": 0.8342411731613334
+          },
+          {
+            "pair": [
+              65,
+              121
+            ],
+            "positive": true,
+            "cosine": 0.9055111742917061
+          },
+          {
+            "pair": [
+              108,
+              118
+            ],
+            "positive": true,
+            "cosine": 0.8866078664954472
+          },
+          {
+            "pair": [
+              126,
+              127
+            ],
+            "positive": true,
+            "cosine": 0.8127165503962922
+          },
+          {
+            "pair": [
+              127,
+              128
+            ],
+            "positive": true,
+            "cosine": 0.8245759810591287
+          },
+          {
+            "pair": [
+              127,
+              130
+            ],
+            "positive": true,
+            "cosine": 0.8181391555187292
+          },
+          {
+            "pair": [
+              139,
+              140
+            ],
+            "positive": true,
+            "cosine": 0.82469051235908
+          },
+          {
+            "pair": [
+              139,
+              142
+            ],
+            "positive": true,
+            "cosine": 0.8640722426775549
+          },
+          {
+            "pair": [
+              140,
+              141
+            ],
+            "positive": true,
+            "cosine": 0.8228617944957983
+          },
+          {
+            "pair": [
+              143,
+              145
+            ],
+            "positive": true,
+            "cosine": 0.8247513876391053
+          },
+          {
+            "pair": [
+              145,
+              146
+            ],
+            "positive": true,
+            "cosine": 0.838120135388944
+          },
+          {
+            "pair": [
+              147,
+              148
+            ],
+            "positive": true,
+            "cosine": 0.8548250496019666
+          },
+          {
+            "pair": [
+              151,
+              152
+            ],
+            "positive": true,
+            "cosine": 0.8757348037726922
+          },
+          {
+            "pair": [
+              152,
+              153
+            ],
+            "positive": true,
+            "cosine": 0.8418107124474207
+          },
+          {
+            "pair": [
+              157,
+              158
+            ],
+            "positive": true,
+            "cosine": 0.8126103162884023
+          },
+          {
+            "pair": [
+              29,
+              39
+            ],
+            "positive": false,
+            "cosine": 0.7723334190631694
+          },
+          {
+            "pair": [
+              35,
+              112
+            ],
+            "positive": false,
+            "cosine": 0.7897351750052962
+          },
+          {
+            "pair": [
+              35,
+              118
+            ],
+            "positive": false,
+            "cosine": 0.783393516116342
+          },
+          {
+            "pair": [
+              35,
+              125
+            ],
+            "positive": false,
+            "cosine": 0.7750773784531908
+          },
+          {
+            "pair": [
+              36,
+              118
+            ],
+            "positive": false,
+            "cosine": 0.7816453670423843
+          },
+          {
+            "pair": [
+              51,
+              153
+            ],
+            "positive": false,
+            "cosine": 0.7579969640450178
+          },
+          {
+            "pair": [
+              62,
+              151
+            ],
+            "positive": false,
+            "cosine": 0.8271204468524198
+          },
+          {
+            "pair": [
+              63,
+              151
+            ],
+            "positive": false,
+            "cosine": 0.7953214439931976
+          },
+          {
+            "pair": [
+              64,
+              144
+            ],
+            "positive": false,
+            "cosine": 0.7131385897116889
+          },
+          {
+            "pair": [
+              93,
+              136
+            ],
+            "positive": false,
+            "cosine": 0.8203173673123325
+          },
+          {
+            "pair": [
+              109,
+              113
+            ],
+            "positive": false,
+            "cosine": 0.7554581550429774
+          },
+          {
+            "pair": [
+              147,
+              151
+            ],
+            "positive": false,
+            "cosine": 0.8047055847174417
+          },
+          {
+            "pair": [
+              147,
+              153
+            ],
+            "positive": false,
+            "cosine": 0.817669158094535
+          }
+        ]
+      },
+      "transfer": {
+        "positivePairs": 69,
+        "negativePairs": 5,
+        "rocAuc": 0.8927536231884058,
+        "averagePrecision": 0.9913631328084442,
+        "knownPositiveRecall": {
+          "5": 0.8405797101449275,
+          "10": 0.9637681159420289
+        },
+        "pairScores": [
+          {
+            "pair": [
+              1,
+              2
+            ],
+            "positive": true,
+            "cosine": 0.8553785664598221
+          },
+          {
+            "pair": [
+              1,
+              3
+            ],
+            "positive": true,
+            "cosine": 0.795222323942183
+          },
+          {
+            "pair": [
+              1,
+              31
+            ],
+            "positive": true,
+            "cosine": 0.8483518850342566
+          },
+          {
+            "pair": [
+              1,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.8580674496463516
+          },
+          {
+            "pair": [
+              2,
+              3
+            ],
+            "positive": true,
+            "cosine": 0.7883209572326806
+          },
+          {
+            "pair": [
+              2,
+              31
+            ],
+            "positive": true,
+            "cosine": 0.8350242839084464
+          },
+          {
+            "pair": [
+              2,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.8386907865938434
+          },
+          {
+            "pair": [
+              3,
+              31
+            ],
+            "positive": true,
+            "cosine": 0.8040263242934036
+          },
+          {
+            "pair": [
+              3,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.8317499895967297
+          },
+          {
+            "pair": [
+              4,
+              5
+            ],
+            "positive": true,
+            "cosine": 0.839802056830328
+          },
+          {
+            "pair": [
+              4,
+              6
+            ],
+            "positive": true,
+            "cosine": 0.7865022465767793
+          },
+          {
+            "pair": [
+              4,
+              31
+            ],
+            "positive": true,
+            "cosine": 0.8415314208564848
+          },
+          {
+            "pair": [
+              4,
+              40
+            ],
+            "positive": true,
+            "cosine": 0.8735686839251156
+          },
+          {
+            "pair": [
+              5,
+              6
+            ],
+            "positive": true,
+            "cosine": 0.788114164933556
+          },
+          {
+            "pair": [
+              5,
+              31
+            ],
+            "positive": true,
+            "cosine": 0.8055466006629305
+          },
+          {
+            "pair": [
+              5,
+              40
+            ],
+            "positive": true,
+            "cosine": 0.8288100318941722
+          },
+          {
+            "pair": [
+              6,
+              31
+            ],
+            "positive": true,
+            "cosine": 0.761202389018514
+          },
+          {
+            "pair": [
+              6,
+              40
+            ],
+            "positive": true,
+            "cosine": 0.769771652455346
+          },
+          {
+            "pair": [
+              7,
+              8
+            ],
+            "positive": true,
+            "cosine": 0.8484347199405511
+          },
+          {
+            "pair": [
+              7,
+              9
+            ],
+            "positive": true,
+            "cosine": 0.7953079510154383
+          },
+          {
+            "pair": [
+              7,
+              33
+            ],
+            "positive": true,
+            "cosine": 0.8142133354208252
+          },
+          {
+            "pair": [
+              8,
+              9
+            ],
+            "positive": true,
+            "cosine": 0.8265830353991421
+          },
+          {
+            "pair": [
+              8,
+              33
+            ],
+            "positive": true,
+            "cosine": 0.854551060025722
+          },
+          {
+            "pair": [
+              9,
+              33
+            ],
+            "positive": true,
+            "cosine": 0.7854897159242713
+          },
+          {
+            "pair": [
+              10,
+              11
+            ],
+            "positive": true,
+            "cosine": 0.7817507275240128
+          },
+          {
+            "pair": [
+              10,
+              12
+            ],
+            "positive": true,
+            "cosine": 0.8503661629349305
+          },
+          {
+            "pair": [
+              10,
+              32
+            ],
+            "positive": true,
+            "cosine": 0.8097516991389379
+          },
+          {
+            "pair": [
+              11,
+              12
+            ],
+            "positive": true,
+            "cosine": 0.7892025565806191
+          },
+          {
+            "pair": [
+              11,
+              32
+            ],
+            "positive": true,
+            "cosine": 0.8328783145257406
+          },
+          {
+            "pair": [
+              12,
+              32
+            ],
+            "positive": true,
+            "cosine": 0.8475902800677905
+          },
+          {
+            "pair": [
+              13,
+              14
+            ],
+            "positive": true,
+            "cosine": 0.7841891592472555
+          },
+          {
+            "pair": [
+              13,
+              15
+            ],
+            "positive": true,
+            "cosine": 0.8506409290558421
+          },
+          {
+            "pair": [
+              13,
+              33
+            ],
+            "positive": true,
+            "cosine": 0.8075200825779654
+          },
+          {
+            "pair": [
+              13,
+              38
+            ],
+            "positive": true,
+            "cosine": 0.8342677559929854
+          },
+          {
+            "pair": [
+              14,
+              15
+            ],
+            "positive": true,
+            "cosine": 0.8441379499685007
+          },
+          {
+            "pair": [
+              14,
+              33
+            ],
+            "positive": true,
+            "cosine": 0.8175463049555352
+          },
+          {
+            "pair": [
+              14,
+              38
+            ],
+            "positive": true,
+            "cosine": 0.8058820495464587
+          },
+          {
+            "pair": [
+              15,
+              33
+            ],
+            "positive": true,
+            "cosine": 0.8157195815010332
+          },
+          {
+            "pair": [
+              15,
+              38
+            ],
+            "positive": true,
+            "cosine": 0.8214675628270891
+          },
+          {
+            "pair": [
+              16,
+              17
+            ],
+            "positive": true,
+            "cosine": 0.8209898757216822
+          },
+          {
+            "pair": [
+              16,
+              18
+            ],
+            "positive": true,
+            "cosine": 0.8777287520190125
+          },
+          {
+            "pair": [
+              16,
+              32
+            ],
+            "positive": true,
+            "cosine": 0.7921555966174724
+          },
+          {
+            "pair": [
+              17,
+              18
+            ],
+            "positive": true,
+            "cosine": 0.814515729034902
+          },
+          {
+            "pair": [
+              17,
+              32
+            ],
+            "positive": true,
+            "cosine": 0.7751149141575012
+          },
+          {
+            "pair": [
+              18,
+              32
+            ],
+            "positive": true,
+            "cosine": 0.8333180083237447
+          },
+          {
+            "pair": [
+              19,
+              20
+            ],
+            "positive": true,
+            "cosine": 0.8544229485676104
+          },
+          {
+            "pair": [
+              19,
+              21
+            ],
+            "positive": true,
+            "cosine": 0.9183967203374749
+          },
+          {
+            "pair": [
+              19,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.8518110407988989
+          },
+          {
+            "pair": [
+              20,
+              21
+            ],
+            "positive": true,
+            "cosine": 0.8630673861406197
+          },
+          {
+            "pair": [
+              20,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.8570006221799253
+          },
+          {
+            "pair": [
+              21,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.8368220574977867
+          },
+          {
+            "pair": [
+              22,
+              23
+            ],
+            "positive": true,
+            "cosine": 0.7679344259058725
+          },
+          {
+            "pair": [
+              22,
+              24
+            ],
+            "positive": true,
+            "cosine": 0.7811424379575227
+          },
+          {
+            "pair": [
+              22,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.8202372471977777
+          },
+          {
+            "pair": [
+              23,
+              24
+            ],
+            "positive": true,
+            "cosine": 0.8135941892647404
+          },
+          {
+            "pair": [
+              23,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.799792675237335
+          },
+          {
+            "pair": [
+              24,
+              34
+            ],
+            "positive": true,
+            "cosine": 0.834371360095708
+          },
+          {
+            "pair": [
+              25,
+              26
+            ],
+            "positive": true,
+            "cosine": 0.8605878923342454
+          },
+          {
+            "pair": [
+              25,
+              27
+            ],
+            "positive": true,
+            "cosine": 0.790435066950385
+          },
+          {
+            "pair": [
+              25,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.8632508649618058
+          },
+          {
+            "pair": [
+              26,
+              27
+            ],
+            "positive": true,
+            "cosine": 0.7879802926019691
+          },
+          {
+            "pair": [
+              26,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.828315079730747
+          },
+          {
+            "pair": [
+              27,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.7807739900829432
+          },
+          {
+            "pair": [
+              28,
+              29
+            ],
+            "positive": true,
+            "cosine": 0.8493603796376956
+          },
+          {
+            "pair": [
+              28,
+              30
+            ],
+            "positive": true,
+            "cosine": 0.776334644392744
+          },
+          {
+            "pair": [
+              29,
+              30
+            ],
+            "positive": true,
+            "cosine": 0.7773008155603348
+          },
+          {
+            "pair": [
+              31,
+              35
+            ],
+            "positive": true,
+            "cosine": 0.835465735392013
+          },
+          {
+            "pair": [
+              31,
+              40
+            ],
+            "positive": true,
+            "cosine": 0.7882461707793947
+          },
+          {
+            "pair": [
+              33,
+              38
+            ],
+            "positive": true,
+            "cosine": 0.8190117797623188
+          },
+          {
+            "pair": [
+              5,
+              13
+            ],
+            "positive": false,
+            "cosine": 0.7451872010294577
+          },
+          {
+            "pair": [
+              8,
+              38
+            ],
+            "positive": false,
+            "cosine": 0.800340591837823
+          },
+          {
+            "pair": [
+              10,
+              18
+            ],
+            "positive": false,
+            "cosine": 0.7867722219039844
+          },
+          {
+            "pair": [
+              36,
+              37
+            ],
+            "positive": false,
+            "cosine": 0.7745271266979161
+          },
+          {
+            "pair": [
+              38,
+              39
+            ],
+            "positive": false,
+            "cosine": 0.7440761342503635
+          }
+        ]
+      },
+      "scopeProbes": [
+        {
+          "note": 120,
+          "preferred": "Rosemary",
+          "rejected": "Basil",
+          "basis": "user-reported species mismatch",
+          "preferredCosine": 0.8310829997062683,
+          "rejectedCosine": 0.7324815988540649,
+          "margin": 0.09860140085220337
+        },
+        {
+          "note": 35,
+          "preferred": "Running",
+          "rejected": "Running gear",
+          "basis": "user-reported scope; representative plain run",
+          "preferredCosine": 0.8266472816467285,
+          "rejectedCosine": 0.7902398705482483,
+          "margin": 0.036407411098480225
+        },
+        {
+          "note": 103,
+          "preferred": "Running",
+          "rejected": "Running gear",
+          "basis": "user-reported scope; representative plain run",
+          "preferredCosine": 0.796097457408905,
+          "rejectedCosine": 0.7787995338439941,
+          "margin": 0.01729792356491089
+        },
+        {
+          "note": 108,
+          "preferred": "Meal preparation",
+          "rejected": "Running gear",
+          "basis": "rejection confirmed; preferred label proposed",
+          "preferredCosine": 0.8573715686798096,
+          "rejectedCosine": 0.7719644904136658,
+          "margin": 0.0854070782661438
+        },
+        {
+          "note": 28,
+          "preferred": "Focused work",
+          "rejected": "Chat",
+          "basis": "rejection confirmed; preferred label proposed",
+          "preferredCosine": 0.7726002335548401,
+          "rejectedCosine": 0.8684317469596863,
+          "margin": -0.09583151340484619
+        },
+        {
+          "note": 94,
+          "preferred": "Focused work",
+          "rejected": "Chat",
+          "basis": "rejection confirmed; preferred label proposed",
+          "preferredCosine": 0.7994945645332336,
+          "rejectedCosine": 0.7927067875862122,
+          "margin": 0.006787776947021484
+        },
+        {
+          "note": 72,
+          "preferred": "Walking",
+          "rejected": "Meetings",
+          "basis": "rejection confirmed; preferred label proposed",
+          "preferredCosine": 0.7622409462928772,
+          "rejectedCosine": 0.8116655349731445,
+          "margin": -0.049424588680267334
+        },
+        {
+          "note": 161,
+          "preferred": "Walking",
+          "rejected": "Meetings",
+          "basis": "rejection confirmed; preferred label proposed",
+          "preferredCosine": 0.7835789918899536,
+          "rejectedCosine": 0.8302740454673767,
+          "margin": -0.046695053577423096
+        },
+        {
+          "note": 57,
+          "preferred": "Meetings",
+          "rejected": "Meeting planning",
+          "basis": "explicit user scope preference",
+          "preferredCosine": 0.8237327337265015,
+          "rejectedCosine": 0.8579300045967102,
+          "margin": -0.03419727087020874
+        },
+        {
+          "note": 145,
+          "preferred": "Reading notes",
+          "rejected": "Chapter",
+          "basis": "rejection confirmed; preferred label proposed",
+          "preferredCosine": 0.8432891368865967,
+          "rejectedCosine": 0.8279924392700195,
+          "margin": 0.015296697616577148
+        },
+        {
+          "note": 147,
+          "preferred": "Piano practice",
+          "rejected": "Phrases",
+          "basis": "mixed topic rejected; preferred label proposed",
+          "preferredCosine": 0.8534644842147827,
+          "rejectedCosine": 0.7920472621917725,
+          "margin": 0.061417222023010254
+        },
+        {
+          "note": 151,
+          "preferred": "French practice",
+          "rejected": "Phrases",
+          "basis": "mixed topic rejected; preferred label proposed",
+          "preferredCosine": 0.8520467281341553,
+          "rejectedCosine": 0.8326030373573303,
+          "margin": 0.01944369077682495
+        },
+        {
+          "note": 63,
+          "preferred": "Note-taking",
+          "rejected": "Phrases",
+          "basis": "mixed topic rejected; preferred label proposed",
+          "preferredCosine": 0.7707078456878662,
+          "rejectedCosine": 0.7862536311149597,
+          "margin": -0.015545785427093506
+        },
+        {
+          "note": 46,
+          "preferred": "Running gear",
+          "rejected": "Running",
+          "basis": "user scope preference; exact socks note ambiguous",
+          "preferredCosine": 0.8306569457054138,
+          "rejectedCosine": 0.8430554866790771,
+          "margin": -0.01239854097366333
+        },
+        {
+          "note": 109,
+          "preferred": "Running gear",
+          "rejected": "Running",
+          "basis": "user scope preference; exact socks note ambiguous",
+          "preferredCosine": 0.8481703996658325,
+          "rejectedCosine": 0.8214914202690125,
+          "margin": 0.02667897939682007
+        }
+      ]
+    }
+  ]
+}

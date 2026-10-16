@@ -1,0 +1,8 @@
+{
+  "licensePolicy": "Commercial use and redistribution of weights must be permitted. First round uses Apache-2.0 or MIT; no remote custom model code.",
+  "models": [
+    {"id": "minilm", "repository": "sentence-transformers/all-MiniLM-L6-v2", "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41", "license": "apache-2.0"},
+    {"id": "bge-small", "repository": "BAAI/bge-small-en-v1.5", "revision": "main", "license": "mit"},
+    {"id": "granite-small", "repository": "ibm-granite/granite-embedding-small-english-r2", "revision": "main", "license": "apache-2.0"}
+  ]
+}

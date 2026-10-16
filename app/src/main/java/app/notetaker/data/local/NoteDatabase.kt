@@ -8,7 +8,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 @Database(
     entities = [NoteEntity::class, TagEntity::class, NoteTagEntity::class, NoteLinkEntity::class, TagAliasEntity::class, TagDismissalEntity::class, EntityTypeEntity::class, OrganizationStateEntity::class, NoteEmbeddingEntity::class, AutomaticTagEntity::class, OrganizationRejectionEntity::class, SemanticLinkEntity::class, TopicDiscoveryKeyEntity::class],
     views = [TagDetails::class],
-    version = 7,
+    version = 8,
     exportSchema = true,
 )
 abstract class NoteDatabase : RoomDatabase() {
@@ -16,6 +16,18 @@ abstract class NoteDatabase : RoomDatabase() {
     abstract fun organizationDao(): OrganizationDao
 
     companion object {
+        val MIGRATION_7_8 = object : Migration(7, 8) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE topic_discovery_keys ADD COLUMN subject TEXT")
+                db.execSQL("ALTER TABLE topic_discovery_keys ADD COLUMN memberIds TEXT")
+                db.execSQL("ALTER TABLE topic_discovery_keys ADD COLUMN branchKey TEXT")
+                db.execSQL("ALTER TABLE topic_discovery_keys ADD COLUMN mergeKind INTEGER NOT NULL DEFAULT 0")
+                // Old redirects did not distinguish user merges from automatic consolidation.
+                // Preserve exact historic bindings to retained destinations, never authorize growth.
+                db.execSQL("UPDATE topic_discovery_keys SET mergeKind = 2 WHERE tagId IN (SELECT tagId FROM topic_discovery_keys WHERE `key` LIKE 'merged-id:%') AND tagId IN (SELECT id FROM tags WHERE provisional = 0)")
+                db.execSQL("UPDATE organization_state SET generation = generation + 1, error = NULL")
+            }
+        }
         // Triggers make queueing atomic with every input change, including bulk edits.
         fun installOrganizationTriggers(db: SupportSQLiteDatabase) {
             db.execSQL("INSERT OR IGNORE INTO organization_state VALUES (1, 0, -1, NULL)")

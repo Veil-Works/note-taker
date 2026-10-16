@@ -1,11 +1,23 @@
 # Grouping and labeling: research and proposed operation plan
 
-Research date: 2026-09-29. Status: proposal, not an implemented replacement.
+Research date: 2026-09-29. Status: identity component implemented; model and
+discovery comparisons remain proposed.
+
+Implementation update: rules 12 implement the identity-reconciliation component and
+Room schema 8 records lineage provenance. See [current identity behavior](TOPICS.md).
+The embedding/discovery experiments below remain proposed. Automatic identity
+consolidation is disabled. Ambiguous pre-v8 redirected retained topics preserve
+exact historical bindings only; lost merge intent cannot be reconstructed reliably.
 
 The immediate experimental environment is this laptop. Embedding and grouping
 benchmarks must run independently of Android. Android export, integration, and
 physical-device performance testing follow only after desktop quality results
 justify a candidate. No new model benchmark was run during this research.
+
+Commercial constraint added 2026-09-29: the app is intended for sale. Only models
+and dependencies permitting the intended commercial use and redistribution may be
+shipped. The first embedding round prefers Apache-2.0/MIT candidates, with pinned
+license evidence. See [laptop protocol](EMBEDDING_BENCHMARK_PROTOCOL.md).
 
 ## Recommendation
 
@@ -280,3 +292,9 @@ missed subjects, label coverage/specificity, abstention coverage, rare-topic qua
 and identity stability separately. Do not optimize only topic count, grouped-note
 coverage, selected pairs, or automated coherence. Give per-notebook results and
 uncertainty rather than one misleading aggregate score.
+
+The first English laptop embedding comparison is now complete: [results](EMBEDDING_COMPARISON.md) and [interpretation / next experiment](EMBEDDING_NEXT_STEPS.md). Granite improves selected-pair separation but does not consistently fix scope labeling; retain the current app model pending end-to-end evaluation.
+
+Follow-up laptop tests (2026-09-30): [408 grouping configurations and scope/focus contrasts](EMBEDDING_GROUPING_COMPARISON.md). BGE should remain alongside Granite in the shortlist; complete-link grouping limits bridging better than connected components, while overlapping cores need consolidation. Scope descriptions help the reported chat/focus errors but do not establish a production label validator. Interpretation is appended to [next steps](EMBEDDING_NEXT_STEPS.md).
+
+User direction (2026-09-30): identify two or three general processing approaches rather than adding case-specific fixes. The active [shortlist](GENERAL_PROCESSING_SHORTLIST.md) is hierarchical clustering, density clustering, and overlapping coherent neighbor cores, with shared corpus-derived labeling. [General results](GENERAL_GROUPING_COMPARISON.md) cover 344 configurations. Supplied-scope/rival/exclusion improvements are excluded from approach selection; earlier reports remain historical diagnostics.

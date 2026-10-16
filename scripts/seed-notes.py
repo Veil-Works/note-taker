@@ -56,8 +56,8 @@ def main():
     seeded_path = backup_dir / 'seeded.db'
     with sqlite3.connect(working_dir / 'notes.db') as original, sqlite3.connect(seeded_path) as seeded:
         original.backup(seeded)
-        if seeded.execute('PRAGMA user_version').fetchone()[0] != 7:
-            raise SystemExit('Expected Room schema 7. Install and launch the current debug app first.')
+        if seeded.execute('PRAGMA user_version').fetchone()[0] != 8:
+            raise SystemExit('Expected Room schema 8. Install and launch the current debug app first.')
         before = seeded.execute('SELECT COUNT(*) FROM notes').fetchone()[0]
         now_ms = int(datetime.datetime.now(datetime.timezone.utc).timestamp() * 1000)
         namespace = uuid.UUID('2e73e9b1-28eb-4ff1-bb40-7873d608f4d2')

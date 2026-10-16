@@ -90,7 +90,7 @@ Compose screens → ViewModels / immutable state → NoteRepository → Room / S
 `feature/` screens, `model/` values, `data/` repositories, `data/local/` schema and
 DAOs, `organization/` inference and matching, and `ui/` shared components.
 
-Room schema 7 migrates versions 1–6 without deleting the notebook. Internal `Tag`
+Room schema 8 migrates versions 1–7 without deleting the notebook. Internal `Tag`
 names and the `tags` table remain as the storage identity for unified topics;
 there is no separate automatic-topic membership store. Schema files are committed.
 

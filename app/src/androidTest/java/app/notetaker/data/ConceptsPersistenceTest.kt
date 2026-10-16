@@ -88,7 +88,7 @@ class ConceptsPersistenceTest {
             old.execSQL("INSERT INTO tag_dismissals VALUES ('a', 't')")
             old.version = 4
         }
-        val db = Room.databaseBuilder(context, NoteDatabase::class.java, name).addMigrations(NoteDatabase.MIGRATION_4_5, NoteDatabase.MIGRATION_5_6, NoteDatabase.MIGRATION_6_7).build()
+        val db = Room.databaseBuilder(context, NoteDatabase::class.java, name).addMigrations(NoteDatabase.MIGRATION_4_5, NoteDatabase.MIGRATION_5_6, NoteDatabase.MIGRATION_6_7, NoteDatabase.MIGRATION_7_8).build()
         try {
             val repo = RoomNoteRepository(db.noteDao())
             assertEquals(8, repo.observeTypes().first().size)

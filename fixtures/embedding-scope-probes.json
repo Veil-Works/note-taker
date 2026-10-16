@@ -1,0 +1,20 @@
+{
+  "description": "Development contrast probes derived before embedding comparison from the user's 2026-09-29 review. Preferred replacement labels marked proposed are analyst suggestions, not approved final taxonomy. IDs index sample-notes + expanded-notes. These are not exhaustive labels or a held-out test.",
+  "probes": [
+    {"note": 120, "preferred": "Rosemary", "rejected": "Basil", "basis": "user-reported species mismatch"},
+    {"note": 35, "preferred": "Running", "rejected": "Running gear", "basis": "user-reported scope; representative plain run"},
+    {"note": 103, "preferred": "Running", "rejected": "Running gear", "basis": "user-reported scope; representative plain run"},
+    {"note": 108, "preferred": "Meal preparation", "rejected": "Running gear", "basis": "rejection confirmed; preferred label proposed"},
+    {"note": 28, "preferred": "Focused work", "rejected": "Chat", "basis": "rejection confirmed; preferred label proposed"},
+    {"note": 94, "preferred": "Focused work", "rejected": "Chat", "basis": "rejection confirmed; preferred label proposed"},
+    {"note": 72, "preferred": "Walking", "rejected": "Meetings", "basis": "rejection confirmed; preferred label proposed"},
+    {"note": 161, "preferred": "Walking", "rejected": "Meetings", "basis": "rejection confirmed; preferred label proposed"},
+    {"note": 57, "preferred": "Meetings", "rejected": "Meeting planning", "basis": "explicit user scope preference"},
+    {"note": 145, "preferred": "Reading notes", "rejected": "Chapter", "basis": "rejection confirmed; preferred label proposed"},
+    {"note": 147, "preferred": "Piano practice", "rejected": "Phrases", "basis": "mixed topic rejected; preferred label proposed"},
+    {"note": 151, "preferred": "French practice", "rejected": "Phrases", "basis": "mixed topic rejected; preferred label proposed"},
+    {"note": 63, "preferred": "Note-taking", "rejected": "Phrases", "basis": "mixed topic rejected; preferred label proposed"},
+    {"note": 46, "preferred": "Running gear", "rejected": "Running", "basis": "user scope preference; exact socks note ambiguous"},
+    {"note": 109, "preferred": "Running gear", "rejected": "Running", "basis": "user scope preference; exact socks note ambiguous"}
+  ]
+}

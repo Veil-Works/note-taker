@@ -169,4 +169,4 @@ The command stops the app, backs up its database and journal under `.local/backu
 and inserts only missing sample IDs into a verified database copy. Existing notes
 are preserved, and repeating the command does not duplicate or overwrite samples.
 The original database files are also retained in the app's private files directory.
-The script requires Python 3, the debuggable app, and Room schema 7.
+The script requires Python 3, the debuggable app, and Room schema 8.

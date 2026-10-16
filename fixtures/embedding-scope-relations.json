@@ -1,0 +1,18 @@
+{
+  "description": "Analyst-authored development relations for dominant note scope. Rival pairs reflect reviewed confusions; they are not a universal rule forbidding both subjects in a genuinely multi-subject note. Meetings plus Note-taking is a proposed compatible overlap. No note IDs or memberships are supplied to inference.",
+  "rivals": [
+    ["Rosemary", "Basil"],
+    ["Running", "Running gear"],
+    ["Running gear", "Meal preparation"],
+    ["Focused work", "Chat"],
+    ["Walking", "Meetings"],
+    ["Meetings", "Meeting planning"],
+    ["Reading notes", "Chapter"],
+    ["Piano practice", "Phrases"],
+    ["French practice", "Phrases"],
+    ["Note-taking", "Phrases"]
+  ],
+  "compatibleExamples": [["Meetings", "Note-taking"]],
+  "rejectedDisplayScopes": ["Chapter", "Phrases"],
+  "displayFilterBasis": "Separate user-preference ablation: the user rejected these vague automatic labels in the observed notebook. Explicit label exclusions, not a learned label-quality detector or a claim these words are never valid topics."
+}

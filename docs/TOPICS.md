@@ -95,16 +95,25 @@ fixed representative notes, so one newly admitted note cannot pull in a chain of
 weaker matches. Labels describe recurring subjects or semantically matched purposes.
 Automatic explanations reference a supporting note or the explicit subject.
 
-Near-duplicate candidates are combined. Untouched provisional topics can be renamed
-or consolidated when their memberships substantially survive in the same candidate;
-old identities redirect to the survivor. Customized topics are never automatically
-deleted or renamed by this consolidation. Renaming a topic does not lock its members.
+Near-duplicate discovery candidates are combined before identity reconciliation.
+Saved identities are no longer automatically consolidated. Rules 12 reconcile all
+discoveries against the same pre-run snapshot using a deterministic global partial
+one-to-one assignment. Retained topics obey the same uniqueness rule. Unresolved
+matches get new identities; unsupported provisional identities expire normally.
 
-The organizer first checks a stored fingerprint of the group's contents. Otherwise
-it looks for substantial membership overlap with existing topics. Overlap from
-changed notes must still agree with their previously cached meaning. Current
-user-defined matches also supply identity evidence. Matching names alone do not
-cause a merge; name collisions get a numeric suffix.
+Identity evidence includes stored discovery subjects, member IDs, compatible content
+fingerprints, and continuous memberships. Excluded notes do not count as positive
+overlap. A single shared mixed note requires independent strong subject/member
+agreement; it cannot merge Library into Balcony rosemary by overlap alone. Renaming
+preserves the original discovered subject as separate evidence. All thresholds remain
+heuristics; this is not a new semantic model or a general accuracy guarantee.
+
+New explicit user merges record separate branch identities. Multiple branches may
+map to the chosen target and grow independently, while each branch gets at most one
+discovery per pass. An automatic match cannot grant this exception. Splits keep at
+most one ordinary child under the original ID. Deletions and exclusions remain
+authoritative. Final names are allocated after all identity choices; expiring names
+are released transactionally before renames/inserts, avoiding transient suffixes.
 
 Generated names of provisional topics are excluded from exact-name attachment.
 Automatic memberships can identify previous groups but never become positive
@@ -119,7 +128,7 @@ a topic is not a global prohibition on discovering any related subject in future
 
 ## Storage and migration
 
-Room schema 7 extends the existing `tags` identity with a `provisional` flag. The
+Room schema 7 extended the existing `tags` identity with a `provisional` flag. The
 internal `Tag` class remains for compatibility with existing editor/filter code;
 all product-facing wording uses Topics. Memberships use `note_tags`,
 `automatic_tags`, and `organization_rejections`. The graph Topic value is a read
@@ -132,6 +141,32 @@ are disambiguated, never silently merged. Customized groups retain their identit
 Legacy explicitly merged groups become manual memberships because their old UI
 promised to keep the combined membership; ordinary and renamed groups remain
 automatic memberships. All earlier migrations chain through this migration.
+
+Schema 8 adds subject, member IDs, branch identity and merge provenance to discovery
+keys. The 7→8 migration preserves note contents, timestamps and user state and queues
+reconciliation. Old redirects did not distinguish user merges from inferred merges:
+exact historical bindings to retained redirected topics are preserved as legacy
+bindings, but do not authorize new many-to-one growth. This conservative exception
+can retain an ambiguous historical merge; it does not claim to recover lost intent.
+Ordinary old bindings without that exception are rechecked for compatibility, so
+an old bad overlap binding is not automatically trusted.
+
+### Rules 12 validation (2026-09-29)
+
+All 75 JVM tests pass, including 17 pure reconciliation cases. Debug and test APK
+builds and lint pass (zero errors, 24 existing warnings). The final targeted emulator
+run passes all 15 tests across identity persistence, unified topics, and the corrected
+manual-topic regression. The earlier 60-test application run passed 59 tests and
+exposed that manual-topic duplication; its failing case passes in the final targeted
+run. Six new persistence tests cover the legacy bridge repair, explicit merge growth,
+identical-membership subjects, expiring names, atomic name swaps/stale generations,
+and schema 7→8 migration. The phone was not accessed.
+
+These tests verify reconciliation behavior, not an improvement in semantic grouping
+accuracy. The compatibility scores remain heuristic. Historical merge intent cannot
+be recovered perfectly, and conservative unmatched choices can produce a new topic
+instead of retaining an uncertain old identity. Embedding/model comparisons remain
+a laptop-first follow-up.
 
 Discovery writes and queue completion happen in one transaction. The initial
 generation guard rejects stale results. Topic creation/pruning triggers enqueue

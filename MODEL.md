@@ -1,5 +1,15 @@
 # Offline organization model
 
+## Identity reconciliation (rules version 12)
+
+Discovery and the bundled encoder are unchanged. A separate pure reconciler matches
+all candidate groups to saved identities globally, with independent subject/member
+evidence and an unmatched option. Rejections are not positive overlap. Automatic
+saved-topic consolidation is removed; explicit merges retain distinct branches.
+Room schema 8 records discovery subjects, member IDs, branch IDs and merge provenance.
+Names are allocated from the final identity set. See [topic identity rules](docs/TOPICS.md).
+Embedding benchmarks remain a separate laptop-first task.
+
 V7 bundles the English sentence-transformers/all-MiniLM-L6-v2 model, quantized to
 int8 for ARM64, with ONNX Runtime Android 1.23.2. No network inference or runtime
 model downloads occur. The model and vocabulary are committed as assets.

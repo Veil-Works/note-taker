@@ -22,7 +22,7 @@ class UnifiedTopicsTest {
         override fun embed(text: String) = if (text.startsWith("Orion")) floatArrayOf(1f, 0f) else floatArrayOf(0f, 1f)
     }
 
-    @Test fun rediscovery_consolidates_untouched_topics_and_preserves_redirects_and_user_names() = runTest {
+    @Test fun ambiguous_old_topics_expire_without_guessing_a_merge_and_user_names_survive() = runTest {
         val db = database()
         try {
             val repo = RoomNoteRepository(db.noteDao(), db.organizationDao())
@@ -43,11 +43,12 @@ class UnifiedTopicsTest {
             assertEquals(2, topics.size)
             assertEquals("My release notes", topics.single { it.id == retained.id }.name)
             val inferred = topics.single { it.provisional }
-            assertEquals("old-a", inferred.id)
+            assertFalse(inferred.id in setOf("old-a", "old-b"))
             assertNotEquals("Session", inferred.name)
             assertEquals(setOf("a", "b", "c", "d"), repo.observeTopics().first().single { it.id == inferred.id }.noteIds)
-            assertEquals(inferred.id, repo.observeTopicRedirects().first()["old-b"])
-            assertEquals(inferred.id, dao.discoveryKeys().single { it.key == "previous-b" }.tagId)
+            assertTrue(repo.observeTopicRedirects().first().containsKey("old-b"))
+            assertNull(repo.observeTopicRedirects().first()["old-b"])
+            assertFalse(dao.discoveryKeys().any { it.key == "previous-b" })
             repo.retryOrganization(); assertTrue(organizer.runOnce())
             assertEquals(topics.map { it.id to it.name }, repo.observeTags().first().map { it.id to it.name })
             assertTrue(repo.observeNotes().first().all { it.updatedAt == 1L })
@@ -228,7 +229,7 @@ class UnifiedTopicsTest {
             old.execSQL("INSERT INTO topic_notes VALUES ('run', 'a'), ('run', 'b'), ('named', 'b'), ('merged', 'c')")
             old.version = 6
         }
-        val db = Room.databaseBuilder(context, NoteDatabase::class.java, name).addMigrations(NoteDatabase.MIGRATION_6_7).build()
+        val db = Room.databaseBuilder(context, NoteDatabase::class.java, name).addMigrations(NoteDatabase.MIGRATION_6_7, NoteDatabase.MIGRATION_7_8).build()
         try {
             val repo = RoomNoteRepository(db.noteDao(), db.organizationDao())
             val topics = repo.observeTags().first()

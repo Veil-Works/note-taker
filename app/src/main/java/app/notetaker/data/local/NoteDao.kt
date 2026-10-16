@@ -144,6 +144,8 @@ interface NoteDao {
     @Upsert suspend fun saveTopicRedirect(row: TopicDiscoveryKeyEntity)
     @Query("UPDATE topic_discovery_keys SET tagId = :target WHERE tagId = :source")
     suspend fun redirectDiscoveryKeys(target: String, source: String)
+    @Query("UPDATE topic_discovery_keys SET mergeKind = 1 WHERE tagId = :target OR tagId = :source")
+    suspend fun markExplicitMerge(target: String, source: String)
     @Query("INSERT OR IGNORE INTO note_tags SELECT noteId, :target FROM note_tags WHERE tagId = :source")
     suspend fun transferManual(target: String, source: String)
     @Query("INSERT OR IGNORE INTO organization_rejections SELECT noteId, :target, content FROM organization_rejections WHERE tagId = :source")
@@ -180,8 +182,9 @@ interface NoteDao {
         if (from.normalizedName != to.normalizedName) {
             insertAlias(TagAliasEntity(java.util.UUID.randomUUID().toString(), target, from.name, from.normalizedName))
         }
+        markExplicitMerge(target, source)
         redirectDiscoveryKeys(target, source)
-        saveTopicRedirect(TopicDiscoveryKeyEntity("merged-id:$source", target))
+        saveTopicRedirect(TopicDiscoveryKeyEntity("merged-id:$source", target, mergeKind = 1))
         deleteTag(source)
     }
 

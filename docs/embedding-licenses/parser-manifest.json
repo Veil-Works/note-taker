@@ -1,0 +1,1003 @@
+{
+  "spacyVersion": "3.8.7",
+  "modelMeta": {
+    "lang": "en",
+    "name": "core_web_sm",
+    "version": "3.8.0",
+    "description": "English pipeline optimized for CPU. Components: tok2vec, tagger, parser, senter, ner, attribute_ruler, lemmatizer.",
+    "author": "Explosion",
+    "email": "contact@explosion.ai",
+    "url": "https://explosion.ai",
+    "license": "MIT",
+    "spacy_version": ">=3.8.0,<3.9.0",
+    "spacy_git_version": "5010fcbd3",
+    "vectors": {
+      "width": 0,
+      "vectors": 0,
+      "keys": 0,
+      "name": null,
+      "mode": "default"
+    },
+    "labels": {
+      "tok2vec": [],
+      "tagger": [
+        "$",
+        "''",
+        ",",
+        "-LRB-",
+        "-RRB-",
+        ".",
+        ":",
+        "ADD",
+        "AFX",
+        "CC",
+        "CD",
+        "DT",
+        "EX",
+        "FW",
+        "HYPH",
+        "IN",
+        "JJ",
+        "JJR",
+        "JJS",
+        "LS",
+        "MD",
+        "NFP",
+        "NN",
+        "NNP",
+        "NNPS",
+        "NNS",
+        "PDT",
+        "POS",
+        "PRP",
+        "PRP$",
+        "RB",
+        "RBR",
+        "RBS",
+        "RP",
+        "SYM",
+        "TO",
+        "UH",
+        "VB",
+        "VBD",
+        "VBG",
+        "VBN",
+        "VBP",
+        "VBZ",
+        "WDT",
+        "WP",
+        "WP$",
+        "WRB",
+        "XX",
+        "_SP",
+        "``"
+      ],
+      "parser": [
+        "ROOT",
+        "acl",
+        "acomp",
+        "advcl",
+        "advmod",
+        "agent",
+        "amod",
+        "appos",
+        "attr",
+        "aux",
+        "auxpass",
+        "case",
+        "cc",
+        "ccomp",
+        "compound",
+        "conj",
+        "csubj",
+        "csubjpass",
+        "dative",
+        "dep",
+        "det",
+        "dobj",
+        "expl",
+        "intj",
+        "mark",
+        "meta",
+        "neg",
+        "nmod",
+        "npadvmod",
+        "nsubj",
+        "nsubjpass",
+        "nummod",
+        "oprd",
+        "parataxis",
+        "pcomp",
+        "pobj",
+        "poss",
+        "preconj",
+        "predet",
+        "prep",
+        "prt",
+        "punct",
+        "quantmod",
+        "relcl",
+        "xcomp"
+      ],
+      "attribute_ruler": [],
+      "lemmatizer": [],
+      "ner": [
+        "CARDINAL",
+        "DATE",
+        "EVENT",
+        "FAC",
+        "GPE",
+        "LANGUAGE",
+        "LAW",
+        "LOC",
+        "MONEY",
+        "NORP",
+        "ORDINAL",
+        "ORG",
+        "PERCENT",
+        "PERSON",
+        "PRODUCT",
+        "QUANTITY",
+        "TIME",
+        "WORK_OF_ART"
+      ]
+    },
+    "pipeline": [
+      "tok2vec",
+      "tagger",
+      "parser",
+      "attribute_ruler",
+      "lemmatizer"
+    ],
+    "components": [
+      "tok2vec",
+      "tagger",
+      "parser",
+      "senter",
+      "attribute_ruler",
+      "lemmatizer",
+      "ner"
+    ],
+    "disabled": [
+      "senter",
+      "ner"
+    ],
+    "performance": {
+      "token_acc": 0.9986194413,
+      "token_p": 0.9956819193,
+      "token_r": 0.9957659295000001,
+      "token_f": 0.9957239226000001,
+      "tag_acc": 0.9729372620000001,
+      "sents_p": 0.9200841934,
+      "sents_r": 0.8939244013000001,
+      "sents_f": 0.9068156724,
+      "dep_uas": 0.9176955214,
+      "dep_las": 0.8991533598,
+      "dep_las_per_type": {
+        "prep": {
+          "p": 0.8541604085000001,
+          "r": 0.8631379245,
+          "f": 0.8586257006
+        },
+        "det": {
+          "p": 0.9768729642,
+          "r": 0.9782271875,
+          "f": 0.9775496068
+        },
+        "pobj": {
+          "p": 0.9620664033,
+          "r": 0.966071078,
+          "f": 0.9640645819
+        },
+        "nsubj": {
+          "p": 0.9573684677000001,
+          "r": 0.9454983571000001,
+          "f": 0.9513963894
+        },
+        "aux": {
+          "p": 0.9792295402000001,
+          "r": 0.982106294,
+          "f": 0.9806658074000001
+        },
+        "advmod": {
+          "p": 0.8525198045,
+          "r": 0.8510853104,
+          "f": 0.8518019535
+        },
+        "relcl": {
+          "p": 0.7660107335,
+          "r": 0.776850508,
+          "f": 0.7713925419000001
+        },
+        "root": {
+          "p": 0.9179682195000001,
+          "r": 0.8917474767,
+          "f": 0.9046678936
+        },
+        "xcomp": {
+          "p": 0.8814035088000001,
+          "r": 0.9016511127,
+          "f": 0.8914123492
+        },
+        "amod": {
+          "p": 0.9161996611000001,
+          "r": 0.9109167477000001,
+          "f": 0.9135505669
+        },
+        "compound": {
+          "p": 0.916113822,
+          "r": 0.9305524616,
+          "f": 0.9232766957
+        },
+        "poss": {
+          "p": 0.9741586538,
+          "r": 0.9788647343,
+          "f": 0.9765060241
+        },
+        "ccomp": {
+          "p": 0.7786216062,
+          "r": 0.8352342159,
+          "f": 0.8059349514
+        },
+        "attr": {
+          "p": 0.8972491909,
+          "r": 0.9327165685000001,
+          "f": 0.9146391753
+        },
+        "case": {
+          "p": 0.9782608696,
+          "r": 0.9909909910000001,
+          "f": 0.9845847837
+        },
+        "mark": {
+          "p": 0.9028511088000001,
+          "r": 0.906200318,
+          "f": 0.9045226131
+        },
+        "intj": {
+          "p": 0.6679841897000001,
+          "r": 0.619047619,
+          "f": 0.6425855513000001
+        },
+        "advcl": {
+          "p": 0.6656519533,
+          "r": 0.6607907328,
+          "f": 0.6632124352000001
+        },
+        "cc": {
+          "p": 0.8345964153000001,
+          "r": 0.8298050472,
+          "f": 0.8321938347000001
+        },
+        "neg": {
+          "p": 0.9475786321,
+          "r": 0.9523331661000001,
+          "f": 0.9499499499
+        },
+        "conj": {
+          "p": 0.7649689441,
+          "r": 0.7751762336,
+          "f": 0.7700387645
+        },
+        "nsubjpass": {
+          "p": 0.9159021407,
+          "r": 0.9215384615000001,
+          "f": 0.9187116564000001
+        },
+        "auxpass": {
+          "p": 0.9494232476000001,
+          "r": 0.9749430524,
+          "f": 0.9620139357
+        },
+        "dobj": {
+          "p": 0.9231431478000001,
+          "r": 0.9399155311,
+          "f": 0.9314538419
+        },
+        "nummod": {
+          "p": 0.9353284301,
+          "r": 0.9313131313,
+          "f": 0.9333164621000001
+        },
+        "npadvmod": {
+          "p": 0.7748267898000001,
+          "r": 0.7150976909,
+          "f": 0.7437650102000001
+        },
+        "prt": {
+          "p": 0.8148760331,
+          "r": 0.8835125448000001,
+          "f": 0.8478073947
+        },
+        "pcomp": {
+          "p": 0.8693820225000001,
+          "r": 0.8669467787,
+          "f": 0.8681626928
+        },
+        "expl": {
+          "p": 0.9789029536,
+          "r": 0.9935760171,
+          "f": 0.9861849097000001
+        },
+        "acl": {
+          "p": 0.7417295415,
+          "r": 0.6972176759000001,
+          "f": 0.7187851519
+        },
+        "agent": {
+          "p": 0.8994889267,
+          "r": 0.9462365591,
+          "f": 0.9222707424000001
+        },
+        "dative": {
+          "p": 0.7669172932,
+          "r": 0.7018348624,
+          "f": 0.7329341317
+        },
+        "acomp": {
+          "p": 0.9132441163,
+          "r": 0.8975056689,
+          "f": 0.9053064959
+        },
+        "dep": {
+          "p": 0.3686006826,
+          "r": 0.1753246753,
+          "f": 0.23762376240000002
+        },
+        "csubj": {
+          "p": 0.7039106145,
+          "r": 0.7455621302000001,
+          "f": 0.724137931
+        },
+        "quantmod": {
+          "p": 0.8625336927,
+          "r": 0.7798537774000001,
+          "f": 0.8191126280000001
+        },
+        "nmod": {
+          "p": 0.7528868360000001,
+          "r": 0.5959780622,
+          "f": 0.6653061224
+        },
+        "appos": {
+          "p": 0.6866606983,
+          "r": 0.6655097614000001,
+          "f": 0.6759198061
+        },
+        "predet": {
+          "p": 0.8406374502,
+          "r": 0.9055793991000001,
+          "f": 0.8719008264
+        },
+        "preconj": {
+          "p": 0.5591397849,
+          "r": 0.6046511628,
+          "f": 0.5810055866
+        },
+        "oprd": {
+          "p": 0.8287671233,
+          "r": 0.7223880597,
+          "f": 0.7719298246
+        },
+        "parataxis": {
+          "p": 0.5860215054,
+          "r": 0.4728850325,
+          "f": 0.5234093637
+        },
+        "meta": {
+          "p": 0.8,
+          "r": 0.4615384615,
+          "f": 0.5853658537
+        },
+        "csubjpass": {
+          "p": 0.625,
+          "r": 0.8333333333,
+          "f": 0.7142857143
+        }
+      },
+      "ents_p": 0.8429743795,
+      "ents_r": 0.8436498397000001,
+      "ents_f": 0.8433119744,
+      "ents_per_type": {
+        "DATE": {
+          "p": 0.8531038722000001,
+          "r": 0.8812698413000001,
+          "f": 0.8669581512000001
+        },
+        "GPE": {
+          "p": 0.9142205757,
+          "r": 0.8948396095000001,
+          "f": 0.9044262757
+        },
+        "ORDINAL": {
+          "p": 0.7741046832,
+          "r": 0.8726708075,
+          "f": 0.8204379562
+        },
+        "ORG": {
+          "p": 0.7904834996000001,
+          "r": 0.8191940615000001,
+          "f": 0.8045827366
+        },
+        "CARDINAL": {
+          "p": 0.8149386845000001,
+          "r": 0.8692033294,
+          "f": 0.8411967779
+        },
+        "FAC": {
+          "p": 0.3904761905,
+          "r": 0.3153846154,
+          "f": 0.3489361702
+        },
+        "PERSON": {
+          "p": 0.8574969021000001,
+          "r": 0.9033942559,
+          "f": 0.8798474253
+        },
+        "NORP": {
+          "p": 0.9031224980000001,
+          "r": 0.9024000000000001,
+          "f": 0.9027611044
+        },
+        "TIME": {
+          "p": 0.7454545455,
+          "r": 0.7192982456,
+          "f": 0.7321428571
+        },
+        "LOC": {
+          "p": 0.7356321839000001,
+          "r": 0.6114649682000001,
+          "f": 0.667826087
+        },
+        "MONEY": {
+          "p": 0.915274463,
+          "r": 0.9055489965,
+          "f": 0.9103857567
+        },
+        "QUANTITY": {
+          "p": 0.8153846154000001,
+          "r": 0.5824175824,
+          "f": 0.6794871795
+        },
+        "WORK_OF_ART": {
+          "p": 0.47445255470000003,
+          "r": 0.3350515464,
+          "f": 0.3927492447
+        },
+        "EVENT": {
+          "p": 0.6341463415,
+          "r": 0.29885057470000004,
+          "f": 0.40625000000000006
+        },
+        "LAW": {
+          "p": 0.44642857140000003,
+          "r": 0.390625,
+          "f": 0.4166666667
+        },
+        "PERCENT": {
+          "p": 0.9153354633,
+          "r": 0.8774885145,
+          "f": 0.8960125098
+        },
+        "LANGUAGE": {
+          "p": 0.7692307692,
+          "r": 0.625,
+          "f": 0.6896551724000001
+        },
+        "PRODUCT": {
+          "p": 0.5287356322,
+          "r": 0.2180094787,
+          "f": 0.3087248322
+        }
+      },
+      "speed": 9426.1029865937
+    },
+    "sources": [
+      {
+        "name": "OntoNotes 5",
+        "url": "https://catalog.ldc.upenn.edu/LDC2013T19",
+        "license": "commercial (licensed by Explosion)",
+        "author": "Ralph Weischedel, Martha Palmer, Mitchell Marcus, Eduard Hovy, Sameer Pradhan, Lance Ramshaw, Nianwen Xue, Ann Taylor, Jeff Kaufman, Michelle Franchini, Mohammed El-Bachouti, Robert Belvin, Ann Houston"
+      },
+      {
+        "name": "ClearNLP Constituent-to-Dependency Conversion",
+        "url": "https://github.com/clir/clearnlp-guidelines/blob/master/md/components/dependency_conversion.md",
+        "license": "Citation provided for reference, no code packaged with model",
+        "author": "Emory University"
+      },
+      {
+        "name": "WordNet 3.0",
+        "url": "https://wordnet.princeton.edu/",
+        "author": "Princeton University",
+        "license": "WordNet 3.0 License"
+      }
+    ],
+    "requirements": []
+  },
+  "modelFiles": [
+    {
+      "path": "__init__.py",
+      "sha256": "c8eb57079c03fc4157c227f641781fbcb3e9d11439abe1bf0b72e4c0fa78a38d",
+      "bytes": 237
+    },
+    {
+      "path": "en_core_web_sm-3.8.0/LICENSE",
+      "sha256": "3933c176979b68bc6d0bcc902c7d6c130f1d127f476f17ba5cdba8d99cfd0012",
+      "bytes": 1056
+    },
+    {
+      "path": "en_core_web_sm-3.8.0/LICENSES_SOURCES",
+      "sha256": "20d9dfacd215112251f15341edd1a47b1f98bf393a212f10f194ffdc7ee98a90",
+      "bytes": 2347
+    },
+    {
+      "path": "en_core_web_sm-3.8.0/README.md",
+      "sha256": "91b0ed1742ea0803034b4d769c4536e88d9d4da7808d833f2a804b6c54aae220",
+      "bytes": 2587
+    },
+    {
+      "path": "en_core_web_sm-3.8.0/accuracy.json",
+      "sha256": "e7572d7f2f3c18e9921471f9d0b3424f8cf7f1a909ae484fa10b780a13f4c676",
+      "bytes": 6341
+    },
+    {
+      "path": "en_core_web_sm-3.8.0/attribute_ruler/patterns",
+      "sha256": "f8b97f7ebef9b8536bba5f0fc1e73af6183563e96e2325bcbb021b8c6dbc6683",
+      "bytes": 14735
+    },
+    {
+      "path": "en_core_web_sm-3.8.0/config.cfg",
+      "sha256": "65c545ca2da5bd4b87b22d4917318605360b37dee6ed6b18516a036f87319f79",
+      "bytes": 5527
+    },
+    {
+      "path": "en_core_web_sm-3.8.0/lemmatizer/lookups/lookups.bin",
+      "sha256": "eb64f40c0f8396d1762730c0ddf4dad2a52d138f5a389f71a1a1d088173b7737",
+      "bytes": 972893
+    },
+    {
+      "path": "en_core_web_sm-3.8.0/meta.json",
+      "sha256": "7456349002fa8cf31111051bd37fdbea67a1b7f7a0a60ce235466f98a6758125",
+      "bytes": 10106
+    },
+    {
+      "path": "en_core_web_sm-3.8.0/ner/cfg",
+      "sha256": "a7172edadafba9f472e9ac0f2660eec04b6405e471be9e20267b79c67288d22d",
+      "bytes": 221
+    },
+    {
+      "path": "en_core_web_sm-3.8.0/ner/model",
+      "sha256": "cd93e9ca9126c69f1d10a1039ef67c3d9ec1223b44d079856705970f0f19ff4e",
+      "bytes": 6154601
+    },
+    {
+      "path": "en_core_web_sm-3.8.0/ner/moves",
+      "sha256": "d82b13473ebd33e0396004dd22f00c71fe3c1251742bf1f7c4554f23fd3b0af4",
+      "bytes": 1064
+    },
+    {
+      "path": "en_core_web_sm-3.8.0/parser/cfg",
+      "sha256": "e2a240ef01f95e58f5dd4c9d6e90d61f597b8d998966570d3009dd81e8879780",
+      "bytes": 222
+    },
+    {
+      "path": "en_core_web_sm-3.8.0/parser/model",
+      "sha256": "e0098910535a863d430082ece57455d5fa071cd4ca3a0054e80582076c752b1e",
+      "bytes": 319909
+    },
+    {
+      "path": "en_core_web_sm-3.8.0/parser/moves",
+      "sha256": "ec41318c32eb7f9e4d8f050b2e8466ee67954d2d3455c1aec73abf46c82dd67f",
+      "bytes": 1571
+    },
+    {
+      "path": "en_core_web_sm-3.8.0/senter/cfg",
+      "sha256": "2a4db4a729b6469da1f87d71cc7cd3ed2a73360cc85326821e850836c4671103",
+      "bytes": 23
+    },
+    {
+      "path": "en_core_web_sm-3.8.0/senter/model",
+      "sha256": "b69e7174a0b6307739adec3c8053ac45fdbad7171c4d3d8bfcd9713ecbc01f8c",
+      "bytes": 197089
+    },
+    {
+      "path": "en_core_web_sm-3.8.0/tagger/cfg",
+      "sha256": "d484c3d9391f37bf9c727aa2eb4c477a24cb103020f95e52dc37842818b50118",
+      "bytes": 615
+    },
+    {
+      "path": "en_core_web_sm-3.8.0/tagger/model",
+      "sha256": "1ec3d93f38cebe172f2b5c89d84be72856ce42c8f1a64f1699f1d98a771f36b7",
+      "bytes": 19829
+    },
+    {
+      "path": "en_core_web_sm-3.8.0/tok2vec/cfg",
+      "sha256": "f8a5a26e3056eb6fb06deeb3dbccfd88ae74900200c98c70b5966bbb7ec9d4de",
+      "bytes": 4
+    },
+    {
+      "path": "en_core_web_sm-3.8.0/tok2vec/model",
+      "sha256": "e84fc06eb319c94d28e460fc334e292120b01f18baa5dc8b50c977459820a090",
+      "bytes": 6269370
+    },
+    {
+      "path": "en_core_web_sm-3.8.0/tokenizer",
+      "sha256": "b014e8bba4958b120af2d0c1c63eabb7c00379f2bacaf10df7c5325efd2ea467",
+      "bytes": 77066
+    },
+    {
+      "path": "en_core_web_sm-3.8.0/vocab/key2row",
+      "sha256": "76be8b528d0075f7aae98d6fa57a6d3c83ae480a8469e668d7b0af968995ac71",
+      "bytes": 1
+    },
+    {
+      "path": "en_core_web_sm-3.8.0/vocab/lookups.bin",
+      "sha256": "fce9c883c56165f29573cc938c2a1c9d417ac61bd8f56b671dd5f7996de70682",
+      "bytes": 70040
+    },
+    {
+      "path": "en_core_web_sm-3.8.0/vocab/strings.json",
+      "sha256": "b1966d1f07a05b68576df07f43f40203b4e11124ad82cc839e8312ad8d7fdae7",
+      "bytes": 1103983
+    },
+    {
+      "path": "en_core_web_sm-3.8.0/vocab/vectors",
+      "sha256": "14772b683e726436d5948ad3fff2b43d036ef2ebbe3458aafed6004e05a40706",
+      "bytes": 128
+    },
+    {
+      "path": "en_core_web_sm-3.8.0/vocab/vectors.cfg",
+      "sha256": "ff4359091952c8cd16f1f0482f5770fb82d1707368d5cca3c46aa501f552e3c5",
+      "bytes": 22
+    },
+    {
+      "path": "meta.json",
+      "sha256": "7456349002fa8cf31111051bd37fdbea67a1b7f7a0a60ce235466f98a6758125",
+      "bytes": 10106
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "annotated-types",
+      "version": "0.8.0",
+      "licenseExpression": "MIT",
+      "license": null,
+      "classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ]
+    },
+    {
+      "name": "blis",
+      "version": "1.3.3",
+      "licenseExpression": null,
+      "license": "BSD",
+      "classifiers": [
+        "License :: OSI Approved :: BSD License"
+      ]
+    },
+    {
+      "name": "catalogue",
+      "version": "2.0.10",
+      "licenseExpression": null,
+      "license": "MIT",
+      "classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ]
+    },
+    {
+      "name": "certifi",
+      "version": "2026.7.22",
+      "licenseExpression": null,
+      "license": "MPL-2.0",
+      "classifiers": [
+        "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)"
+      ]
+    },
+    {
+      "name": "charset-normalizer",
+      "version": "3.5.2",
+      "licenseExpression": null,
+      "license": "MIT",
+      "classifiers": []
+    },
+    {
+      "name": "click",
+      "version": "8.5.0",
+      "licenseExpression": "BSD-3-Clause",
+      "license": null,
+      "classifiers": []
+    },
+    {
+      "name": "cloudpathlib",
+      "version": "0.25.0",
+      "licenseExpression": null,
+      "license": null,
+      "classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ]
+    },
+    {
+      "name": "confection",
+      "version": "0.1.5",
+      "licenseExpression": null,
+      "license": "MIT",
+      "classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ]
+    },
+    {
+      "name": "cymem",
+      "version": "2.0.13",
+      "licenseExpression": null,
+      "license": "MIT",
+      "classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ]
+    },
+    {
+      "name": "en_core_web_sm",
+      "version": "3.8.0",
+      "licenseExpression": null,
+      "license": "MIT",
+      "classifiers": []
+    },
+    {
+      "name": "idna",
+      "version": "3.20",
+      "licenseExpression": "BSD-3-Clause",
+      "license": null,
+      "classifiers": []
+    },
+    {
+      "name": "Jinja2",
+      "version": "3.1.6",
+      "licenseExpression": null,
+      "license": null,
+      "classifiers": [
+        "License :: OSI Approved :: BSD License"
+      ]
+    },
+    {
+      "name": "langcodes",
+      "version": "3.5.1",
+      "licenseExpression": null,
+      "license": null,
+      "classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ]
+    },
+    {
+      "name": "markdown-it-py",
+      "version": "4.2.0",
+      "licenseExpression": null,
+      "license": null,
+      "classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ]
+    },
+    {
+      "name": "MarkupSafe",
+      "version": "3.0.3",
+      "licenseExpression": "BSD-3-Clause",
+      "license": null,
+      "classifiers": []
+    },
+    {
+      "name": "mdurl",
+      "version": "0.1.2",
+      "licenseExpression": null,
+      "license": null,
+      "classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ]
+    },
+    {
+      "name": "murmurhash",
+      "version": "1.0.15",
+      "licenseExpression": null,
+      "license": "MIT",
+      "classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ]
+    },
+    {
+      "name": "numpy",
+      "version": "2.5.3",
+      "licenseExpression": "BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0",
+      "license": null,
+      "classifiers": []
+    },
+    {
+      "name": "packaging",
+      "version": "26.3",
+      "licenseExpression": "Apache-2.0 OR BSD-2-Clause",
+      "license": null,
+      "classifiers": []
+    },
+    {
+      "name": "preshed",
+      "version": "3.0.13",
+      "licenseExpression": null,
+      "license": "MIT",
+      "classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ]
+    },
+    {
+      "name": "pydantic",
+      "version": "2.13.5",
+      "licenseExpression": "MIT",
+      "license": null,
+      "classifiers": []
+    },
+    {
+      "name": "pydantic_core",
+      "version": "2.46.5",
+      "licenseExpression": "MIT",
+      "license": null,
+      "classifiers": []
+    },
+    {
+      "name": "Pygments",
+      "version": "2.21.0",
+      "licenseExpression": "BSD-2-Clause",
+      "license": null,
+      "classifiers": []
+    },
+    {
+      "name": "requests",
+      "version": "2.34.2",
+      "licenseExpression": null,
+      "license": "Apache-2.0",
+      "classifiers": [
+        "License :: OSI Approved :: Apache Software License"
+      ]
+    },
+    {
+      "name": "rich",
+      "version": "15.0.0",
+      "licenseExpression": null,
+      "license": "MIT",
+      "classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ]
+    },
+    {
+      "name": "setuptools",
+      "version": "84.0.0",
+      "licenseExpression": "MIT",
+      "license": null,
+      "classifiers": []
+    },
+    {
+      "name": "shellingham",
+      "version": "1.5.4",
+      "licenseExpression": null,
+      "license": "ISC License",
+      "classifiers": [
+        "License :: OSI Approved :: ISC License (ISCL)"
+      ]
+    },
+    {
+      "name": "smart_open",
+      "version": "7.7.1",
+      "licenseExpression": null,
+      "license": null,
+      "classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ]
+    },
+    {
+      "name": "spacy",
+      "version": "3.8.7",
+      "licenseExpression": null,
+      "license": "MIT",
+      "classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ]
+    },
+    {
+      "name": "spacy-legacy",
+      "version": "3.0.12",
+      "licenseExpression": null,
+      "license": "MIT",
+      "classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ]
+    },
+    {
+      "name": "spacy-loggers",
+      "version": "1.0.5",
+      "licenseExpression": null,
+      "license": "MIT",
+      "classifiers": []
+    },
+    {
+      "name": "srsly",
+      "version": "2.5.4",
+      "licenseExpression": null,
+      "license": "MIT",
+      "classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ]
+    },
+    {
+      "name": "thinc",
+      "version": "8.3.11",
+      "licenseExpression": null,
+      "license": "MIT",
+      "classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ]
+    },
+    {
+      "name": "tqdm",
+      "version": "4.70.1",
+      "licenseExpression": null,
+      "license": "MPL-2.0 AND MIT",
+      "classifiers": []
+    },
+    {
+      "name": "typer",
+      "version": "0.16.0",
+      "licenseExpression": null,
+      "license": null,
+      "classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ]
+    },
+    {
+      "name": "typer-slim",
+      "version": "0.16.0",
+      "licenseExpression": null,
+      "license": null,
+      "classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ]
+    },
+    {
+      "name": "typing-inspection",
+      "version": "0.4.4",
+      "licenseExpression": "MIT",
+      "license": null,
+      "classifiers": []
+    },
+    {
+      "name": "typing_extensions",
+      "version": "4.16.0",
+      "licenseExpression": "PSF-2.0",
+      "license": null,
+      "classifiers": []
+    },
+    {
+      "name": "urllib3",
+      "version": "2.8.0",
+      "licenseExpression": "MIT",
+      "license": null,
+      "classifiers": []
+    },
+    {
+      "name": "wasabi",
+      "version": "1.1.3",
+      "licenseExpression": null,
+      "license": "MIT",
+      "classifiers": []
+    },
+    {
+      "name": "weasel",
+      "version": "0.4.3",
+      "licenseExpression": null,
+      "license": "MIT",
+      "classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ]
+    },
+    {
+      "name": "wrapt",
+      "version": "2.5.0",
+      "licenseExpression": "BSD-2-Clause",
+      "license": null,
+      "classifiers": []
+    }
+  ]
+}

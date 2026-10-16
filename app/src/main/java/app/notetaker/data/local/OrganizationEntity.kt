@@ -26,4 +26,12 @@ data class SemanticLinkEntity(val noteId: String, val targetId: String, val scor
 /** Persist discovery lineage across renames/merges; null targets suppress deleted topics. */
 @Entity(tableName = "topic_discovery_keys", indices = [Index("tagId")], foreignKeys = [
     ForeignKey(entity = TagEntity::class, parentColumns = ["id"], childColumns = ["tagId"], onDelete = ForeignKey.SET_NULL)])
-data class TopicDiscoveryKeyEntity(@PrimaryKey val key: String, val tagId: String?)
+data class TopicDiscoveryKeyEntity(
+    @PrimaryKey val key: String,
+    val tagId: String?,
+    val subject: String? = null,
+    val memberIds: String? = null,
+    val branchKey: String? = null,
+    /** 0: inferred, 1: explicit user merge, 2: legacy ambiguous redirect (exact key only). */
+    @ColumnInfo(defaultValue = "0") val mergeKind: Int = 0,
+)
