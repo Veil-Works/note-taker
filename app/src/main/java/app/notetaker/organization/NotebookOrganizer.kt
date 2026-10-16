@@ -11,6 +11,7 @@ import kotlin.coroutines.coroutineContext
 class NotebookOrganizer(
     private val db: NoteDatabase,
     private val embedding: TextEmbedding,
+    private val connectionsOnly: Boolean = false,
     private val discover: (List<DiscoveryNote>) -> List<TopicCandidate> = { TopicDiscovery(embedding).discover(it) },
 ) {
     suspend fun runOnce(): Boolean {
@@ -32,7 +33,7 @@ class NotebookOrganizer(
             row.note.id to vector
         }
         val nonempty = notes.filter { it.note.content.isNotBlank() }
-        val subjects = recurringSubjects(nonempty.associate { it.note.id to it.note.content }, vectors)
+        val subjects = if (connectionsOnly) emptyMap() else recurringSubjects(nonempty.associate { it.note.id to it.note.content }, vectors)
         val links = buildList {
             nonempty.forEachIndexed { index, row ->
                 coroutineContext.ensureActive()
@@ -44,6 +45,11 @@ class NotebookOrganizer(
                     add(SemanticLinkEntity(other.note.id, row.note.id, score))
                 }
             }
+        }
+        if (connectionsOnly) {
+            // Replace derived organization without inventing group identities. Manual
+            // topics, links, aliases and rejections remain owned by the user.
+            return dao.apply(state.generation, newEmbeddings, emptyList(), links, emptyList(), emptyList())
         }
         // Only user-attached tags are positive examples. Never train on our own guesses.
         val examples = tags.associate { tag -> tag.id to notes.filter { row -> row.tags.any { it.id == tag.id } } }
@@ -153,7 +159,7 @@ class NotebookOrganizer(
     }
 
     companion object {
-        const val RULES_VERSION = 12
+        const val RULES_VERSION = 13
         const val TOPIC_THRESHOLD = 0.42
         const val LEARNED_THRESHOLD = 0.55
     }

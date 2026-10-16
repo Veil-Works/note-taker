@@ -18,7 +18,7 @@ class OrganizationWorker(context: Context, params: WorkerParameters) : Coroutine
             if (queued == null || queued.completed == queued.generation) return@withContext Result.success()
             LocalTextEmbedding(applicationContext).use { model ->
                 // Bound each run; unfinished generations remain durably queued.
-                repeat(3) { if (NotebookOrganizer(container.database, model).runOnce()) return@withContext Result.success() }
+                repeat(3) { if (NotebookOrganizer(container.database, model, connectionsOnly = true).runOnce()) return@withContext Result.success() }
             }
             Result.retry()
         } catch (cancelled: CancellationException) { throw cancelled }

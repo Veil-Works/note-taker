@@ -1,9 +1,16 @@
 # Note-taker
 
 A private, local-first Android notebook built with Kotlin, Jetpack Compose, and
-Room. Version 8 unifies manual tags and discovered groups as **Topics**. Capture
-needs no tags, setup, or approval queue. Related notes and topics are found
-entirely offline using a bundled sentence model.
+Room. This branch experiments with **note-first retrieval**: write directly on the
+notes screen, autosave without a title or category, and browse direct related
+notes chronologically. Standalone notes need no companions. There are no generated
+summaries. Connections use the existing bundled offline sentence model.
+
+See [Note-first experiment](docs/NOTE_FIRST_EXPERIMENT.md) for behavior and limits.
+The background worker now computes connections only: it retires inferred topic
+memberships and untouched inferred topics while preserving manual organization.
+The topic tools below remain optional; the earlier discovery algorithm is retained
+for comparison tests, not enabled in the worker.
 
 ## Topics
 
@@ -18,7 +25,7 @@ entirely offline using a bundled sentence model.
   Renaming preserves the topic identity/name without freezing its memberships.
 - Merging retains the target name, combines aliases and memberships, and redirects
   the source's discovery history and active filters to the target.
-- Discovered topics appear without review. Untouched ones expire when unsupported;
+- Legacy discovered topics expire when their derived memberships are retired;
   topics you create, edit, merge, confirm, or correct remain available.
 - Automatic assignments and generated names never become user training examples.
 
@@ -29,13 +36,18 @@ how the organizer reuses identities without merging on name similarity alone.
 
 - Five destinations: List, Net, New note, Topics, Settings; compact floating
   navigation with larger labels and unframed icons.
-- Immediate capture; existing-note edits autosave after 600 ms and on backgrounding.
+- Inline plain-text capture autosaves after 500 ms and finishes on backgrounding
+  or leaving the composer. Done starts a fresh thought; failed saves retain text.
+  The separate New note dialog retains its explicit-save/topic-prefix behavior.
+  Existing-note edits autosave after 600 ms and on backgrounding.
   Done commits the editing session; outside taps discard that session's edits.
 - Literal case-insensitive content search, multiple-topic filters, date ranges,
   sorting, frequently used topics, and optional list grouping.
 - Bulk deletion, topic assignment/removal, and manual note connections.
 - Related notes inferred by meaning, shared-topic connections, and independent
   manual links. Keep linked preserves a shared-topic connection as a manual link.
+- The new related timeline uses direct semantic/manual connections only, orders
+  by creation time, and offers closer/broader matches without assigning groups.
 - Interactive graph with pan/zoom, topic labels, searchable note browser, and
   connection-strength filtering.
 - System/light/dark appearance and compact-list preferences.

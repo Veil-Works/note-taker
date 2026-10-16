@@ -41,6 +41,7 @@ fun EditorScreen(
     onDeleted: (Note?) -> Unit,
     onOpenNote: (String) -> Unit,
     onOpenConcept: (String?) -> Unit = {},
+    onOpenRelated: ((String) -> Unit)? = null,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val suggestions by viewModel.suggestions.collectAsStateWithLifecycle()
@@ -97,6 +98,10 @@ fun EditorScreen(
                                 TextButton(onClick = { panel = "topics" }, modifier = Modifier.testTag("edit_topics")) { Text("Topics") }
                                 TextButton(onClick = { panel = "connections" }, modifier = Modifier.testTag("edit_connections")) { Text("Connections") }
                             }
+                            if (onOpenRelated != null && state.noteId != null) TextButton(
+                                onClick = { viewModel.close { onOpenRelated(checkNotNull(state.noteId)) } },
+                                modifier = Modifier.testTag("open_related_history"),
+                            ) { Text("View related notes in time order") }
                         }
                         if (panel == "topics") {
                             app.notetaker.ui.AutomaticOrganization(state.tags, state.automaticTagReasons, organizationStatus,

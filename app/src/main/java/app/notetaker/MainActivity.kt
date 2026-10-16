@@ -77,6 +77,7 @@ internal fun NoteTakerApp(repository: NoteRepository) {
     var compact by remember { mutableStateOf(preferences.getBoolean("compact", false)) }
     var capturing by rememberSaveable { mutableStateOf(false) }
     val notesViewModel: NotesViewModel = viewModel(factory = NotesViewModel.factory(repository))
+    val quickCapture: app.notetaker.feature.notes.QuickCaptureViewModel = viewModel(factory = app.notetaker.feature.notes.QuickCaptureViewModel.factory(repository))
     val concepts: ConceptsViewModel = viewModel(factory = ConceptsViewModel.factory(repository))
     val notebook: NotebookViewModel = viewModel(factory = NotebookViewModel.factory(repository))
     val notebookState by notebook.state.collectAsStateWithLifecycle()
@@ -111,7 +112,19 @@ internal fun NoteTakerApp(repository: NoteRepository) {
                 NotesScreen(
                     viewModel = notesViewModel,
                     compact = compact,
-                    onOpenNote = { id -> navController.navigate("$EDITOR_ROUTE?noteId=$id") },
+                    quickCaptureViewModel = quickCapture,
+                    connections = notebookState.edges,
+                    connectionNotes = notebookState.notes,
+                    onOpenRelated = { id -> quickCapture.finish { navController.navigate("related/$id") } },
+                    onOpenNote = { id -> quickCapture.finish { navController.navigate("$EDITOR_ROUTE?noteId=$id") } },
+                )
+            }
+
+            composable("related/{noteId}", arguments = listOf(navArgument("noteId") { type = NavType.StringType })) { relatedEntry ->
+                app.notetaker.feature.notes.RelatedHistoryScreen(
+                    anchorId = checkNotNull(relatedEntry.arguments?.getString("noteId")), state = notebookState,
+                    onBack = { navController.popBackStack() },
+                    onOpen = { navController.navigate("$EDITOR_ROUTE?noteId=$it") },
                 )
             }
 
@@ -162,6 +175,10 @@ internal fun NoteTakerApp(repository: NoteRepository) {
                     viewModel = editorViewModel,
                     isNewNote = noteId == null,
                     onClose = { navController.popBackStack() },
+                    onOpenRelated = { id ->
+                        navController.popBackStack()
+                        navController.navigate("related/$id")
+                    },
                     onOpenConcept = { id ->
                         navController.popBackStack()
                         navController.navigate("concepts?tagId=${id.orEmpty()}")

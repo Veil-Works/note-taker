@@ -91,7 +91,12 @@ fun NotesScreen(
     viewModel: NotesViewModel,
     onOpenNote: (String) -> Unit,
     compact: Boolean = false,
+    quickCaptureViewModel: QuickCaptureViewModel? = null,
+    connections: List<app.notetaker.model.GraphEdge> = emptyList(),
+    connectionNotes: List<Note>? = null,
+    onOpenRelated: (String) -> Unit = {},
 ) {
+    val quickState = quickCaptureViewModel?.state?.collectAsStateWithLifecycle()?.value
     val captureGeneration by viewModel.captureGeneration.collectAsStateWithLifecycle()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val tags by viewModel.tags.collectAsStateWithLifecycle()
@@ -176,6 +181,7 @@ fun NotesScreen(
             }
             }
             }
+            if (!selectionMode && !searching && quickCaptureViewModel != null) QuickCapture(quickCaptureViewModel)
             Row(
                 Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = 12.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -233,12 +239,12 @@ fun NotesScreen(
                 state.notes.isEmpty() -> MessageContent(
                     if (filters.period != DatePeriod.ALL) "No notes match these filters."
                     else if (selectedTags.isNotEmpty()) "No notes match all selected topics and search."
-                    else if (state.query.isBlank()) "No notes yet. Tap New note to capture your first thought."
+                    else if (state.query.isBlank()) if (quickCaptureViewModel != null) "Write your first note above. No title or topic needed." else "No notes yet. Tap New note to capture your first thought."
                     else "No notes match your search.",
                     Modifier.padding(bottom = bottomSpace),
                 )
                 else -> NotesList(
-                    notes = state.notes,
+                    notes = state.notes.filterNot { it.id == quickState?.noteId },
                     grouped = grouped,
                     compact = compact,
                     onOpenNote = { if (selectionMode) viewModel.toggleNote(it) else onOpenNote(it) },
@@ -248,6 +254,9 @@ fun NotesScreen(
                     enabled = !bulkBusy,
                     bottomSpace = bottomSpace,
                     resetKey = listOf(state.query, selectedTags, filters, captureGeneration),
+                    connections = connections,
+                    connectionNotes = connectionNotes ?: state.notes,
+                    onOpenRelated = onOpenRelated,
                 )
             }
 
@@ -305,6 +314,9 @@ private fun NotesList(
     enabled: Boolean,
     bottomSpace: Dp,
     resetKey: Any,
+    connections: List<app.notetaker.model.GraphEdge>,
+    connectionNotes: List<Note>,
+    onOpenRelated: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val listState = rememberLazyListState()
@@ -330,6 +342,8 @@ private fun NotesList(
             }
             items(members, key = { "$groupId:${it.id}" }) { note ->
                 NoteRow(note = note, compact = compact, selected = note.id in selectedIds, selectionMode = selectionMode, enabled = enabled,
+                    relatedCount = app.notetaker.model.relatedHistory(note.id, connectionNotes, connections, app.notetaker.model.ConnectionScope.CLOSE).size - 1,
+                    onOpenRelated = { onOpenRelated(note.id) },
                     onLongClick = { onLongClick(note.id) }, onClick = { onOpenNote(note.id) })
             }
         }
@@ -338,7 +352,7 @@ private fun NotesList(
 }
 
 @Composable
-private fun NoteRow(note: Note, compact: Boolean, selected: Boolean, selectionMode: Boolean, enabled: Boolean, onLongClick: () -> Unit, onClick: () -> Unit) {
+private fun NoteRow(note: Note, compact: Boolean, selected: Boolean, selectionMode: Boolean, enabled: Boolean, relatedCount: Int, onOpenRelated: () -> Unit, onLongClick: () -> Unit, onClick: () -> Unit) {
     Surface(modifier = Modifier.glassPanel(22.dp, highlighted = selected), shape = RoundedCornerShape(22.dp),
         color = Color.Transparent, contentColor = MaterialTheme.colorScheme.onSurface, tonalElevation = 0.dp) {
         Row(Modifier.fillMaxWidth().testTag("note_${note.id}")
@@ -357,8 +371,13 @@ private fun NoteRow(note: Note, compact: Boolean, selected: Boolean, selectionMo
                     style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Normal)
                 if (note.tags.isNotEmpty()) Text(note.tags.joinToString(" · ") { it.displayName },
                     style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Text(formatTimestamp(note.updatedAt), modifier = Modifier.align(Alignment.End),
-                    style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    if (!selectionMode && relatedCount > 0) TextButton(onClick = onOpenRelated, enabled = enabled,
+                        modifier = Modifier.testTag("related_${note.id}")) { Text("Related ($relatedCount)") }
+                    Text(formatTimestamp(note.updatedAt), modifier = Modifier.weight(1f),
+                        textAlign = androidx.compose.ui.text.style.TextAlign.End,
+                        style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
             }
         }
     }

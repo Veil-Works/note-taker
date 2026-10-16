@@ -8,7 +8,7 @@ coroutines/Flow. `NoteRepository` separates screens from the Room/SQLite storage
 implementation. `DefaultAppContainer` wires production dependencies.
 
 - `feature/`: notes, editor, graph, concepts/topics, and settings screens.
-- `data/local/`: Room schema version 7, DAOs, and migrations from versions 1–6.
+- `data/local/`: Room schema version 8, DAOs, and migrations from versions 1–7.
 - `organization/`: durable WorkManager processing, WordPiece tokenization,
   bundled MiniLM inference through ONNX Runtime, and grouping/matching rules.
 - `app/src/test/`: JVM tests for ViewModels, filters, graph layout, and rules.
